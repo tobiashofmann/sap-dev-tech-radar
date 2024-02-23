@@ -1,0 +1,15 @@
+[page]
+title = "Web Dynpro Java"
+description = "Web Dynpro is a client-independent programming model of the SAP NetWeaver technology platform for developing user interfaces for professional business applications. It is based on the model view controller paradim which ensures that the business logic is separated from the presentation logic. This architecture is visible in the Web Dynpro perspective of the SAP NetWeaver Developer Studio (NWDS)."
+reason = "Kiss of death since 2009."
+support = "Successor is Fiori UX"
+
+[links]
+"SAP Help" = "https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/15/0d4f21c17c8044af4868130e9fea07/content.htm?no_cache=true"
+
+[config]
+label = "WDJ"
+ring = "STOP"
+quadrant = "UI"
+active = true
+moved = 0

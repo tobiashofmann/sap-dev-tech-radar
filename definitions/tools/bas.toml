@@ -1,0 +1,17 @@
+[page]
+title = "Business Application Studio"
+description = "SAP Business Application Studio is a new SAP Business Technology Platform (SAP BTP) service that offers a modern development environment tailored for efficient development of business applications for the SAP Intelligent Enterprise."
+reason = "SAP Business Application Studio provides a tailor-made development environment for various development scenarios, such as SAP Fiori, SAP S/4HANA extension, and Workflow."
+support = "Supported."
+
+[links]
+SAP = "https://www.sap.com/products/technology-platform/business-application-studio.html"
+"SAP Help" = "https://help.sap.com/docs/bas?locale=en-US"
+"SAP Store" = "https://store.sap.com/dcp/en/product/000000000008900283/sap-business-application-studio"
+
+[config]
+label = "BAS"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0

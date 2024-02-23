@@ -1,0 +1,17 @@
+[page]
+title = "CDS Views"
+description = "This item is about ABAP CDS Views."
+reason = "Successor is CDS View Entity"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/ee6ff9b281d8448f96b4fe6c89f2bdc8/8573b810511948c8a99c0672abc159aa.html?locale=en-US"
+"ABAP CDS Views" = "https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-us/abenddic_cds_views.htm"
+"ABAP CDS" = "https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-us/abencds.htm"
+
+[config]
+label = "CDS Views"
+ring = "HOLD"
+quadrant = "Technology"
+active = true
+moved = 0

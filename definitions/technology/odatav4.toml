@@ -1,0 +1,19 @@
+[page]
+title = "OData v4"
+description = "Open Data Protocol (OData) is an open protocol that allows the creation and consumption of queryable and interoperable Web service APIs in a standard way. Widely supported by SAP solutions."
+reason = "Recommended for RAP projects. "
+support = "Supported"
+
+[links]
+OData = "https://www.odata.org/"
+"OData Vocabularies" = "https://sap.github.io/odata-vocabularies/"
+"OData v4 Standard" = "https://www.odata.org/documentation/"
+Blog = "https://community.sap.com/t5/technology-blogs-by-sap/odata-service-development-options/ba-p/13359604"
+Wikipedia = "https://en.wikipedia.org/wiki/Open_Data_Protocol"
+
+[config]
+label = "OData v4"
+ring = "ADOPT"
+quadrant = "Technology"
+active = true
+moved = 0

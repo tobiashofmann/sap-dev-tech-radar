@@ -1,0 +1,18 @@
+[page]
+title = "CDS View Entity"
+description = "This item is about ABAP CDS Views."
+reason = "Recommended for CDS Views"
+support = "Supported"
+
+[links]
+"ABAP Documentation" = "https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/ABENCDS_ENTITIES.htm"
+"Community" = "https://community.sap.com/t5/application-development-blog-posts/a-new-generation-of-cds-views-cds-view-entities/ba-p/13488765"
+"Blog" = "https://community.sap.com/t5/application-development-blog-posts/abap-core-data-services-new-syntax-for-extending-cds-entities/ba-p/13533191"
+"Blog 2" = "https://community.sap.com/t5/technology-blogs-by-sap/cds-view-entities-the-new-cds-views/ba-p/13484596"
+
+[config]
+label = "CDS View Entity"
+ring = "USE"
+quadrant = "Technology"
+active = true
+moved = 0

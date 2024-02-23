@@ -1,0 +1,18 @@
+[page]
+title = "TITLE"
+description = "DESCRIPTION"
+reason = "REASON FOR THE POSITIONING"
+eol "EOL DATE OR SUPPORTED"
+
+[links]
+name_link1 = "LINK1"
+name_link2 = "LINK2"
+name_link3 = "LINK3"
+
+[config]
+label = "PRODUCT ABBREVATION"
+ring = "RING NAME"
+quadrant = "QUDRANT NAME"
+active = true
+moved = 0
+link = "adt"

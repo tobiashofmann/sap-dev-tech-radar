@@ -1,0 +1,15 @@
+[page]
+title = "SAPUI5"
+description = "UI5 was created by professionals for modern developers to build state of the art web applications. It comes with all features needed to cover most current application requirements."
+reason = "Web technology for Fiori UX"
+support = "Current recommended technology for web apps"
+
+[links]
+"UI5 SDK" = "https://ui5.sap.com/"
+
+[config]
+label = "SAPUI5"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

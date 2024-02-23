@@ -1,0 +1,16 @@
+[page]
+title = "BRF+"
+description = "Business Rule Framework plus (BRFplus) provides a comprehensive application programming interface (API) and user interface (UI) for defining and processing business rules. It allows you to model rules in an intuitive way and to reuse these rules in different applications."
+reason = "Business logic in a common framwork. Recommended technology for managing rules in ABAP programs."
+support = "Available for ABAP. Not for Steampunk."
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_DECISION_SERVICE_MANAGEMENT/90c77b45fd0f42febd69eea239037688/9a6b67ce7c26446483af079719edf679.html?locale=en-US"
+"Wikipedia" = "https://en.wikipedia.org/wiki/BRFplus"
+
+[config]
+label = "BRF+"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

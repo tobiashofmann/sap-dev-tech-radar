@@ -1,0 +1,16 @@
+[page]
+title = "UI5 tooling"
+description = "An open and modular toolchain to develop state-of-the-art applications based on the UI5 framework."
+reason = "Tooling for UI5 apps. For Fiori apps the usage of UX tooling / wizards for BAS and VS Code is recommended."
+support = "Supported"
+
+[links]
+Documentation = "https://sap.github.io/ui5-tooling/v3/"
+GitHub = "https://github.com/SAP/ui5-tooling"
+
+[config]
+label = "UI5 tooling"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0

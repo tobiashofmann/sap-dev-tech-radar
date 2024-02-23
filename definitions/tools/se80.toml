@@ -1,0 +1,17 @@
+[page]
+title = "SE80"
+description = "ABAP classic workbench. ABAP development with SAP Gui"
+reason = "ADT is the recommended tool for developing ABAP apps for S/4HANA"
+support = "Legacy. Future development only for ADT"
+
+[links]
+tools = "https://tools.hana.ondemand.com/"
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/bd833c8355f34e96a6e83096b38bf192/efd94b78ebf811d295b100a0c94260a5.html?locale=en-US"
+"DSAG Leitfaden" = "https://1dsag.github.io/ADT-Leitfaden/introduction/"
+
+[config]
+label = "SE80"
+ring = "STOP"
+quadrant = "Tools"
+active = true
+moved = 0

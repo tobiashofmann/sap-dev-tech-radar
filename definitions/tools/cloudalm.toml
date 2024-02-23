@@ -1,0 +1,15 @@
+[page]
+title = "Cloud ALM"
+description = "SAP Cloud ALM helps you to implement and operate intelligent cloud and hybrid business solutions.<br/><br/>You benefit from an out-of-the-box, native cloud solution, designed as the central entry point to manage your SAP landscape with content-driven guided implementation and highly automated operations."
+reason = "Successor of SolMan. Ready for 2030+ and cloud solutions"
+support = "Supported"
+
+[links]
+"SAP Support" = "https://support.sap.com/en/alm/sap-cloud-alm.html"
+
+[config]
+label = "Cloud ALM"
+ring = "ADOPT"
+quadrant = "Tools"
+active = true
+moved = 0

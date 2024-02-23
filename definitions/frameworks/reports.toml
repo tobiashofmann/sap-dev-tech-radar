@@ -1,0 +1,15 @@
+[page]
+title = "Reports"
+description = "Executable program. Used to display and interact with SAP system."
+reason = "Fiori UX with RAP for backend processing is the recommended alternative to classic reports."
+support = "Not recommended. Recommended to use with Personas."
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/abapdocu_751_index_htm/7.51/en-US/abapreport.htm"
+
+[config]
+label = "Reports"
+ring = "STOP"
+quadrant = "Frameworks"
+active = true
+moved = 0

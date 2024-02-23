@@ -1,0 +1,16 @@
+[page]
+title = "SAPGui"
+description = "Proprietary client from SAP for connecting to an SAP system and run e.g. transactions or reports."
+reason = "For development: use ADT first. Adopt reports to Fiori for end users. When reports: use Web Gui mit Personas"
+support = "Supported for Windows. For MAC: constant pain."
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/sap_gui_for_windows?locale=en-US"
+Wikipedia = "https://en.wikipedia.org/wiki/SAP_Graphical_User_Interface"
+
+[config]
+label = "SAPGui"
+ring = "STOP"
+quadrant = "Tools"
+active = true
+moved = 0

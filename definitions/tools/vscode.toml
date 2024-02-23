@@ -1,0 +1,17 @@
+[page]
+title = "VS Code"
+description = "Alternative for Business Application Studio."
+reason = "Widely used IDE. Allows for local usage. Plugins for SAP development provided by SAP."
+support = "Supported by SAP by providing plugins"
+
+[links]
+Microsoft = "https://code.visualstudio.com/"
+"Fiori Extension pack" = "https://marketplace.visualstudio.com/items?itemName=SAPSE.sap-ux-fiori-tools-extension-pack"
+"Open UX Tools" = "https://github.com/SAP/open-ux-tools/"
+
+[config]
+label = "VS Code"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0

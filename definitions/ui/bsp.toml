@@ -1,0 +1,16 @@
+[page]
+title = "BSP"
+description = "The SAP Web Application Server provides a page-based programming model with server-side scripting as well as server page technology for developing, designing and implementing Web applications: Business Server Pages (BSP). Server-side scripting enables direct access to all elements in the application server (such as function modules, database tables, ABAP Objects, and so on)."
+reason = "Outdated technology. Not suitable for modern web apps."
+support = "Successor is Fiori UX"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_731_BW_ABAP/0884fb55479542b38fb676e8f5b250a1/4c56854fe8530d6ae10000000a15822b.html?locale=en-US"
+
+
+[config]
+label = "BSP"
+ring = "STOP"
+quadrant = "UI"
+active = true
+moved = 0

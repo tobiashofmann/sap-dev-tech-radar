@@ -1,0 +1,17 @@
+[page]
+title = "UI Flexibility"
+description = "SAPUI5 flexibility provides a technology to let various user groups adapt SAP standard apps or other apps based on SAPUI5.<br/><br/>The changes cover simple scenarios, such as moving a field, up to complex scenarios like embedding external content or adding sections to an app with specific UI elements. The changes can be managed, reviewed and activated for certain groups of users.<br/><br/>For end users, key users and developers on all platforms, on premise and cloud."
+reason = "Recommended for UI adaptions of UI5 based apps"
+support = "Supported"
+
+[links]
+"UI5 SDK" = "https://ui5.sap.com/"
+"SAP Help" = "https://help.sap.com/docs/UI5_FLEXIBILITY/430e2c1a4ff241bc8162df4bf51e0730/e36d19b3d24f47199a9a82d3faa508c3.html"
+
+
+[config]
+label = "UI Flexibility"
+ring = "USE"
+quadrant = "UI"
+active = true
+moved = 0

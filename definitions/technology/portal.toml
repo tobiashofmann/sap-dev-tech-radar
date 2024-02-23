@@ -1,0 +1,16 @@
+[page]
+title = "SAP Portal"
+description = "Portal solution from SAP. Integrate business content from SAP and serve as a central point of access accross multiple systems with SSO"
+reason = "Only in supported, not recommended any longer. Successor: Build Workzone or local Fiori Launchpad"
+support = "EOL 31.12.2027/30."
+
+[links]
+"Fiori Design Guidelines" = "https://experience.sap.com/fiori-design-web/launchpad/"
+SAP = "https://www.sap.com/germany/products/technology-platform/fiori.html"
+
+[config]
+label = "Portal"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0

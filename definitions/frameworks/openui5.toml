@@ -1,0 +1,16 @@
+[page]
+title = "OpenUI5"
+description = "UI5 was created by professionals for modern developers to build state of the art web applications. It comes with all features needed to cover most current application requirements."
+reason = "SAP customers should use SAPUI5 instead of OpenUI5. OpenUI5 should be used for open source projects and when no SAP backend is involved"
+support = "Current recommended technology for web apps"
+
+[links]
+"UI5 SDK" = "https://openui5.org/"
+
+
+[config]
+label = "OpenUI5"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

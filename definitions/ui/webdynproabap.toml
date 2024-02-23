@@ -1,0 +1,16 @@
+[page]
+title = "Web Dynpro ABAP"
+description = "Web Dynpro ABAP is a UI technology for developing Web applications in the ABAP environment. It consists of a runtime environment and a graphical development environment with special Web Dynpro tools that are integrated in the ABAP Workbench."
+reason = "Not recommended for new developments"
+support = "Successor is Fiori UX"
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/8b1f705fd190458ba97a8e258f7a3cfb/7.5%20SP22/en-US/4e/161363b81a20cce10000000a42189c/frameset.htm"
+Wikipedia = "https://en.wikipedia.org/wiki/Web_Dynpro"
+
+[config]
+label = "WDA"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0

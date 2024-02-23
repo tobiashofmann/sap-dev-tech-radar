@@ -1,0 +1,16 @@
+[page]
+title = "Web IDE"
+description = "SAP Web IDE Full-Stack streamlines the end-to-end application lifecycle – easily develop, test, build, deploy, and extend role-based, consumer-grade apps for business users."
+reason = "Only on Neo available. EOL. For newer SAP Fiori Apps: BAS or VS Code is needed to extension or adaption projects"
+support = "Succeeded by BAS"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/web-ide?locale=en-US"
+"Feature Scope" = "https://help.sap.com/doc/797857d5b4ca4997b20431f96c13319e/Cloud/en-US/WEBIDE_FSD.pdf"
+
+[config]
+label = "WebIDE"
+ring = "STOP"
+quadrant = "Tools"
+active = true
+moved = 0

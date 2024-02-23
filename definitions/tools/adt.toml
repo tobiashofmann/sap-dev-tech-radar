@@ -1,0 +1,17 @@
+[page]
+title = "ABAP Development Tools"
+description = "ABAP Development Tools for SAP NetWeaver (ADT) enables ABAP developers to perform development tasks using the ABAP application server capabilities in an Eclipse-based IDE."
+reason = "ADT is the recommended tool for developing ABAP apps for S/4HANA"
+support = "Supported. Only tool that allows development of CDS and RAP"
+
+[links]
+Tools = "https://tools.hana.ondemand.com/"
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/7bfe8cdcfbb040dcb6702dada8c3e2f0/a3314a7fd9384ce8a40eff2d3b144628.html?locale=en-US"
+"DSAG Leitfaden" = "https://1dsag.github.io/ADT-Leitfaden/introduction/"
+
+[config]
+label = "ADT"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0

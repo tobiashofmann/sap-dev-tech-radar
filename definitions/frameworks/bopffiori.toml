@@ -1,0 +1,16 @@
+[page]
+title = "ABAP Programming Model for SAP Fiori."
+description = "The ABAP Programming Model for SAP Fiori offers a standardized way to efficiently develop modern and intrinsically SAP HANA-optimized web-based applications of all types, i.e., search, analytical and transactional apps. It is the current best practice for application developments in SAP S/4HANA."
+reason = "Success to BOPF is RAP"
+support = "Success is RAP"
+
+[links]
+"Evolution of the ABAP Programming Model" = "https://community.sap.com/t5/technology-blogs-by-sap/evolution-of-the-abap-programming-model/ba-p/13398328"
+"Getting Started with the ABAP Programming Model for SAP Fiori" = "https://community.sap.com/t5/technology-blogs-by-sap/getting-started-with-the-abap-programming-model-for-sap-fiori/ba-p/13178296"
+
+[config]
+label = "BOPF Fiori"
+ring = "HOLD"
+quadrant = "Frameworks"
+active = true
+moved = 0

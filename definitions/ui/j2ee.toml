@@ -1,0 +1,15 @@
+[page]
+title = "J2EE"
+description = "Java2 Enterprise Edition Specification, version 1.3, defines an extensible and reliable platform for building high-volume, secure and scalable business Web applications. It defines two types of Web components that can build a J2EE Web application and a runtime environment where they run."
+reason = "Was never the recommended UI technology"
+support = "Successor is Fiori UX"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_700/129f88c06c531014aa4eb568cafe09ea/69f5bc3d42f46c33e10000000a11405a.html?locale=en"
+
+[config]
+label = "J2EE"
+ring = "STOP"
+quadrant = "UI"
+active = true
+moved = 0

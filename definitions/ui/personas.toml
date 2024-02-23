@@ -1,0 +1,20 @@
+[page]
+title = "SAP Screen Personas"
+description = "Improve user productivity, process efficiency, and decision making with better usability for your SAP ERP screens. SAP Screen Personas software delivers drag-and-drop simplicity to help you create a modern, intuitive user experience (SAP Fiori UX) across desktops and mobile devices. Simplify and adapt your classic applications, whether you are running SAP S/4HANA Cloud Public Edition, SAP S/4HANA Cloud Private Edition, SAP S/4HANA, SAP Business Suite on HANA, or SAP ECC 6.0"
+reason = "Part of the SAP UI strategy. Integrated in S/4HANA with support until 2040."
+support = "Supported and aligned with S/4HANA support"
+
+[links]
+Roadmap = "https://community.sap.com/t5/technology-blogs-by-sap/sap-screen-personas-roadmap-update-july-2023/ba-p/13568681"
+"SAP Help" = "https://help.sap.com/docs/SAP_SCREEN_PERSONAS/e9aec5d380204249836a4fc3fc76f38e/d59f3aac0f574537af49f2ce0033bba8.html?locale=en-US"
+"SAP Help2" = "https://help.sap.com/docs/SAP_SCREEN_PERSONAS?locale=en-US"
+"Application Help" = "https://help.sap.com/docs/SAP_SCREEN_PERSONAS/20993a0c28654a26beb2b63b722d74f2/c1f0a38f9f044465bda47fc41087a228.html?locale=en-US"
+Web = "https://pages.community.sap.com/topics/screen-personas"
+
+[config]
+label = "Personas"
+ring = "USE"
+quadrant = "UI"
+active = true
+moved = 0
+link = "adt"

@@ -1,0 +1,17 @@
+[page]
+title = "Cloud Application Programming Model Node.JS"
+description = "The SAP Cloud Application Programming Model (CAP) is a framework of languages, libraries, and tools for building enterprise-grade services and applications. It guides developers along a 'golden path' of proven best practices and a great wealth of out-of-the-box solutions to recurring tasks."
+reason = "Recommended framework for custom SAP BTP apps"
+support = "Supported"
+
+[links]
+"Documentation" = "https://cap.cloud.sap/docs/"
+"CAP Cookbook" = "https://cap.cloud.sap/docs/guides/"
+"GitHub" = "https://github.com/cap-js"
+
+[config]
+label = "CAP JS"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

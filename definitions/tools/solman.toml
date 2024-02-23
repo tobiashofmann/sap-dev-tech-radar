@@ -1,0 +1,16 @@
+[page]
+title = "Solution Manager"
+description = "SAP Solution Manager 7.2 covers the complete application lifecycle of your IT solution running on-premise, hybrid or in the cloud. The modern and intelligent IT management platform empowers your IT organization for the future of business. <br><br>With this highly integrated solution you can implement, maintain, run, and adopt all enterprise solutions – even non-SAP software – while supporting business innovation, business continuity, and efficient operations. <br><br>The usage rights for SAP Solution Manager include Focused Build and Focused Insights - at no additional costs."
+reason = "Not available for 2030+. EOL announced."
+support = "Supported only until 2030. Successor is Cloud ALM"
+
+[links]
+"SAP Support" = "https://support.sap.com/en/alm/solution-manager.html"
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/7bfe8cdcfbb040dcb6702dada8c3e2f0/a3314a7fd9384ce8a40eff2d3b144628.html?locale=en-US"
+
+[config]
+label = "SolMan"
+ring = "HOLD"
+quadrant = "Tools"
+active = true
+moved = 0

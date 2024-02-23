@@ -1,0 +1,16 @@
+[page]
+title = "Fiori Elements"
+description = "SAP Fiori elements is a framework that comprises the most commonly used floorplan templates. It speeds up development by reducing the amount of frontend code needed to build SAP Fiori apps and drives UX consistency and compliance with the latest SAP Fiori design guidelines."
+reason = "Fiori Elements is the receommended framwork for modern Fiori Apps (developed with RAP/CAP)"
+support = "Supported."
+
+[links]
+"SAP Fiori Elements" = "https://experience.sap.com/fiori-design-web/smart-templates/"
+Roadmap = "https://storyboard.cfapps.eu10.hana.ondemand.com/#/story/23ec6f30-26b1-483b-9171-a53bd85bb2e2"
+
+[config]
+label = "Fiori Elements"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

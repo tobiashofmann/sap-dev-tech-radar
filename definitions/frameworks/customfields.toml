@@ -1,0 +1,17 @@
+[page]
+title = "Custom Fields and Logic"
+description = "Wouldn't you like to streamline and simplify the development process for your business applications? Then you should get to know more about Business Object Processing Framework (BOPF), our infrastructure for developing business objects that is available for the SAP Business Suite. With the Business Object Processing Framework, you will save time during the development cycle because you don't have to implement all the technical details yourself - details such as authorization control, low-level transaction handling, buffer management, provisioning of consumer API, or business logic orchestration. Using the model-driven approach in BOPF, you can instead focus your attention more on the actual business requirements themselves."
+reason = "Success to BOPF is RAP"
+support = "Success is RAP"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0f69f8fb28ac4bf48d2b57b9637e81fa/57909455bf7c4fdd8bcf48d76c1eae33.html?locale=en-US"
+"SAP Learning" = "https://learning.sap.com/learning-journeys/get-started-with-in-app-extensibility-in-sap-s-4hana/using-custom-fields-and-logic_c3abf136-f83f-475d-95e0-2d21d699d890"
+"Fiori App Library" = "https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/#/detail/Apps('F1481')/S27OP"
+
+[config]
+label = "Custom Fields & Logic"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

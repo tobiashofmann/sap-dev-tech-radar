@@ -1,0 +1,17 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "plugins": ["html", "toml"],
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-redeclare": "off",
+        "no-undef": "off",
+        "no-unused-vars": "off"
+    }
+}

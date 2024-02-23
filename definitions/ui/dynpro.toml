@@ -1,0 +1,15 @@
+[page]
+title = "Dynpro"
+description = "Dynpro (sometimes also known as a screen) is an abbreviation for dynamic program. A dynpro is a repository object and is always a component of an ABAP program. It consists of the screen with its screen elements and the dynpro flow logic. Dynpro fields are assigned to the screen elements."
+reason = "UI for legacy ABAP programs"
+support = "Successor is Fiori UX"
+
+[links]
+"ABAP Keyword documentation" = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-us/abenabap_dynpros.htm"
+
+[config]
+label = "Dynpro"
+ring = "STOP"
+quadrant = "UI"
+active = true
+moved = 0

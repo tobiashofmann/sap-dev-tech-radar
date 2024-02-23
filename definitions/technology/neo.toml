@@ -1,0 +1,16 @@
+[page]
+title = "Neo"
+description = "Neo is the SAP propietary flavor of SAP BTP."
+reason = "Neo is EOL The receommended successor is SAP BTP Cloud Foundry"
+support = "31. December 2028"
+
+[links]
+FAQ = "https://d.dam.sap.com/a/ybmQiUC/External%20FAQ.pdf?rc=10"
+Blog = "https://community.sap.com/t5/technology-blogs-by-sap/farewell-neo-sap-btp-multi-cloud-environment-the-deployment-environment-of/ba-p/13560080"
+
+[config]
+label = "Neo"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0

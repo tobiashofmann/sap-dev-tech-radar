@@ -1,0 +1,15 @@
+[page]
+title = "gCTS Manager"
+description = "Git-enabled Change and Transport System (gCTS) lets you store all versions of ABAP development and Customizing objects in Git repositories."
+reason = "git enabled transports between systems. Recommended for new ABAP landscapes"
+support = "Supported."
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/4a368c163b08418890a406d413933ba7/2bcbc1d2227149f58a9faad76f7405fe.html?locale=en-US"
+
+[config]
+label = "gCTS"
+ring = "ADOPT"
+quadrant = "Tools"
+active = true
+moved = 0

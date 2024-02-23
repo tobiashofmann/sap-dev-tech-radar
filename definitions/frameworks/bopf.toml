@@ -1,0 +1,15 @@
+[page]
+title = "Business Object Processing Framework (BOPF)"
+description = "Wouldn't you like to streamline and simplify the development process for your business applications? Then you should get to know more about Business Object Processing Framework (BOPF), our infrastructure for developing business objects that is available for the SAP Business Suite. With the Business Object Processing Framework, you will save time during the development cycle because you don't have to implement all the technical details yourself - details such as authorization control, low-level transaction handling, buffer management, provisioning of consumer API, or business logic orchestration. Using the model-driven approach in BOPF, you can instead focus your attention more on the actual business requirements themselves."
+reason = "Success to BOPF is RAP"
+support = "Success is RAP"
+
+[links]
+"SCN" = "https://pages.community.sap.com/topics/abap/bopf"
+
+[config]
+label = "BOPF"
+ring = "STOP"
+quadrant = "Frameworks"
+active = true
+moved = 0

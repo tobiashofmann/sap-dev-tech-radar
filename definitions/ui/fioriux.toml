@@ -1,0 +1,16 @@
+[page]
+title = "Fiori UX"
+description = "The original SAP Fiori user interface for web apps based on the SAPUI5 framework. Learn how to design engaging and intuitive apps that can run on any device."
+reason = "UI strategy SAP: Fiori first"
+support = "Standard UX strategy from SAP"
+
+[links]
+"Fiori Design Guidelines" = "https://experience.sap.com/fiori-design-web/"
+SAP = "https://www.sap.com/germany/products/technology-platform/fiori.html"
+
+[config]
+label = "Fiori UX"
+ring = "USE"
+quadrant = "UI"
+active = true
+moved = 0

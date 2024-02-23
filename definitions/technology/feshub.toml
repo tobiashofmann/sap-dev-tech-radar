@@ -1,0 +1,16 @@
+[page]
+title = "Fiori Frontend Server hub"
+description = "The SAP Fiori front-end server is an add-on product for SAP NetWeaver Application Server for ABAP (AS ABAP)"
+reason = "HUB deployment of FES is since 2020 not recommended. Use FES embedded instead."
+support = "Supported, but not recommended"
+
+[links]
+"SAP Fiori Deployment Options and System Landscape Recommendations" = "https://www.sap.com/docs/download/2018/02/f0148939-f27c-0010-82c7-eda71af511fa.pdf"
+Blog = "https://community.sap.com/t5/technology-blogs-by-sap/sap-fiori-deployment-options-and-sap-fiori-front-end-server-strategy-update/ba-p/13444527#:~:text=SAP%20Fiori%20front%2Dend%20server%206.0%20%2D%20same%20as%20the%20predecessor,systems%20is%20the%20recommended%20setup."
+
+[config]
+label = "FES hub"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0

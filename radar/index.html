@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<meta name="description" content="SAP Dev Tech Radar: visualization of the current usage recommendation status of SAP technologies for SAP developers.">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SAP development Tech Radar</title>
+<link rel="shortcut icon" href="/favicon.ico">
+
+<script src="js/d3.v4.min.js"></script>
+<script src="js/radar.js"></script>
+
+<link rel="stylesheet" href="css/radar.css">
+</head>
+
+<body>
+
+<svg id="radar"></svg>
+
+<script>
+fetch('./config.json').then(function(response) {
+  return response.json();
+}).then(function(data) {
+  radar_visualization({
+    svg_id: "radar",
+    width: 1450,
+    height: 1000,
+    colors: {
+      background: "#fff",
+      grid: '#dddde0',
+      inactive: "#ddd"
+    },
+    title: "SAP Development Tech Radar",
+    date: data.date,
+    quadrants: [
+      { name: "Tools" },
+      { name: "Frameworks" },
+      { name: "UI" },
+      { name: "Technology" },
+    ],
+    rings: [
+      { name: "ADOPT", color: "#198754" },
+      { name: "USE",   color: "#0c6efd" },
+      { name: "HOLD",  color: "#ffc107" },
+      { name: "STOP",  color: "#dc3545" }
+    ],
+    print_layout: true,
+    links_in_new_tabs: true,
+    //zoomed_quadrant: 3,
+    entries: data.entries
+  });
+}).catch(function(err) {
+  console.log('Error loading config.json', err);
+});
+</script>
+
+<table>
+  <tr>
+    <td>
+
+      <h3>What is the SAP Development Tech Radar?</h3>
+
+      <p>
+        The SAP Development Tech Radar lists the SAP technologies and their usage recommendation (<em>ring assignment</em>). There are four rings with the following meanings:
+      </p>
+
+      <ul>
+        <li><strong>ADOPT</strong> &mdash; Technologies that are new and still in a stabilization and adoption phase. They might be a successor to a technology in ring USE, HOLD or STOP. In case of HOLD or STOP, these technologies should be assessed as soon as possible.</li>
+        <li><strong>USE</strong> &mdash; Technologies that are currently recommended. They are supported by SAP and are considered stable and with a defined roadmap. While a successor might be in ring ADOPT, they continue to be the recommended choice for the time being.</li>
+        <li><strong>HOLD</strong> &mdash; Technologies whose usage is only recommended when there is no alternative available or the usage is bound to a product or service with a defined EOL. Anything listed in HOLD should not be used for new products.</li>
+        <li><strong>STOP</strong> &mdash; Technologies that are considered obsolete, with a successor and with a defined EOL date. Products using this technology should either switch to a technology in the ring ADOPT or USE. Continuing using this technology comes with a high risk regarding support, features and product continuation. </li>
+      </ul>
+
+    </td>
+
+    <td>
+
+      <h3>What is the purpose?</h3>
+
+      <p>
+      The SAP development Tech Radar is a tool aiming to guide SAP developers making the right choice. SAP developers should easily be able to identify the right technology to use for new projects, as well as understanding which technologies currently used should be replaced in the future. 
+      Therefore, the tech radar aims to help SAP developers in positioning themselves and give them the tool needed to justify and defend their choice of technology.
+      </p>
+      <p>
+      The SAP development tech radar aims to provide a plattform for SAP developers to exchange on the community driven technology recommendation, to reflect and make make technology decisions transparent.
+      In a borader scope, it aims to continuously evolve the overall SAP developer technology. 
+      </p>
+
+      <p>
+        The information is not tailored to a specific version, e.g. NetWeaver 7.50 or S/4HANA 2023. The recommendations are generic and give guidance on what you should be used, independent of the current available technology stack. If the recommendation is to use RAP with OData v4 or CDS View Entity and your sytem does not support this, see this as an oppurtunity to drive change in your stack. Innovation from SAP will not stop, and the longer it takes you to be able to use the technology in the ring USE, the higher the risk to stay outdated: once you as a developer, but also your company. If your tech stack shows that you are mostly in the HOLD and STOP ring because USE implies an update, do the update.
+      </p>
+      <p>
+      Based on the <a href="https://www.thoughtworks.com/radar">pioneering work of ThoughtWorks</a>, the SAP development Tech Radar is based on the Zalando Tech Radar for visualization.
+      </p>
+
+    </td>
+
+  </tr>
+
+  <tr>
+    <td>
+      <h3>What is the SAP Development Tech Radar?</h3>
+  
+      <p>There are 4 quadrants: </p>
+
+      <ul>
+        <li><strong>UI</strong> &mdash; Technologies focused on the UI.</li>
+        <li><strong>Technology</strong> &mdash; Technologies that are enabler for other tasks and do not fit in the other quadrants.</li>
+        <li><strong>Tools</strong> &mdash; Tools for SAP developers.</li>
+        <li><strong>Framworks</strong> &mdash; Frameworks for developing SAP apps.</li>
+      </ul>
+      
+    </td>
+
+    <td>
+      <h3>How to maintain it?</h3>
+      
+      <p>
+      The Tech Radar is maintained by <em>Tobias Hofmann</em>. The idea is to continuously improve the tech radar by adding, removing and adjusting the listed technologies. The latest version of the tech radar will be published every quarter.
+      </p>
+      <p>
+      To ensure that the tech radar stays relevant, contributions from the SAP development community are welcomed. The contribution can span the task of adding a new technology, as well as adjusting the ring of a listed technology, or to adjust the information provided. Assignment of technologies to rings is the outcome of ring change proposals, which are discussed and voted on. 
+      </p>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

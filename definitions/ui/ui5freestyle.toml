@@ -1,0 +1,16 @@
+[page]
+title = "UI5 Freestyle"
+description = "Freestyle UI5 apps are apps that are developed using UI5. The design however can differ from the Fiori UX guidelines. Developers have full freedom regarding the app design. Fiori conventions, like using XML views, are not enforced."
+reason = "Freestyle UI5 apps might follow the Fiori UX guidelines, yet this is only encouraged. Freestyle apps bear the risk of future problems regarding maintenance and updates."
+support = "Current recommended technology for web apps"
+
+[links]
+"UI5 SDK" = "https://ui5.sap.com/"
+
+
+[config]
+label = "UI5 freestyle"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0
