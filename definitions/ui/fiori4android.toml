@@ -1,0 +1,19 @@
+[page]
+title = "SAP BTP SDK for Android"
+description = "The SAP BTP SDK for Android provides development tools for creating native Android mobile applications that use SAP Mobile Services. The SDK is based on the Java and Kotlin programming languages and it is built on top of Google's Android SDK.<br/><br/>This SDK focuses on application development with a device to back-end view instead of only client-side libraries. The tools in the SDK are specifically designed to help you quickly develop the framework for enterprise apps so that you can focus on implementing your business logic.<br/><br/>The SDK ships with an Android Studio plugin called the SAP BTP SDK Wizard for Android. This plugin simplifies the development of your Android projects by generating hundreds of lines of source code."
+reason = "Only for very specific use cases. Better to adopt MDK for serving also iOS and/or web. Or using UI5 directly."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_BTP_SDK_FOR_ANDROID?locale=en-US"
+Tutorials = "https://developers.sap.com/topics/sap-btp-sdk-for-android.html"
+"Fiori for Android Design Guidelines" = "https://experience.sap.com/fiori-design-android/"
+"SAP Fiori Mentor App" = "https://experience.sap.com/fiori-design-android/sap-fiori-mentor-app/"
+
+
+[config]
+label = "SAP BTP SDK for Android"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0
