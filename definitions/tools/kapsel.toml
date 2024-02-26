@@ -1,0 +1,16 @@
+[page]
+title = "Kapsel SDK"
+description = "The Hybrid SDK (Kapsel) is a set of SAP plugins for Apache Cordova.<br/><br/>The Hybrid SDK (Kapsel) leverages the Cordova application container and provides Kapsel plugins to make the Cordova container enterprise-grade, allowing it to more seamlessly integrate with SAP Mobile Platform Server and mobile service for development and operations. The Hybrid SDK (Kapsel) plugins provide capabilities like application life cycle management, implementation of a common logon manager and single sign-on (SSO), integration with SAP Mobile Platform Server-based push notifications and so on. Since the Hybrid SDK (Kapsel) is implemented without modifying the Cordova container, it is compatible with anything else you develop with Cordova, and allows you access to the latest Cordova features and bug fixes when you build your application."
+reason = "Legacy and not recommended. Switch to one of the native Fiori SDKs or better to MDK. SAP abandoned the hybrid app development path (as did other, see Cordova). Kapsel for hybrid apps is not recommended. If MDK is not an option, maybe PWA for UI5 apps can be used."
+support = "EOL 31.12.2025"
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/f1944845cb7b4cb886ebfbd5fa720c64/3.0.14/en-US/7c03a218700610149f94dd65a52e798f.html"
+"Kapsel App Development" = "https://help.sap.com/doc/d9c75eebcfa840c8a4aa4b0e6a8136de/3.0.14/en-US/7c05514870061014ae31b35a27134786.html"
+
+[config]
+label = "Kapsel"
+ring = "STOP"
+quadrant = "Tools"
+active = true
+moved = 0
