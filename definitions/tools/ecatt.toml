@@ -1,0 +1,16 @@
+[page]
+title = "Extended Computer Aided Test Tool (eCATT)"
+description = "Use extended Computer Aided Test Tool (eCATT) to create and execute functional tests for software. The primary aim is the automatic testing of SAP business processes. Each test generates a detailed log that documents the test process and results.<br/><br/>eCATT provides a environment for developing functional tests. Rather than create a single object that defines every aspect of a test, eCATT has four separate object types. The first three form the building blocks of a test, and the fourth combines the others into a complete test case. The following graphic summarizes the development process and how the different eCATT objects fit into that process."
+reason = "Recommended for testing Reports"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/c6663103e6ad47dcb8bb830d85137077/496d2fa0e0221ec6e10000000a42189b.html?locale=en-US"
+"Wikipedia (de)" = "https://de.wikipedia.org/wiki/ECATT"
+
+[config]
+label = "eCATT"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
