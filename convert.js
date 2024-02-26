@@ -10,13 +10,13 @@ import fs from 'node:fs'
 // config file for tech radar
 let configJson = createConfigJson();
 
-  /** 
-   * convert toml to JSON    
-   * @param {JSON} tomlAsJson 
-   * @param {string} filename 
+  /**
+   * convert toml to JSON
+   * @param {JSON} tomlAsJson
+   * @param {string} filename
    */
 function createCONFIG(tomlAsJson, filename) {
-  
+
   configJson.entries.push(json2config(tomlAsJson, filename));
   //console.log(configJson);
 
@@ -26,26 +26,25 @@ function createCONFIG(tomlAsJson, filename) {
 }
 
  /**
-   * convert toml to HTML    
-   * @param {JSON} tomlAsJson 
-   * @param {string} filename 
+   * convert toml to HTML
+   * @param {JSON} tomlAsJson
+   * @param {string} filename
    */
 function createHTML(tomlAsJson, filename) {
-    
+
   let htmltemplate = loadHtmlTemplate();
   writeHtmlToFile(tomlAsJson, htmltemplate, filename);
   //console.log(htmltemplate);
 }
 
 
-
   /**
    * Write HTML data to file
-   * 
-   * @param {string} htmltemplate 
+   *
+   * @param {string} htmltemplate
    */
   function writeHtmlToFile(tomlAsJson, htmltemplate, filename) {
-    
+
     if (htmltemplate !== -1) {
 
         const html = conv2html(tomlAsJson, htmltemplate);
@@ -57,13 +56,11 @@ function createHTML(tomlAsJson, filename) {
   }
 
 
-
-
   /**
    * Convert toml JSON to HTML
-   * @param {*} tomlAsJson 
-   * @param {*} htmltemplate 
-   * @returns 
+   * @param {*} tomlAsJson
+   * @param {*} htmltemplate
+   * @returns
    */
   function conv2html(tomlAsJson, htmltemplate) {
     //console.log(tomlAsJson);
@@ -85,7 +82,7 @@ function createHTML(tomlAsJson, filename) {
 
     // replace color based on ring
     htmltemplate = replacePlaceholder(htmltemplate, "%color%", getReplaceColor(tomlAsJson.config.ring));
-    
+
     return htmltemplate;
   }
 
@@ -101,7 +98,7 @@ function createHTML(tomlAsJson, filename) {
 
   /**
    * Replaces placeholder in htmltemplate with value
-   * 
+   *
    * @param {string} htmltemplate html template with placeholder
    * @param {string} placeholder e.g. %title%
    * @param {string} value value to be inserted
@@ -113,7 +110,7 @@ function createHTML(tomlAsJson, filename) {
 
   /**
    * Load HTML template file
-   * @returns 
+   * @returns
    */
   function loadHtmlTemplate() {
     try {
@@ -128,7 +125,6 @@ function createHTML(tomlAsJson, filename) {
   }
 
 
-
 /**
  * Create base config JSON
  * Automatically sets the date value to current Year and Month
@@ -138,7 +134,7 @@ function createConfigJson() {
   const releaseDraftVersion = "-draft";
   const releaseVersion = releaseDraftVersion;
   let configJson = {
-      "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}) + releaseVersion ,
+      "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}) + releaseVersion,
       "entries": []
   }
   return configJson;
@@ -176,10 +172,9 @@ function writeConfigJson2File(configJson) {
     }
 
 
-  
   /**
    * Retrieve the correct quadrant
-   * 
+   *
    * "Tools" - 0
    * "Frameworks" - 1
    * "UI" - 2
@@ -204,7 +199,7 @@ function writeConfigJson2File(configJson) {
 
   /**
    * Retrieve the correct quadrant
-   * 
+   *
    * "ADOPT" - 0
    * "USE" - 1
    * "HOLD" - 2
@@ -226,7 +221,6 @@ function writeConfigJson2File(configJson) {
             return 0;
     }
   }
-
 
 
 /**
