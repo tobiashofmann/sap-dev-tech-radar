@@ -5,9 +5,9 @@ reason = "Recommended framework for custom SAP BTP apps"
 support = "Supported"
 
 [links]
-"Documentation" = "https://cap.cloud.sap/docs/"
+Documentation = "https://cap.cloud.sap/docs/"
 "CAP Cookbook" = "https://cap.cloud.sap/docs/guides/"
-"GitHub" = "https://github.com/cap-js"
+GitHub = "https://github.com/cap-js"
 
 [config]
 label = "CAP JS"

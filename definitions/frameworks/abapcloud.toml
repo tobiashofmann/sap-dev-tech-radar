@@ -5,7 +5,7 @@ reason = "Recommended for new development in S/4HANA"
 support = "Supported"
 
 [links]
-"SCN" = "https://community.sap.com/t5/enterprise-resource-planning-blogs-by-sap/abap-cloud/ba-p/13557273"
+SCN = "https://community.sap.com/t5/enterprise-resource-planning-blogs-by-sap/abap-cloud/ba-p/13557273"
 "Extensibility Guide" = "https://www.sap.com/documents/2022/10/52e0cd9b-497e-0010-bca6-c68f7e60039b.html"
 
 [config]

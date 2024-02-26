@@ -5,9 +5,9 @@ reason = "CAP Node.JS is preferred over CAP Java"
 support = "Supported"
 
 [links]
-"Documentation" = "https://cap.cloud.sap/docs/"
+Documentation = "https://cap.cloud.sap/docs/"
 "CAP Cookbook" = "https://cap.cloud.sap/docs/guides/"
-"GitHub" = "https://github.com/cap-js"
+GitHub = "https://github.com/cap-js"
 
 [config]
 label = "CAP Java"

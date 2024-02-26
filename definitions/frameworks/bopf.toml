@@ -5,7 +5,7 @@ reason = "Success to BOPF is RAP"
 support = "Success is RAP"
 
 [links]
-"SCN" = "https://pages.community.sap.com/topics/abap/bopf"
+SCN = "https://pages.community.sap.com/topics/abap/bopf"
 
 [config]
 label = "BOPF"
