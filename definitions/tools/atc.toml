@@ -1,0 +1,17 @@
+[page]
+title = "ABAP Test Cockpit"
+description = "The ABAP Test Cockpit (ATC) is a tool for doing static and dynamic quality checking of ABAP code and associated repository objects."
+reason = "The way to for quality checking ABAP Code."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/ba879a6e2ea04d9bb94c7ccd7cdac446/62c41ad841554516bb06fb3620540e47.html?locale=en-US"
+"ABAP Keyword documentation" = "https://help.sap.com/doc/abapdocu_758_index_htm/7.58/en-US/index.htm?file=abenabap-testcockpit_guidl.htm"
+"DSAG Leitfaden (de)" = "https://www.dsag.de/wp-content/uploads/2021/12/dsag_leitfaden_atc_2020_06.pdf"
+
+[config]
+label = "ATC"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
