@@ -4,7 +4,7 @@
         "es6": true
     },
     "plugins": ["html", "toml"],
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "plugin:toml/standard"],
     "parserOptions": {
         "ecmaVersion": 2015,
         "sourceType": "module"
@@ -12,6 +12,11 @@
     "rules": {
         "no-redeclare": "off",
         "no-undef": "off",
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+
+        "comma-spacing": "error",
+        "no-multi-spaces": ["error", { "exceptions": { "TOMLKeyValue": true } }],
+        "no-multiple-empty-lines": "error",
+        "no-trailing-spaces": "error"
     }
 }

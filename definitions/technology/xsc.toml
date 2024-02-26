@@ -5,7 +5,7 @@ reason = "Successor is XSA, but apps should be developed either in ABAP/RAP or C
 support = "Successor is XSA"
 
 [links]
-"Documentation" = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abenxsc_glosry.htm"
+Documentation = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abenxsc_glosry.htm"
 
 [config]
 label = "XSC"

@@ -39,11 +39,10 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
       }
 
   });
-  
 
   /**
    * Retrieves the filename (name without suffix .toml)
-   * @param {string} filepath 
+   * @param {string} filepath
    * @returns filename as string
    */
   function getFilename(filepath) {
@@ -51,4 +50,3 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
         const filename = path.basename(filepath, extension);
         return filename;
   }
-

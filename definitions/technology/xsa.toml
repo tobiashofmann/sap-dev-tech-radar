@@ -6,7 +6,7 @@ support = "Supported"
 
 [links]
 "SAP Help" = "https://help.sap.com/docs/SAP_HANA_PLATFORM/4505d0bdaf4948449b7f7379d24d0f0d/df19a03dc07e4ba19db4e0006c1da429.html?locale=en-US"
-"Documentation" = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abenxsa_glosry.htm"
+Documentation = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/abenxsa_glosry.htm"
 
 [config]
 label = "XSA"
