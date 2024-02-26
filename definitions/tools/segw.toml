@@ -1,0 +1,16 @@
+[page]
+title = "SEGW"
+description = "SAP Gateway Service Builder is a design-time environment, which provides developers an easy-to-use set of tools for creating services. The Code-based OData Channel consumes it and supports developers throughout the development life cycle of a service.<br/><br/>Service Builder caters need of both experienced and less experienced developers for exposing the data for an easy consumption, using a variety of platforms, frameworks, and devices, in a single transaction. While experienced developers have maximum flexibility to define a new service and integrate their own source code, less experienced developers can reduce the time and effort involved in creating services by importing existing definition files and implementing content generators.<br/><br/>Service Builder provides an OData-compliant modeling environment for creation and maintenance of OData services without any need for programming. Service Builder visualizes all the development artifacts that developers need to create a service."
+reason = "OData sevices should be developed using RAP. SEGW is not in active development since a few years. Not recommended for OData v4 services."
+support = "Legacy."
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/saphelp_nw74/7.4.16/en-us/cd/dd22512c312314e10000000a44176d/content.htm?no_cache=true"
+"SAP Note 2485370" = "https://me.sap.com/notes/2485370/E"
+
+[config]
+label = "SEGW"
+ring = "STOP"
+quadrant = "Tools"
+active = true
+moved = 0
