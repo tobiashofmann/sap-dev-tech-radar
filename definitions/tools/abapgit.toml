@@ -1,16 +1,17 @@
 [page]
-title = "ABAPgit"
+title = "abapGit"
 description = "abapGit is a git client for ABAP developed in ABAP. It requires ABAP version 702 SP 8 or higher."
-reason = "ABAP development using git development process (workflow)"
+reason = "abapGit is a git client developed by the community for the community, it allows additional transparency during the development process like setting up DevOps principles with Continious Integration. Foster an inner source culture using open tooling, consume and share open source ABAP projects."
 support = "Supported by the community"
 
 [links]
-Homepage = "https://abapgit.org/"
-Documentation = "https://docs.abapgit.org/"
+Homepage = "https://abapgit.org"
+Documentation = "https://docs.abapgit.org"
 "Latest build" = "https://raw.githubusercontent.com/abapGit/build/main/zabapgit_standalone.prog.abap"
+"Open Source Projects" = "https://dotabap.org"
 
 [config]
-label = "ABAPgit"
+label = "abapGit"
 ring = "USE"
 quadrant = "Tools"
 active = true
