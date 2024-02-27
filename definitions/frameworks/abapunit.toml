@@ -1,6 +1,6 @@
 [page]
-title = "ABAP Unit"
-description = "ABAP Unit is a unit-testing framework that is integrated into the ABAP language.<br/><br/>In unit testing, a developer ensures that the correct behavior of the smallest testable units – such as the methods of classes – of his or her code is verifiable. Unit testing makes it easier to verify quality, to refactor code, to perform regression testing, and to implement according to the test-driven development model."
+title = "Acceptance Test Driven Development with ABAP Unit"
+description = "ABAP Unit is a unit-testing framework that is integrated into the ABAP language.<br/><br/>In unit testing, a developer ensures that the correct behavior of the smallest testable units – such as the methods of classes – of his or her code is verifiable. Unit testing makes it easier to verify quality, to refactor code and to perform regression testing. Its a way for developers to sleep more peacefully, because it reduces the risk of production bugs. It is also a safety net if manual tests don't happen or are performed in a very low quality / scope. Tests are also an essential way to communicate with the business and make sure the developer understands the requirement correctly: in acceptance test driven development the user defines one or more  acceptance test including inputs and expected outputs, which can be automated via ABAP Unit. If the initially 'red' accceptance test is 'green', then the users requirement is fulfilled. Because these acceptance tests are usually quite broad, the developer implements the requirement in various small steps (write unit test, implement logic, refactor) until the initially failed acceptance test passes.
 reason = "The way to do unit testing in ABAP"
 support = "Supported"
 
@@ -9,9 +9,10 @@ support = "Supported"
 "Unit Testing with ABAP Unit" = "https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/4e/c4a6e06e391014adc9fffe4e204223/content.htm"
 "ABAP Keyword documentation" = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/index.htm?file=abenabap_unit.htm"
 "Wikipedia (de)" = "https://de.wikipedia.org/wiki/ABAP_Unit"
+"Acceptance Test Driven Development" = "https://en.wikipedia.org/wiki/Acceptance_test-driven_development"
 
 [config]
-label = "ABAP Unit"
+label = "Acceptance Test Driven Development with ABAP Unit"
 ring = "USE"
 quadrant = "Frameworks"
 active = true
