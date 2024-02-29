@@ -1,7 +1,7 @@
 [page]
 title = "Web Components"
-description = "The SAP Fiori launchpad is a shell that hosts SAP Fiori apps, and provides the apps with services such as navigation, personalization, embedded support, and application configuration. The launchpad is the entry point to SAP Fiori apps on mobile and desktop devices. The launchpad displays a home page with tiles. Each tile represents a business application that the user can launch. Tiles can also display live status indicators, such as the number of open tasks. The launchpad is role-based. In other words, the user’s role determines which app tiles are shown."
-reason = "Central Point of Access to Fiori Apps"
+description = "Enterprise-flavored sugar on top of native APIs!<br/><br/>Based on web standards - just HTML!<br/>- Future-proof.<br/>- Implement the SAP Fiori design language.<br/>- Feature-rich.<br/>- Secure, accessible, themeable, i18n-ready."
+reason = "The new way for UI5 controls. Will substitute in the future the 'classic' ui5 controls."
 support = "Recommended"
 
 [links]
