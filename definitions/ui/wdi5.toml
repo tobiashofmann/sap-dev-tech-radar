@@ -1,0 +1,18 @@
+[page]
+title = "WDI5"
+description = "wdi5 is used for end-to-end tests of a UI5 web-application. wdi5 is a Webdriver.IO service, utilizing UI5’s test API. WebdriverIO (WDIO) is a hugely popular end-to-end testing framework. wdi5 uses a real browser and interacts with your app the same way a real user would."
+reason = "Used for end-to-end tests of a UI5 web-application. Part of the UI5 testing pyramid for System Tests. Recommended for UI5 tests."
+support = "Supported by community. Commercial option available."
+
+[links]
+Documentation = "https://ui5-community.github.io/wdi5/#/"
+"Git Hub" = "https://github.com/ui5-community/wdi5"
+"Commercial Support" = "https://github.com/ui5-community/wdi5/blob/main/SUPPORT.md#commercial-support"
+"UI5 Testing" = "https://ui5.sap.com/#/topic/7cdee404cac441888539ed7bfe076e57"
+
+[config]
+label = "WDI5"
+ring = "ADOPT"
+quadrant = "UI"
+active = true
+moved = 0
