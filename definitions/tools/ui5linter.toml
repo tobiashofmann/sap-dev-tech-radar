@@ -1,0 +1,16 @@
+[page]
+title = "UI5 linter"
+description = "UI5 linter is a static code analysis tool for UI5 projects. It checks JavaScript, XML, JSON, and other files in your project and reports the findings. It lists problematic code, which is not following the UI5 best practices."
+reason = "New tool. First version recently released.<br><br>From the announcement blog: While the initial version of UI5 linter already provides good value, it is not yet covering all aspects and not all best practices for UI5 2.x."
+support = "Supported"
+
+[links]
+Blog = "https://community.sap.com/t5/technology-blogs-by-sap/introducing-ui5-linter/ba-p/13633898"
+GitHub = "https://github.com/SAP/ui5-linter"
+
+[config]
+label = "UI5 linter"
+ring = "ADOPT"
+quadrant = "Tools"
+active = true
+moved = 0
