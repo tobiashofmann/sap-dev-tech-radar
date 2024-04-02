@@ -1,8 +1,8 @@
 [page]
 title = "Clean ABAP"
-description = "ABAP Unit is a unit-testing framework that is integrated into the ABAP language.<br/><br/>In unit testing, a developer ensures that the correct behavior of the smallest testable units – such as the methods of classes – of his or her code is verifiable. Unit testing makes it easier to verify quality, to refactor code, to perform regression testing, and to implement according to the test-driven development model."
-reason = "The way to do unit testing in ABAP"
-support = "Supported"
+description = "Programming languages enable us to say the same thing in different ways. While all of them may be correct, some may be more efficient, easier to understand, and more robust than others."
+reason = "Clean code guidelines for ABAP"
+support = "No real support. Best practice for writing ABAP code."
 
 [links]
 "Homepage" = "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
