@@ -1,15 +1,16 @@
 [page]
-title = "SAPGui"
-description = "Proprietary client from SAP for connecting to an SAP system and run e.g. transactions or reports."
-reason = "For development: use ADT first. Adopt reports to Fiori for end users. When reports: use Web Gui mit Personas"
+title = "SAP GUI"
+description = "Proprietary client from SAP for connecting to an SAP system and run e.g. transactions or reports. This here refers to SAP GUI for Windows and SAP GUI for Java.<br><br>SAP GUI is SAPs universal UI technology for working with SAP systems, such as SAP ERP or SAP Business Suite.<br><br>SAP GUI is used to display dynpro-based applications created in the SAP NetWeaver Application Server ABAP"
+reason = "SAP GUI is used to display dynpro-based applications. These are deprecated. Applications should be using different technology and adhere to the Fiori UX.<br><br>For development: use ADT first. Adopt reports to Fiori for end users. When reports: use Web Gui mit Personas<br><br>Application should be at least accessible by a web browser. Accessing an SAP S/4HANA Public Cloud system via SAP GUI is not possible."
 support = "Supported for Windows. For MAC: constant pain."
 
 [links]
-"SAP Help" = "https://help.sap.com/docs/sap_gui_for_windows?locale=en-US"
+"SAP Help" = "https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/9a/d405e746ef43288755cb80a14be542/content.htm"
+"SAP GUI for Windows" = "https://help.sap.com/docs/sap_gui_for_windows?locale=en-US"
 Wikipedia = "https://en.wikipedia.org/wiki/SAP_Graphical_User_Interface"
 
 [config]
-label = "SAPGui"
+label = "SAP GUI"
 ring = "STOP"
 quadrant = "Tools"
 active = true

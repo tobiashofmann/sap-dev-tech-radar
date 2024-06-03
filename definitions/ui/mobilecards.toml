@@ -1,0 +1,20 @@
+[page]
+title = "Mobile Cards"
+description = "SAP Mobile Cards enables end users to mobilize Fiori app web content without installing a custom mobile application.<br><br>It packages information containerized micro apps, allowing end users to access and interact with that information in a responsive, native manner on their mobile devices.<br><br>Depending on the OData service, it allows to easily create offline capabable micro apps that can be workflow enabled."
+reason = "Failed to gain enough usage adoption.<br><br>Mobile Cards is designed for a limited usage scope where the cards can actually perform well."
+support = "Supported"
+
+[links]
+Documentation = "https://help.sap.com/doc/f53c64b93e5140918d676b927a3cd65b/Cloud/en-US/docs-en/guides/getting-started/mck/mck-overview.html"
+"Mobile Cards Overview" = "https://help.sap.com/docs/CP/70ac991a4f734773b1892a8d0d45eabc/6c3834f4af454a21babc4e0600defe06.html"
+"Mobile Cards Templates" = "https://github.com/SAP-samples/mobile-cards-templates"
+"Discovery Center Mission" = "https://discovery-center.cloud.sap/missiondetail/3177/"
+"Apple Store" = "https://apps.apple.com/us/app/sap-mobile-cards/id1168110623?platform=iphone"
+"Play Store" = "https://play.google.com/store/apps/details?id=com.sap.content2go"
+
+[config]
+label = "Mobile Cards"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0

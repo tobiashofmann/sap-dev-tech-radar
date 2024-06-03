@@ -1,0 +1,18 @@
+[page]
+title = "SOAP"
+description = "Simple Object Access Protocol (SOAP), provides the definition of the lightweight protocol for XML based information, exchanged between parties in a distributed environment. SOAP version 1.2 supports major features, required for communication with other Web service vendors."
+reason = "SOAP failed to deliver on the promises and expectations. It is still widely used, also by S/4HANA public cloud.<br/><br/>As it was once regarded standard, many tools are available to develop apps that use SOAP. For new developments, it is recommended to use OData (v2/v4) as API. When possible, SOAP APIs should be replaced with RAP services."
+support = "Supported."
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/48/52347a08e672d0e10000000a42189c/content.htm"
+"SAP Business Accelerator Hub" = "https://api.sap.com/content-type/API/apis/SOAP"
+Wikipedia = "https://en.wikipedia.org/wiki/SOAP"
+"SOAP Version 1.2 W3C recommendation" = "https://www.w3.org/TR/soap12/"
+
+[config]
+label = "SOAP"
+ring = "HOLD"
+quadrant = "Technology"
+active = true
+moved = 0

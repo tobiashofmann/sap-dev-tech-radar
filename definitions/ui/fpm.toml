@@ -1,0 +1,17 @@
+[page]
+title = "Flexible Programming Model"
+description = "The flexible programming model allows eliminating the need for a rigid choice between SAP Fiori elements and freestyle SAPUI5 development.<br><br>While you have the freedom to use any SAPUI5 coding or controls in extension points, you can also make use of building blocks and controller extensions to enhance your application. You can even create a custom app that runs on the SAP Fiori elements framework, where all pages are treated like custom pages.<br><br>Available extension points can be used to insert own coding. Complex UI controls can be easily realized by using building blocks (macros) that follow the Fiori design guidelines, e.g. for tables, fields or value helps."
+reason = "Flexible Programming Model (FPM) is the recommended approach to adjust Fiori Elements (FE) applications. Best way to combine UI5 freestyle with FE. Allows to use the smart controls approach also for FE and OData v4.<br><br>In ring ADOPT, as FPM needs FE and OData v4."
+support = "Supported."
+
+[links]
+"Flexible Programming Model Explorer" = "https://ui5.sap.com/test-resources/sap/fe/core/fpmExplorer/index.html#/overview/introduction"
+"SAP Learning" = "https://learning.sap.com/learning-journeys/developing-an-sap-fiori-elements-app-based-on-a-cap-odata-v4-service/getting-an-overview-of-the-flexible-programming-model_fc9ea1ee-20a8-4add-b3f9-c8c8e3701ae0"
+Blog = "https://community.sap.com/t5/technology-blogs-by-sap/leverage-the-flexible-programming-model-to-extend-your-sap-fiori-elements/ba-p/13502121"
+
+[config]
+label = "FPM"
+ring = "ADOPT"
+quadrant = "UI"
+active = true
+moved = 0

@@ -5,3 +5,4 @@ Here is the list of people that contributed to the SAP development tech radar. T
 # 2024.06
 
 - Tobias Hofmann
+- Lars Hvam

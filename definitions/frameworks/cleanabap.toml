@@ -1,0 +1,16 @@
+[page]
+title = "Clean ABAP"
+description = "Programming languages enable us to say the same thing in different ways. While all of them may be correct, some may be more efficient, easier to understand, and more robust than others."
+reason = "Clean code guidelines for ABAP"
+support = "No real support. Best practice for writing ABAP code."
+
+[links]
+"Homepage" = "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
+"Blog: ABAP Tools for Clean ABAP" = "https://community.sap.com/t5/technology-blogs-by-sap/abap-tools-for-clean-abap/ba-p/13577378"
+
+[config]
+label = "Clean ABAP"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

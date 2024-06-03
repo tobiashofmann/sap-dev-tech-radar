@@ -1,0 +1,20 @@
+[page]
+title = "SAP BTP SDK for iOS"
+description = "The SAP BTP SDK for iOS is based on the Apple Swift programming language, which emphasizes developer efficiency and ease of use when developing apps in the Xcode IDE. The SAP BTP SDK for iOS supplements the Swift SDK, and does not replace it. Developers can use components of each, depending on the needs of a particular application.<br/><br/>The SAP BTP SDK for iOS includes well-defined layers (SDK frameworks, components, and platform services) that greatly simplify development of enterprise-ready mobile native iOS apps that take full advantage of iPhone and iPad features (Touch ID, location services and notifications, and so on). It is tightly integrated with SAP Mobile Services."
+reason = "Only for very specific use cases. Better to adopt MDK for serving also Android and/or web. Or using UI5 directly."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/btp-sdk-ios/sap-btp-sdk-for-ios/about-sap-btp-sdk-for-ios?locale=en-US"
+Tutorials = "https://developers.sap.com/topics/sap-btp-sdk-for-ios.html"
+"Fiori for iOS Design Guidelines" = "https://experience.sap.com/fiori-design-ios/"
+"SAP Fiori Mentor App" = "https://experience.sap.com/fiori-design-ios/article/sap-fiori-mentor-app/"
+"Apple Developer" = "https://developer.apple.com/sap/"
+
+
+[config]
+label = "SAP BTP SDK for iOS"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0

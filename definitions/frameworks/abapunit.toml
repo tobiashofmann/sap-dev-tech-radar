@@ -1,0 +1,18 @@
+[page]
+title = "ABAP Unit"
+description = "ABAP Unit is a unit-testing framework that is integrated into the ABAP language.<br/><br/>In unit testing, a developer ensures that the correct behavior of the smallest testable units – such as the methods of classes – of his or her code is verifiable. Unit testing makes it easier to verify quality, to refactor code, to perform regression testing, and to implement according to the test-driven development model."
+reason = "The way to do unit testing in ABAP"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/4e/c18be06e391014adc9fffe4e204223/content.htm"
+"Unit Testing with ABAP Unit" = "https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/4e/c4a6e06e391014adc9fffe4e204223/content.htm"
+"ABAP Keyword documentation" = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/index.htm?file=abenabap_unit.htm"
+"Wikipedia (de)" = "https://de.wikipedia.org/wiki/ABAP_Unit"
+
+[config]
+label = "ABAP Unit"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

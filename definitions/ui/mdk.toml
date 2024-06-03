@@ -1,0 +1,19 @@
+[page]
+title = "Mobile Development Kit (MDK)"
+description = "SAP Mobile Development Kit enables developers and technical business users to build multi-channel applications. It allows you to build your application once, in an integrated development environment (SAP Business Application Studio/ VSCode extension) and run it natively on Mobile (Android & iOS) and as a web application (online) in the browser."
+reason = "Recommended to build multi platform apps."
+support = "Supported"
+
+[links]
+Documentation = "https://help.sap.com/doc/f53c64b93e5140918d676b927a3cd65b/Cloud/en-US/docs-en/guides/getting-started/mdk/overview.html"
+"MDK API Documentation" = "https://help.sap.com/doc/3642933ef2e1478fb1578ef2acba4ae9/Latest/en-US/index.html"
+Tutorials = "https://developers.sap.com/topics/mobile-development-kit.html"
+"GitHub Samples" = "https://github.com/SAP-samples/cloud-mdk-tutorial-samples"
+"SAP Learning" = "https://help.sap.com/learning-journeys/8a4db22f842e4f37874eae5ce9d2d4b1"
+
+[config]
+label = "MDK"
+ring = "USE"
+quadrant = "UI"
+active = true
+moved = 0

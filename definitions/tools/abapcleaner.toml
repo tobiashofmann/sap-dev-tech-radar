@@ -1,0 +1,15 @@
+[page]
+title = "ABAP Cleaner"
+description = "ABAP cleaner is a configurable tool with the ambition to automate whatever can be automated with respect to ABAP code style.<br/><br/>With ABAP cleaner, you can clean any amount of code from a single statement to an entire code document with one keystroke. ABAP cleaner then applies 70+ different cleanup rules to your code section, cleaning approx. 1 MB of code per second."
+reason = "Useful tool for clean code. Align ABAP coding with best practices. Use it together with ADT."
+support = "Supported by the community"
+
+[links]
+Homepage = "https://github.com/SAP/abap-cleaner"
+
+[config]
+label = "ABAP Cleaner"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
