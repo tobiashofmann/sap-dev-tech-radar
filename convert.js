@@ -133,8 +133,14 @@ function createHTML(tomlAsJson, filename) {
 function createConfigJson() {
   const releaseDraftVersion = "-draft";
   const releaseVersion = releaseDraftVersion;
+  /*
   let configJson = {
       "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}) + releaseVersion,
+      "entries": []
+  }
+  */
+  let configJson = {
+      "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}),
       "entries": []
   }
   return configJson;
