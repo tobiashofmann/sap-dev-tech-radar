@@ -25,8 +25,9 @@ The listed technology is for SAP developers and composes mainly technology from 
 **Important:**
 
 - The rings are not an order. They do not mandate you to do something. USE does _not_ mean that this technology _must_ be used. As do the others not mandate any immediate actions.
-- Technologies in the same quadrant and ring to not compete. The SDTR is not a product evaluation nor buyer guide.
-- The radar is version independent. It shows that at the publishing time current recommendation. The technology version (e.g. NW 7.4 or S/4HANA 2023) in use does not matter for the correct usage. 
+- Technologies in the same quadrant and ring do not compete. The SDTR is not a product evaluation nor buyer guide.
+- The radar is version independent. It shows that at the publishing time current recommendation. The technology version (e.g. NW 7.4 or S/4HANA 2023) in use does not matter for the correct usage.
+- If you want to use the SDTR in your organization: use it as input and template and create your own, company specific technology radar. The SDTR does not include 3rd party software that needs to licensed seperately. If your organization uses e.g. a security scanner, testing tool and a low code framework from a partner, this should be added to any company specific tech radar.
 
 The SDTR lists technologies and their positioning in the radar. It represents an overview of the current SAP technologies. The positioning of a technology in a ring does not mean that a company is having a good or bad technology stack. Each ring comes with the task to evaluate the currently used technology and the plans and roadmaps in effect for the developers and companies.
 
