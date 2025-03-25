@@ -1,0 +1,20 @@
+[page]
+title = "BTP, ABAP environment"
+description = "SAP BTP, ABAP environment (aka Steampunk) is the platform as a service for ABAP developers. Provided and managed by SAP, it’s a cloud-optimized ABAP platform based on SAP HANA Cloud that serves as a development and runtime environment for cloud apps. The common usage scenarios are loosely-coupled, side-by-side extensions and applications and multitanancy SaaS solutions."
+reason = "Part of the cloud and clean core strategy of SAP. Available since +/-2019 adoption is growing steadily. For a positioning in ring USE a broad use accross ABAP landscapes at customers needs to be shown and proven.<br>Recommended for ABAP based side-by-side extensions:<br>- Loosely-coupled, side-by-side extensions and applications<br>- Multitenancy SaaS solutions."
+support = "Supported. SAP is investing and providing continously new features to BTP, ABAP environment."
+
+[links]
+"Product Page" = "https://www.sap.com/products/technology-platform/abap.html"
+"PDF: SAP BTP ABAP Environment" = "https://www.sap.com/germany/products/technology-platform/abap.html?pdf-asset=54b8017d-e17e-0010-bca6-c68f7e60039b&page=1"
+"Discovery Center" = "https://discovery-center.cloud.sap/serviceCatalog/abap-environment?region=all"
+"SAP Help" = "https://help.sap.com/docs/sap-btp-abap-environment?locale=en-US"
+"SAP Learning" = "https://learning.sap.com/products/business-technology-platform/development/abap"
+Tutorials = "https://developers.sap.com/tutorial-navigator.html?tag=software-product%3Atechnology-platform%2Fsap-business-technology-platform%2Fsap-btp-abap-environment"
+
+[config]
+label = "Steampunk"
+ring = "ADOPT"
+quadrant = "Technology"
+active = true
+moved = 0
