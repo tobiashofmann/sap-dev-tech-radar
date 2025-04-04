@@ -1,0 +1,18 @@
+[page]
+title = "JCo Standalone"
+description = "The SAP Java Connector (JCo) is a library that allows Java applications to invoke ABAP Function Modules (RFM, RFC). SAP offers JCo as a standalone download library which can be used by custom applications. The standalone version follows a different support strategy than the JCo provided by SAP BTP."
+reason = "The usage scenario of JCo is to call ABAP functions from a Java application. This is a legacy scenario. Applications should communicate with an ABAP system via an HTTP API; recommended is OData v4.<br>The standalone version of JCo is currently only supported until 31. December 2027, in case SAP is not providing a successor until then. This support strategy is a high risk for every application depending on the standalone JCo.<br>In general, the usage of JCo should be considered a bad practice, as it allows to call any RFM in ABAP. This contradicts the clean core and stable API approach SAP customers should adopt."
+support = "Current End of Support is 31.12.2027"
+
+[links]
+"SAP Java Connector" = "https://support.sap.com/en/product/connectors/jco.html"
+"SAP Connectors" = "https://support.sap.com/en/product/connectors.html"
+"SAP Note 2786882 - Support Strategy" = "https://me.sap.com/notes/2786882"
+"SAP Help: Invoke ABAP RFM from BTP" = "https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/invoking-abap-function-modules-via-rfc?locale=en-US"
+
+[config]
+label = "JCo"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0
