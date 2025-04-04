@@ -1,0 +1,18 @@
+[page]
+title = "Table Maintenance"
+description = "SAP offers a framework to create, change and delete customizing data. Maintenance dialogs are used to maintain customizing and customer data in one or more views and tables. The dialogs can be adjusted flexibly to customer requirements by using variants, add own modules or adding enhancement at predefined events."
+reason = "Maintaining customization data using transaction SM30 is the de-facto standard in SAP environments. Since S/4HANA 2023 the the Business Configuration Maintenance Object and App offers a Fiori alternative that can be used to substitute SM30 for on-premise and cloud deployments. This replacement comes with an ADT wizard to create the necessary RAP objects and Fiori app."
+support = "Supported"
+
+[links]
+"SAP Help Generate Table Maintenance Dialog" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/521cd184dd2f491a9a4179edb66951c3/4dc29d465e583a9de10000000a42189b.html?locale=en-US"
+"SAP Help Extended Table Maintenance" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/521cd184dd2f491a9a4179edb66951c3/4ddf6fc9231c6634e10000000a42189b.html?locale=en-US"
+"SAP Help BCMO ADT Wizard" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/047e01c3bcdd4303a60b61364bd5b31d.html?locale=en-US"
+"Fiori App Custom Business Configuration" = "https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/#/detail/Apps('F4579')/S29OP"
+
+[config]
+label = "SM30"
+ring = "STOP"
+quadrant = "Frameworks"
+active = true
+moved = 0
