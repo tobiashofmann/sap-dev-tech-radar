@@ -1,0 +1,18 @@
+[page]
+title = "SAP Business Client"
+description = "SAP Business Client is a single entry point to different SAP business applications and technologies. It severs as a shell that gives access to different SAP UI technologies: WDA/FPM, SAP GUI, BSP, Fiori. A HTML and Client Version is available."
+reason = "Successor is the Fiori Launchpad. While maintained, SAP Business Client is not the preferred entry solution to SAP products, like the FLP or Work Zone. The business cilent application is available for Windows only. It is a bridge technology for SAP customers coming from SAP Portal, Web Dynpro and SAP GUI that are adopting Fiori but still depend heavily on their custom apps."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/9737050ef01843f19572591b42128f1b/03ecbafb844b450a9314a5683b75ed80.html?locale=en-US"
+"SAP Note 3220574" = "https://me.sap.com/notes/3220574"
+"SCN" = "https://pages.community.sap.com/topics/business-client"
+"FAQ" = "https://pages.community.sap.com/topics/business-client/faq"
+
+[config]
+label = "NWBC"
+ring = "STOP"
+quadrant = "UI"
+active = true
+moved = 0

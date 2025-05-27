@@ -1,0 +1,17 @@
+[page]
+title = "Business Configuration Maintenance"
+description = "SAP provides a custom business configuration app as an entry point to the customer generated business configuration maintenance objects. Custom Business Configurations (CUBCO) are created using RAP and the data is maintained using a Fiori app. The app offers Fiori features like draft handling or uploading data from Excel."
+reason = "Successor to table maintenance via SM30. Since S/4HANA 2023 the Business Configuration Maintenance Object and App offer a Fiori-enabled approach that can be used to substitute SM30 for on-premise and cloud deployments. Business Configuration comes with an ADT wizard to create the necessary RAP objects and Fiori app."
+support = "Supported"
+
+[links]
+"SAP Help BCMO ADT Wizard" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/047e01c3bcdd4303a60b61364bd5b31d.html?locale=en-US"
+"Create a BCMA with RAP" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/fa420dd6272b41858a7b31f8dc5090f8.html?locale=en-US"
+"Fiori App Custom Business Configuration" = "https://fioriappslibrary.hana.ondemand.com/sap/fix/externalViewer/#/detail/Apps('F4579')/S29OP"
+
+[config]
+label = "CUBCO"
+ring = "ADOPT"
+quadrant = "Frameworks"
+active = true
+moved = 0

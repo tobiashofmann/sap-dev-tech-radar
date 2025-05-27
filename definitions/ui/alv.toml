@@ -1,0 +1,18 @@
+[page]
+title = "SAP List Viewer (ALV)"
+description = "The SAP List Viewer (ALV) allows to easily create reports that display data in a list, offering features like sorting, filtering, aggregation, layout. ALV enables application developers to quickly implement the display of structured datasets as:<br>- Simple and two-dimensional tables<br>- Hierarchical-sequential lists<br>- Tree structures.<br>For non-object-oriented programming environment the legacy ALV Grid Control is available."
+reason = "The number of reports using ALV is extremely high at customers. As a successor the Fiori List Report floorplan can be seen. At the same time, reports using ALV are easy and fast to create, faster and easier as currently with Fiori.<br>An automated migration from ALV to Fiori is not available. In case SAP releases a migration tool or a ALV to Fiori wizard, the positioning will change to STOP."
+support = "ALV Grid Control is succeeded by SAP List Viewer. Successor of the List Viewer is Fiori UX"
+
+[links]
+"SAP List Viewer (ALV)" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b1c834a22d05483b8a75710743b5ff26/4ec38f8788d22b90e10000000a42189d.html?locale=en-US"
+"ALV Grid Control" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/70396d7dec4c4f19b9ca3b2e47559d12/4eb7a512999e0134e10000000a42189b.html?locale=en-US"
+"International Editable SALV Day 2025" = "https://community.sap.com/t5/technology-blogs-by-members/international-editable-salv-day-2025/ba-p/14011230"
+"Wikipedia SAP List Viewer (DE)" = "https://de.wikipedia.org/wiki/SAP_List_Viewer"
+
+[config]
+label = "ALV"
+ring = "HOLD"
+quadrant = "UI"
+active = true
+moved = 0

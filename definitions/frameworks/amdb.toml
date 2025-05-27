@@ -1,0 +1,18 @@
+[page]
+title = "AMDP - ABAP Managed Database Procedures"
+description = "ABAP Managed Database Procedures (AMDP) is one of the recommended patterns for use in ABAP code optimization within the context of ABAP development on SAP HANA. It allows to write HANA procedures in ABAP. It is one of the approaches to achieve code pushdown to the HANA database. AMDP only supports HANA as a database.<br>Use case is when large amounts of data between the database and the application server can be swapped out (processing on the HANA DB)."
+reason = "Recommended for ABAP code optimization with HANA. AMDB is not recommended to be used if the same task can be achieved using OpenSQL or CDS.<br>AMDP should be used only if it enables database-specific functions to be accessed that do not exist in Open SQL or if large process flows or analyses that incur repeated transports of large amounts of data between the database and the application server can be swapped out."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/abap-cloud/abap-development-tools-user-guide/abap-managed-database-procedures-amdp"
+"ABAP Docu" = "https://help.sap.com/doc/abapdocu_750_index_htm/7.50/en-US/abenamdp.htm"
+"Brandeis Consulting - AMDB Coding Guidelines" = "https://www.brandeis.de/en/blog/amdp-coding-guidelines-en"
+"Brandeis Consulting - Das AMDB Framework (DE)" = "https://www.brandeis.de/blog/das-amdp-framework"
+
+[config]
+label = "AMDP"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
