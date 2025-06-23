@@ -6,7 +6,7 @@ support = "Supported"
 
 [links]
 Blog = "https://community.sap.com/t5/technology-blogs-by-sap/introducing-ui5-linter/ba-p/13633898"
-GitHub = "https://github.com/SAP/ui5-linter"
+GitHub = "https://github.com/UI5/linter"
 
 [config]
 label = "UI5 linter"
