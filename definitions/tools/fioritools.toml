@@ -1,0 +1,19 @@
+[page]
+title = "Fiori Tools"
+description = "The SAP Fiori tools provide functionalities to simplify the process of writing or modifying SAP Fiori Elements apps. They are a set of several tools that efficiently support the developer during the app development process: Application Wizard, Application Modeler, Guided Development, Service Modeler, XML Annotation Language Server, XML Toolkit. The Fiori tools are available for BAS and VS Code."
+reason = "The recommended tooling for Fiori Elements apps. Available for both BAS and VS Code, the tooling is being made (in progress) as open source. For developers working with Fiori Elements apps in the frontend, the tools offer valuable help at all development phases, and specially when working with annotations."
+support = "Supported"
+
+[links]
+Documentation = "https://help.sap.com/docs/SAP_FIORI_tools"
+GitHub = "https://github.com/SAP/open-ux-tools"
+Capabilities = "https://help.sap.com/docs/SAP_FIORI_tools/17d50220bcd848aa854c9c182d65b699/f540ae1961914bf783cd266f3c0d8530.html"
+"VS Code Marketplace" = "https://marketplace.visualstudio.com/items?itemName=SAPSE.sap-ux-fiori-tools-extension-pack"
+SCN = "https://pages.community.sap.com/topics/fiori-tools"
+
+[config]
+label = "Fiori tools"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
