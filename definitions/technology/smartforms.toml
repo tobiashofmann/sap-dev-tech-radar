@@ -1,0 +1,19 @@
+[page]
+title = "Smart Forms"
+description = "Smart Forms are used to create and maintain forms in SAP Systems. Several output channels like printer or HTML can be used. SAP Smart Forms offers tools that allow to create, maintain and adopt forms. The architecture of SAP Smart Forms separates application data retrieval from the form definition. "
+reason = "Not recommended. Smart Forms successor to SAPscript and is succeeded by Adobe Forms, introducced in 2005. New forms should be created using Adobe Forms."
+support = "Supported."
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/e0ef07e1f76b4370b1baa502eace5ece/4e50b68d95e14dd2e10000000a42189b.html?locale=en-US"
+"SAP Help 4.7" = "https://help.sap.com/saphelp_470/helpdata/en/a5/de6838abce021ae10000009b38f842/frameset.htm"
+
+
+[config]
+label = "Smart Forms"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0
+
+
