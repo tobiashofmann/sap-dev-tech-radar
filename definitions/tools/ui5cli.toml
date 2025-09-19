@@ -1,0 +1,16 @@
+[page]
+title = "UI5 CLI"
+description = "An open and modular toolchain to develop state-of-the-art applications based on the UI5 framework."
+reason = "Tooling for UI5 apps. For Fiori apps the usage of UX tooling / wizards for BAS and VS Code is recommended."
+support = "Supported"
+
+[links]
+Documentation = "https://ui5.github.io/cli/stable/"
+GitHub = "https://github.com/UI5/cli"
+
+[config]
+label = "UI5 CLI"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
