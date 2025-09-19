@@ -1,0 +1,17 @@
+[page]
+title = "NAST"
+description = "NAST Output Management is the standard solution for output management for Business Suite applications. NAST supports several channels like Print, FAX, E-Mail, EDI or ALE. It is used widely by modules like SD or MM. Uses a table driven architecture and offers customization options, while integration other technologies like Smart Forms. NAST stands for Nachrichtensteuerung."
+reason = "Successor for new S/4HANA applications is available. NAST is available and supported in S/4HANA. No switch to S/4HANA Output Management mandatory for existing applications."
+support = "Use only for existing Business Suite applications that already used NAST. For new S/4HANA application, S/4HANA Output Management is recommended."
+
+[links]
+"SCN Blog Post Output Management vs NAST" = "https://community.sap.com/t5/supply-chain-management-blog-posts-by-sap/s-4hana-output-management-vs-nast-when-to-choose-which/ba-p/13889623"
+"SCN Blog Post Storing Output Documents in SAP S/4HANA" = "https://community.sap.com/t5/technology-blog-posts-by-sap/storing-output-documents-in-sap-s-4hana/ba-p/13552587"
+"SCN Blog Post Determining the Right Tool: NAST vs. BRF+ for SAP Output Management" = "https://community.sap.com/t5/technology-blog-posts-by-sap/determining-the-right-tool-nast-vs-brf-for-sap-output-management/ba-p/13734107"
+
+[config]
+label = "NAST"
+ring = "HOLD"
+quadrant = "Frameworks"
+active = true
+moved = 0
