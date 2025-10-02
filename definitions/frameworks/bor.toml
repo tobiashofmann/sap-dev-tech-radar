@@ -1,0 +1,18 @@
+[page]
+title = "BOR"
+description = "The Business Object Repository (BOR) contains object types that are created using the Business Object Builder. Events is a object type component for an object type. Events are status changes that are published across the system and that can be used in a workflow."
+reason = "Legacy framework. Originally made for SAP Workflow. Successor is RAP Events."
+support = "Not available in SAP S/4HANA Cloud public or SAP BTP ABAP Environment."
+
+[links]
+"SAP Help Business Workflow" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/4400bdc8dd4648a5a2e5c1c8e05198d7/4f41effddd89535be10000000a421937.html?locale=en-US"
+"SAP Help BOR" = "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/a602ff71a47c441bb3000504ec938fea/4f344cbf0a7b5542e10000000a421937.html?locale=en-US"
+"SAP Help RAP Business Events" = "https://help.sap.com/docs/abap-cloud/abap-rap/business-events?locale=en-US"
+"SAP Note 3478579" = "https://me.sap.com/notes/3478579"
+
+[config]
+label = "BOR"
+ring = "HOLD"
+quadrant = "Frameworks"
+active = true
+moved = 0
