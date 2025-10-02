@@ -1,11 +1,12 @@
 [page]
 title = "CRM-WebClient-UI"
 description = "The CRM WebClient UI is based on the WebClient UI framework. It is designed for business users, and presents a role-based workspace with a navigation area from which you can start different functions, applications, and processes."
-reason = "Currently only usage is for Solution Manager"
-support = "EOL with SolMan in 2027/30. Successor is Fiori UX"
+reason = "Currently only usage is for standard SAP apps (CRM, Solution Manager). It is not available in the public cloud for custom extensions."
+support = "Only available in S/4HANA on premise and private cloud. Successor is Fiori UX."
 
 [links]
 "SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_700/129f88c06c531014aa4eb568cafe09ea/69f5bc3d42f46c33e10000000a11405a.html?locale=en"
+"SAP Note 3591718" = "https://me.sap.com/notes/3591718"
 
 [config]
 label = "CRM-WebClient-UI"
