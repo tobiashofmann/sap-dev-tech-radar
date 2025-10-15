@@ -11,7 +11,7 @@ support = "Use only for existing Business Suite applications that already used N
 
 [config]
 label = "NAST"
-ring = "HOLD"
+ring = "USE"
 quadrant = "Frameworks"
 active = true
 moved = 0
