@@ -69,6 +69,7 @@ function createHTML(tomlAsJson, filename) {
     htmltemplate = replacePlaceholder(htmltemplate, "%title%", tomlAsJson.page.title);
     htmltemplate = replacePlaceholder(htmltemplate, "%description%", tomlAsJson.page.description);
     htmltemplate = replacePlaceholder(htmltemplate, "%reason%", tomlAsJson.page.reason);
+    htmltemplate = replacePlaceholder(htmltemplate, "%support%", tomlAsJson.page.support);
     htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", tomlAsJson.config.quadrant);
     htmltemplate = replacePlaceholder(htmltemplate, "%ring%", tomlAsJson.config.ring);
 
