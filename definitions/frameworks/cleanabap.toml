@@ -5,7 +5,7 @@ reason = "Clean code guidelines for ABAP"
 support = "No real support. Best practice for writing ABAP code."
 
 [links]
-"Homepage" = "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
+Homepage = "https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md"
 "Blog: ABAP Tools for Clean ABAP" = "https://community.sap.com/t5/technology-blogs-by-sap/abap-tools-for-clean-abap/ba-p/13577378"
 
 [config]

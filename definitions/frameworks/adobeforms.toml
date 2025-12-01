@@ -1,0 +1,20 @@
+[page]
+title = "Adobe Forms"
+description = "Adobe Forms is the latest forms solutions for SAP. It enables form-based processing of business data. Forms are designed using the Adobe LifeCycle Designer and rendered on the ADS. Forms can be static, interactive as well as online or offline enabled."
+reason = "Currently recommended forms technology. Available for on-premise and cloud solutions. Default forms solution for S/4HANA public cloud."
+support = "Supported."
+
+[links]
+"SAP Forms Service by Adobe" = "https://www.sap.com/germany/products/technology-platform/forms-service-by-adobe.html"
+"SAP Help Adobe Forms BTP" = "https://help.sap.com/docs/CP_FORMS_BY_ADOBE?locale=en-US"
+"SAP Help Forms Service by Adobe" = "https://help.sap.com/docs/forms-service-by-adobe/sap-forms-service-cf/sap-forms-service-by-adobe?locale=en-US"
+"Discovery Center" = "https://discovery-center.cloud.sap/serviceCatalog/forms-service-by-adobe?region=all"
+"ADS Configuration NW Java" = "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/cc3e2153b8504419bc7114f5ae2f693c/69a633254b6e47e6aa379e68e36eb66d.html?locale=en-US"
+"SAP Help SAP Interactive Forms by Adobe" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/6f3c61a7a5b94447b80e72f722b0aad7/a9b128543eaa4a508b5120b695e29391.html?locale=en-US"
+
+[config]
+label = "Adobe Forms"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

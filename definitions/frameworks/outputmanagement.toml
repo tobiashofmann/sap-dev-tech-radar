@@ -1,0 +1,19 @@
+[page]
+title = "S/4HANA Output Management"
+description = "Output management is the framework for all functions and processes related to the output of documents in SAP S/4HANA. It comprises activities related to business documents and provides functions like printing, sending e-mails or maintaining form templates. The on-premise and private cloud versions of S/4HANA support EDI as an channel. The public cloud version depends on Adobe Document Services for form rendering. The reuse service used is S/4HANA Output Control. S/4HANA Output Management is the successor to NAST which was the framework used in the Business Suite for output management."
+reason = "S/4HANA Output Management is part of the S/4HANA standard. It is the standard solution for output management for new applications. For applications that existed before S/4HANA, NAST is recommended. A switch from NAST to S/4HANA Output Management is not mandatroy."
+support = "Supported. Standard output management solution for new applications in S/4HANA."
+
+[links]
+"SAP Help S4 Public Cloud" = "https://help.sap.com/docs/SAP_S4HANA_CLOUD/a630d57fc5004c6383e7a81efee7a8bb/d7bd4b5d70d94f09bcf99b221a7a1688.html?locale=en-US"
+"SAP Help S4 Private Cloud" = "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/8308e6d301d54584a33cd04a9861bc52/d736578415a340cba84b944798a699b5.html?locale=en-US"
+"SCN Blog Post Output Management" = "https://community.sap.com/t5/enterprise-resource-planning-blog-posts-by-sap/output-management-in-sap-s-4hana/ba-p/13492419"
+"SCN Blog Post Output Management vs NAST" = "https://community.sap.com/t5/supply-chain-management-blog-posts-by-sap/s-4hana-output-management-vs-nast-when-to-choose-which/ba-p/13889623"
+"SAP Learning Getting Started with SAP Forms service by Adobe" = "https://learning.sap.com/learning-journeys/getting-started-with-sap-forms-service-by-adobe"
+
+[config]
+label = "Output Management"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0

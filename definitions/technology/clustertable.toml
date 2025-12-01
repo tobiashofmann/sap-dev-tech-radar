@@ -1,0 +1,19 @@
+[page]
+title = "Cluster Table"
+description = "Cluster tables and table pools are special table types in the ABAP Dictionary. Data from several tables is stored in a table pool / table cluster. These tables are used exclusively for storing internal control information (parameters, screen sequences, temporary data, documentation, etc). Data stored in a custer table is compressed using a proprietory format and can only be accessed by the SAP kernel. With S/4HANA, cluster tables are obsolete."
+reason = "Deprecated technology. Not supported by S/4HANA and ABAP as of release 7.53."
+support = "Not supported as of ABAP release 7.53."
+
+[links]
+"SAP Help Pooled and Cluster Tables" = "https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_752/ec1c9c8191b74de98feb94001a95dd76/cf21f083446011d189700000e8322d00.html?locale=en-US"
+"ABAP Keyword Documentation" = "https://help.sap.com/doc/abapdocu_latest_index_htm/latest/en-US/index.htm?file=abencluster_table_glosry.htm"
+"1892354 - SAP Strategy for Cluster and Pool Tables" = "https://me.sap.com/notes/1892354"
+"2634739 - How to get a list about the existing pool and cluster tables in the system?" = "https://me.sap.com/notes/0002634739"
+"YouTube: Do Cluster Tables Exist in SAP S/4HANA?" = "https://www.youtube.com/watch?v=NNG4izOk7CQ"
+
+[config]
+label = "Cluster Table"
+ring = "STOP"
+quadrant = "Technology"
+active = true
+moved = 0

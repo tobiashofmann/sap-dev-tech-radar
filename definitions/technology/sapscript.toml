@@ -2,7 +2,7 @@
 title = "SAPscript"
 description = "The oldest SAP forms technology. Dating back to 1992, this forms technology is still available and used. Allows to create forms that contain custom logic and layout. Via the usage of standard texts and symbols, flexible forms can be created."
 reason = "Not recommended. Legacy technology with restrictions regarding modern layout like barcodes or pictures.<br>Once the dominant forms technology, SAPscript is superseded by SmartForms or Adobe Forms.<br>Being a legacy technology means that its usage share is declining, making it also complicated to maintain SAPscript based forms. General recommendation is to migrate SAPscript forms or to rewrite them in newer technology. "
-support = "Supported untill 2040 (follows S/4HANA maintenance strategy)"
+support = "Supported until 2040 (follows S/4HANA maintenance strategy)"
 
 [links]
 "SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/bb9551032d3046c98c2b251ae486085f/4e12dc40e1905707e10000000a42189e.html?locale=en-US"

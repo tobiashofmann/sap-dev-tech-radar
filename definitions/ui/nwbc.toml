@@ -7,8 +7,8 @@ support = "Supported"
 [links]
 "SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/9737050ef01843f19572591b42128f1b/03ecbafb844b450a9314a5683b75ed80.html?locale=en-US"
 "SAP Note 3220574" = "https://me.sap.com/notes/3220574"
-"SCN" = "https://pages.community.sap.com/topics/business-client"
-"FAQ" = "https://pages.community.sap.com/topics/business-client/faq"
+SCN = "https://pages.community.sap.com/topics/business-client"
+FAQ = "https://pages.community.sap.com/topics/business-client/faq"
 
 [config]
 label = "NWBC"
