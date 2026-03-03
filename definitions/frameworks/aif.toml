@@ -1,0 +1,18 @@
+[page]
+title = "Application Interface Framework"
+description = "The Application Interface Framework enables the development and monitoring of interfaces, as well as error handling. AIF can be seen as a bridge technology that enables connecting to 'legacy' technologies like IDoc, SOAP or ABAP Proxies in a clean core way. It addtionally allows to connect to modern interface technologies like OData. It enables business users to monitor interfaces accross technologies and to fix issues."
+reason = "Recommended"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_APPLICATION_INTERFACE_FRAMEWORK/1cefaed5b7a3471cb08564e54d5ba866/5a3eacf824e74542abbd2271238dc70b.html?locale=en-US"
+SAP = "https://www.sap.com/products/technology-platform/application-interface-mgmt.html"
+"Learning Journey" = "https://learning.sap.com/learning-journeys/managing-sap-application-interface-framework?searchId=73bcf7b2-7097-4804-93ed-2b3a582581d6&listPosition=2"
+"SAP Course Managing Clean Core for SAP S/4HANA Cloud" = "https://learning.sap.com/courses/managing-clean-core-for-sap-s-4hana-cloud/exploring-how-to-make-landscapes-core-compliant-1"
+
+[config]
+label = "AIF"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
