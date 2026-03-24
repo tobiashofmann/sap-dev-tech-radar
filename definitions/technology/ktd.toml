@@ -1,0 +1,16 @@
+[page]
+title = "Knowledge Transfer Documents"
+description = "Modern way for documenting a development object. Based on markdown. ADT for Eclipse is needed to maintain and display a KTD."
+reason = "Availabe in S/4HANA since 2020"
+support = "Supported. Available in ADT for Eclipse"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/c238d694b825421f940829321ffa326a/fb51cd65f7f047b7b65b9a08f4e202c0"
+"SAP Help KTD Markdown" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/c238d694b825421f940829321ffa326a/b2f22a9fa9b543cfad70db34f7e17e7c.html"
+
+[config]
+label = "KTD"
+ring = "Adopt"
+quadrant = "Technology"
+active = true
+moved = 0
