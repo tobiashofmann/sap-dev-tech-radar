@@ -59,6 +59,26 @@ Not all of the above criteria can be easily defined. How to measure if something
 - **HOLD**: Technology in HOLD might be still absolutely valid for the time being. Yet, when a newer, better(?) altenative is available - see ring ADOPT or USE - , this should be used for new projects.
 - **STOP**: For STOP, these are basically EOL or outdated and should not be used any longer. There must be a plan available on what to do with the solutions using this technology. Consider letting the technology phase out together with the EOL solution.
 
+## Trend
+
+Technologies listed in the SAP Development Tech Radar will change rings over time. The normal life cycle is to go through ADOPT -> USE -> HOLD -> STOP. Each technology includes a trend indication. The trend indicates the chance of a technology to change ring positioning in the next 12 months. The trend indication can be
+
+- positive
+- stable
+- negative
+
+The meaning for the trend is to indicate to which ring the technology might be moving to.
+
+- Positive: change from ADOPT to USE
+- Neutral: no change
+- Negative: change from USE to HOLD or HOLD to STOP or STOP to Deprecated
+
+If a technology in ring ADOPT has the trend positive, it is likely that it will transition to ring USE in the next 12 months, meaning: in one of the next 2 version of the SDTR. Same for negative and ring HOLD: the technology is lickely to transition to ring STOP. Whereas with trend neutral, no change is expected to happen. However, this is just a trend. A technology might also stay in the ring after 12 months. The trend should however then be changed to neutral.
+
+Currently there are no plans to add a incubator "ring" where newly announced technologies are listed but are not part of the SDTR and ring ADOPT.
+
+The trend is only valid for technologies listed in the radar. For the ones listed as deprecated, the trend value is no longer used, albeit it should be set to stable.
+
 ## Organization
 
 The SDTR is not intended to be a one person project. To gain significant traction, it must be open. This is for once ensured by the publishing process that will be handled on the project page.
