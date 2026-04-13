@@ -86,9 +86,25 @@ function createHTML(tomlAsJson, filename) {
     htmltemplate = replacePlaceholder(htmltemplate, "%support%", tomlAsJson.page.support);
     htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", tomlAsJson.config.quadrant);
     htmltemplate = replacePlaceholder(htmltemplate, "%ring%", tomlAsJson.config.ring);
+    htmltemplate = replacePlaceholder(htmltemplate, "%trend%", tomlAsJson.config.trend);
 
-    var links = "";
-    for (var name in tomlAsJson.links) {
+    switch (tomlAsJson.config.trend) {
+      case "positive":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-up-arrow.svg");
+        break;
+      case "negative":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-down-arrow.svg");
+        break;
+      case "stable":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/arrow-right.svg");
+        break;
+      default:
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/stop-fill.svg");
+        break;
+    }
+
+    let links = "";
+    for (let name in tomlAsJson.links) {
         //links += "<li><a href='" +tomlAsJson.links[name]+ "'>" +name+ "</a></li>";
         links += "<a href='" +tomlAsJson.links[name]+ "' class='list-group-item list-group-item-action link-primary'>" +name+ "</a>";
 
@@ -176,7 +192,7 @@ function writeConfigJson2File(configJson) {
     quadrant = "Tools"
     active = true
     moved = 0
-    link = "adt"
+    link = "./detail.html"
   */
     function json2config(data, filename) {
       const url = "./html/" + filename + ".html";
