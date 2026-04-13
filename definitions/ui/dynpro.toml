@@ -13,3 +13,4 @@ ring = "STOP"
 quadrant = "UI"
 active = true
 moved = 0
+trend = "stable"

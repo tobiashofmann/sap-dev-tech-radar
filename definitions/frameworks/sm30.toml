@@ -16,3 +16,4 @@ ring = "STOP"
 quadrant = "Frameworks"
 active = true
 moved = 0
+trend = "stable"

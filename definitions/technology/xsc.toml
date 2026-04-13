@@ -9,7 +9,9 @@ Documentation = "https://help.sap.com/doc/abapdocu_752_index_htm/7.52/en-US/aben
 
 [config]
 label = "XSC"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "Technology"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

@@ -13,7 +13,9 @@ support = "Not supported as of ABAP release 7.53."
 
 [config]
 label = "Cluster Table"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "Technology"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

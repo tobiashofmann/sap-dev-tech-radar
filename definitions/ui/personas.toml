@@ -17,4 +17,4 @@ ring = "USE"
 quadrant = "UI"
 active = true
 moved = 0
-link = "adt"
+trend = "stable"

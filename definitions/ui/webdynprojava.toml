@@ -9,7 +9,9 @@ support = "Successor is Fiori UX"
 
 [config]
 label = "WDJ"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "UI"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"
