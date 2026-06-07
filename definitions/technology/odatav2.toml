@@ -18,3 +18,4 @@ ring = "USE"
 quadrant = "Technology"
 active = true
 moved = 0
+trend = "stable"

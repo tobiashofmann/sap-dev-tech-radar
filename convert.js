@@ -10,6 +10,9 @@ import fs from 'node:fs'
 // config file for tech radar
 let configJson = createConfigJson();
 
+// list for deprecated technologies
+let deprecatedList = [];
+
   /**
    * convert toml to JSON
    * @param {JSON} tomlAsJson
@@ -17,11 +20,22 @@ let configJson = createConfigJson();
    */
 function createCONFIG(tomlAsJson, filename) {
 
-  configJson.entries.push(json2config(tomlAsJson, filename));
-  //console.log(configJson);
+  // add to deprecated list if ring is DEPRECATED
+  if (tomlAsJson.config.ring === "DEPRECATED") {
+    deprecatedList.push({
+      title: tomlAsJson.config.label,
+      quadrant: tomlAsJson.config.quadrant,
+      since: tomlAsJson.config.since,
+      link: "./html/" + filename + ".html"
+    });
+  }
+  else {
+    configJson.entries.push(json2config(tomlAsJson, filename));
+    //console.log(configJson);
 
-  // write config json to file. Needed by tech radar web app
-  writeConfigJson2File(configJson);
+    // write config json to file. Needed by tech radar web app
+    writeConfigJson2File(configJson);
+  }
 
 }
 
@@ -72,9 +86,25 @@ function createHTML(tomlAsJson, filename) {
     htmltemplate = replacePlaceholder(htmltemplate, "%support%", tomlAsJson.page.support);
     htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", tomlAsJson.config.quadrant);
     htmltemplate = replacePlaceholder(htmltemplate, "%ring%", tomlAsJson.config.ring);
+    htmltemplate = replacePlaceholder(htmltemplate, "%trend%", tomlAsJson.config.trend);
 
-    var links = "";
-    for (var name in tomlAsJson.links) {
+    switch (tomlAsJson.config.trend) {
+      case "positive":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-up-arrow.svg");
+        break;
+      case "negative":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-down-arrow.svg");
+        break;
+      case "stable":
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/arrow-right.svg");
+        break;
+      default:
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/stop-fill.svg");
+        break;
+    }
+
+    let links = "";
+    for (let name in tomlAsJson.links) {
         //links += "<li><a href='" +tomlAsJson.links[name]+ "'>" +name+ "</a></li>";
         links += "<a href='" +tomlAsJson.links[name]+ "' class='list-group-item list-group-item-action link-primary'>" +name+ "</a>";
 
@@ -162,7 +192,7 @@ function writeConfigJson2File(configJson) {
     quadrant = "Tools"
     active = true
     moved = 0
-    link = "adt"
+    link = "./detail.html"
   */
     function json2config(data, filename) {
       const url = "./html/" + filename + ".html";
@@ -205,14 +235,15 @@ function writeConfigJson2File(configJson) {
   }
 
   /**
-   * Retrieve the correct quadrant
+   * Retrieve the correct ring
    *
    * "ADOPT" - 0
    * "USE" - 1
    * "HOLD" - 2
    * "STOP" - 3
-   * @param {string} value Quadrant as string
-   * @returns quadrant as int
+   * "DEPRECATED" - 4 (for completeness, though not used in radar)
+   * @param {string} value Ring as string
+   * @returns ring as int
    */
   function getRing(value) {
     switch (value) {
@@ -224,6 +255,8 @@ function writeConfigJson2File(configJson) {
             return 2;
         case "STOP":
             return 3;
+        case "DEPRECATED":
+            return 4;
         default:
             return 0;
     }
@@ -231,7 +264,33 @@ function writeConfigJson2File(configJson) {
 
 
 /**
+ * Create the deprecated technologies page
+ */
+function createDeprecatedPage() {
+  const path = "./radar/deprecated.html";
+  let html = fs.readFileSync(path, 'utf8');
+
+  let tableRows = "";
+  deprecatedList.forEach(item => {
+    tableRows += `<tr>
+      <td><a href="${item.link}">${item.title}</a></td>
+      <td>${item.quadrant}</td>
+      <td class="text-end">${item.since}</td>
+    </tr>\n`;
+  });
+
+  // replace the tbody content
+  const tbodyRegex = /<tbody id="deprecated-table-body">[\s\S]*?<\/tbody>/;
+  const newTbody = `<tbody id="deprecated-table-body">
+    ${tableRows}
+  </tbody>`;
+  html = html.replace(tbodyRegex, newTbody);
+
+  fs.writeFileSync(path, html);
+}
+
+/**
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML}
+export {createCONFIG, createHTML, createDeprecatedPage}

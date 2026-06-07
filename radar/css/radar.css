@@ -5,13 +5,17 @@ body {
 h3 {
   margin-top: 50px;
 }
+h2 {
+  margin-top: 50px;
+  margin-left: 50px;
+}
+.text {
+  margin-left: 50px;
+}
 li {
   margin: 25px 50px 0 0;
 }
-table {
-  width: 1400px;
-  margin: 0 50px 0 50px;
-}
+
 td {
   width: 50%;
   vertical-align: top;

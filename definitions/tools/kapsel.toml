@@ -9,8 +9,10 @@ support = "EOL 31.12.2025"
 "Kapsel App Development" = "https://help.sap.com/doc/d9c75eebcfa840c8a4aa4b0e6a8136de/3.0.14/en-US/7c05514870061014ae31b35a27134786.html"
 
 [config]
-label = "Kapsel"
+label = "DEPRECATED"
 ring = "STOP"
 quadrant = "Tools"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

@@ -10,7 +10,9 @@ support = "Succeeded by BAS"
 
 [config]
 label = "WebIDE"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "Tools"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

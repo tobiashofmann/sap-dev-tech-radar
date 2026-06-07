@@ -2,7 +2,7 @@ import {load} from 'js-toml';
 import { glob } from 'glob'
 import path from 'path';
 import fs from 'node:fs'
-import {createCONFIG, createHTML} from './convert.js';
+import {createCONFIG, createHTML, createDeprecatedPage} from './convert.js';
 
 const tomlFilePath = "./definitions/**/*.toml";
 
@@ -39,6 +39,11 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
       }
 
   });
+
+  //
+  // create deprecated page
+  //
+  createDeprecatedPage();
 
   /**
    * Retrieves the filename (name without suffix .toml)

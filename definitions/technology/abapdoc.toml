@@ -1,0 +1,20 @@
+[page]
+title = "ABAP Doc"
+description = "ABAP source code can be documented using ABAP Doc. It allows to document methods and parameters. Similar to Javadoc or JSDoc, it allows developers to document a method, parameters and return values. ABAP Doc can serve as the documentation of the public API of an ABAP class. For the ABAP Doc comment to be converted to HTML, a supported ADT is needed (currently only ADT for Eclipse)."
+reason = "Recommended for documenting ABAP code. Works with ADT and SAP Gui. Available also on older releases since NetWeaver 7.4 SP03."
+support = "Supported. ABAP Doc comments are converted to HTML in ADT for Eclipse."
+
+[links]
+"SAP Help ABAP Doc on premise" = "https://help.sap.com/doc/abapdocu_816_index_htm/8.16/en-US/ABENDOCCOMMENT.html"
+"SAP Help ABAP Doc cloud" = "https://help.sap.com/doc/abapdocu_cp_index_htm/CLOUD/en-US/ABENDOCCOMMENT.html"
+"DSAG Handbook ADT (English, PDF) page 92" = "https://impulsant-dsag.de/formate/textbeitrag/sap-handbook-abap-development-tools-in-eclipse"
+"DSAG Leitfaden (German, HTML)" = "https://1dsag.github.io/ADT-Leitfaden/working-with-adt/features/abap-doc/"
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/c238d694b825421f940829321ffa326a/a7b235922f6944bbaf3b36949e500b12.html?locale=en-US"
+
+[config]
+label = "ABAP Doc"
+ring = "USE"
+quadrant = "Technology"
+active = true
+moved = 0
+trend = "stable"

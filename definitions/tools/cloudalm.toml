@@ -13,3 +13,4 @@ ring = "ADOPT"
 quadrant = "Tools"
 active = true
 moved = 0
+trend = "stable"

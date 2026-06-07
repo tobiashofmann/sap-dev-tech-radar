@@ -10,7 +10,9 @@ SAP = "https://www.sap.com/germany/products/technology-platform/fiori.html"
 
 [config]
 label = "Portal"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "Technology"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

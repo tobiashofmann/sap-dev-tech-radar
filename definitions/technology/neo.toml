@@ -10,7 +10,9 @@ Blog = "https://community.sap.com/t5/technology-blogs-by-sap/farewell-neo-sap-bt
 
 [config]
 label = "Neo"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "Technology"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

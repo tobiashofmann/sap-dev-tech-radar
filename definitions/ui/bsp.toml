@@ -7,10 +7,11 @@ support = "Successor is Fiori UX"
 [links]
 "SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_731_BW_ABAP/0884fb55479542b38fb676e8f5b250a1/4c56854fe8530d6ae10000000a15822b.html?locale=en-US"
 
-
 [config]
 label = "BSP"
-ring = "STOP"
+ring = "DEPRECATED"
 quadrant = "UI"
 active = true
 moved = 0
+trend = "stable"
+since = "2026.6"

@@ -8,6 +8,28 @@
     <title>SAP development Tech Radar</title>
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <style>
+      .detail-card-row {
+        justify-content: flex-start;
+        align-items: stretch;
+      }
+
+      .detail-card-col {
+        min-width: 18rem;
+        max-width: 18rem;
+      }
+
+      .detail-card {
+        height: 100%;
+      }
+
+      .trend-icon {
+        display: block;
+        width: 3.5rem;
+        height: auto;
+        margin: 0 auto;
+      }
+    </style>
   </head>
 
   <body>
@@ -23,26 +45,45 @@
 
       <h2 class="p-3 fw-bold">Technology Radar</h2>
 
-      <div class="col-auto">
-        <div class="card %color% mb-3" style="max-width: 18rem;">
-          <div class="card-header">Ring</div>
-          <div class="card-body">
-            <h5 class="card-title">%ring%</h5>
-            <p class="card-text">The technology %title% is in the ring <b>%ring%</b></p>
-          </div>
-        </div>
-      </div>  
+    </div>
 
-      <div class="col-auto">
-        <div class="card text-bg-light mb-3" style="max-width: 18rem;">
-          <div class="card-header">Quadrant</div>
-          <div class="card-body">
-            <h5 class="card-title">%quadrant%</h5>
-            <p class="card-text">The technology %title% is in the quadrant <b>%quadrant%</b></p>
+    <div class="container ms-4">
+
+      <div class="row h-100 detail-card-row">
+
+        <div class="col-4 detail-card-col d-flex">
+          <div class="card %color% mb-3 detail-card w-100">
+            <div class="card-header">Ring</div>
+            <div class="card-body">
+              <h5 class="card-title">%ring%</h5>
+              <p class="card-text">The technology %title% is in the ring <b>%ring%</b></p>
+            </div>
+          </div>
+        </div>  
+
+        <div class="col-4 detail-card-col d-flex">
+          <div class="card text-bg-light mb-3 detail-card w-100">
+            <div class="card-header">Quadrant</div>
+            <div class="card-body">
+              <h5 class="card-title">%quadrant%</h5>
+              <p class="card-text">The technology %title% is in the quadrant <b>%quadrant%</b></p>
+            </div>
           </div>
         </div>
+
+        <div class="col-4 detail-card-col d-flex">
+          <div class="card text-bg-light mb-3 detail-card w-100">
+            <div class="card-header">Trend</div>
+            <div class="card-body">
+              <h5 class="card-title">The trend is: %trend%</h5>
+              <p class="card-text text-center mt-4">
+                <img src="%trendimage%" class="trend-icon"/>
+              </p>
+            </div>
+          </div>
+        </div>
+        
       </div>
-      
     </div>
 
     <div class="container-fluid">
