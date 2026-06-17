@@ -90,16 +90,16 @@ function createHTML(tomlAsJson, filename) {
 
     switch (tomlAsJson.config.trend) {
       case "positive":
-        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-up-arrow.svg");
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "../bootstrap/graph-up-arrow.svg");
         break;
       case "negative":
-        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/graph-down-arrow.svg");
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "../bootstrap/graph-down-arrow.svg");
         break;
       case "stable":
-        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/arrow-right.svg");
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "../bootstrap/arrow-right.svg");
         break;
       default:
-        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "/bootstrap/stop-fill.svg");
+        htmltemplate = replacePlaceholder(htmltemplate, "%trendimage%", "../bootstrap/stop-fill.svg");
         break;
     }
 
