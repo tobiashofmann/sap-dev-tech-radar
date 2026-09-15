@@ -21,6 +21,7 @@
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-toml": "^0.9.2",
     "glob": "^10.3.10",
+    "jest": "^30.3.0",
     "js-toml": "^1.0.0"
   },
   "scripts": {
@@ -29,6 +30,7 @@
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
     "lint:js": "eslint convert.js index.js",
     "lint:toml": "eslint definitions/**/*.toml",
-    "lint:html": "eslint radar/**/*.html"
+    "lint:html": "eslint radar/**/*.html",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage"
   }
 }
