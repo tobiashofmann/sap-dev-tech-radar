@@ -1,7 +1,7 @@
 [page]
 title = "SAP Screen Personas"
 description = "Improve user productivity, process efficiency, and decision making with better usability for your SAP ERP screens. SAP Screen Personas software delivers drag-and-drop simplicity to help you create a modern, intuitive user experience (SAP Fiori UX) across desktops and mobile devices. Simplify and adapt your classic applications, whether you are running SAP S/4HANA Cloud Public Edition, SAP S/4HANA Cloud Private Edition, SAP S/4HANA, SAP Business Suite on HANA, or SAP ECC 6.0"
-reason = "Part of the SAP UI strategy. Integrated in S/4HANA with support until 2040."
+reason = "Part of the SAP UI strategy. Integrated in S/4HANA with support until 2040. The positioning and outlook of this technology only applies to Screen Personas for SAP Gui HTML. The support for SAP Gui for Windows is not complete and never will be due to changes in priority. The support for WebDynpro ABAP is already sunset."
 support = "Supported and aligned with S/4HANA support"
 
 [links]
@@ -10,6 +10,10 @@ Roadmap = "https://community.sap.com/t5/technology-blogs-by-sap/sap-screen-perso
 "SAP Help2" = "https://help.sap.com/docs/SAP_SCREEN_PERSONAS?locale=en-US"
 "Application Help" = "https://help.sap.com/docs/SAP_SCREEN_PERSONAS/20993a0c28654a26beb2b63b722d74f2/c1f0a38f9f044465bda47fc41087a228.html?locale=en-US"
 Web = "https://pages.community.sap.com/topics/screen-personas"
+"FAQ" = "https://pages.community.sap.com/topics/screen-personas/faq"
+"3239603 - SAP Screen Personas 3.0 for Web Dynpro ABAP - Sunset" = "https://me.sap.com/notes/3239603/E"
+"2080071 - SAP GUI for Windows: Support for SAP Screen Personas 3.0" = "https://me.sap.com/notes/2080071/E"
+"3578329 - Frameworks, Technologies and Development Patterns in Context of Clean Core Extensibility" = "https://me.sap.com/notes/3578329/E"
 
 [config]
 label = "Personas"
