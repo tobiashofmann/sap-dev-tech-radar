@@ -1,0 +1,19 @@
+[page]
+title = "ABAP Object Services"
+description = "Object Services is an object-oriented framework that encapsulates database access by mapping persistent object attributes directly to relational database content instead of using traditional ABAP SQL statements. For developers working in Java, a highly similar and widely used standard is the Java Persistence API (JPA). "
+reason = "Not recommended. The framework runs in the user space and not in the SAP kernel. Performance is therefore slower. Recommended is to use RAP and CDS for data modeling."
+support = "Supported. Not available in ABAP Cloud."
+
+[links]
+"ABAP Keyword Documentation" = "https://help.sap.com/doc/abapdocu_816_index_htm/8.16/en-US/ABENABAP_OBJECT_SERVICES.html"
+"3578329 - Frameworks, Technologies and Development Patterns in Context of Clean Core Extensibility" = "https://me.sap.com/notes/3578329/E"
+"Maintaining Persistent Classes" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/bd833c8355f34e96a6e83096b38bf192/06f23c33638d11d4966d00a0c94260a5.html?locale=en-US"
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_702/fe1ff96d6c5510148ec5c6a17feb7418/49e7087d1192088ce10000000a421937.html?locale=en-US"
+
+[config]
+label = "Object Services"
+ring = "STOP"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "negative"
