@@ -26,6 +26,7 @@
   "scripts": {
     "start": "browser-sync radar -w",
     "conv": "node index.js",
+    "md": "node toml2markdown.js",
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
     "lint:js": "eslint convert.js index.js",
     "lint:toml": "eslint definitions/**/*.toml",
