@@ -184,6 +184,38 @@ function writeConfigJson2File(configJson) {
   fs.writeFileSync(path, JSON.stringify(configJson));
 }
 
+function createSDTR(technologies) {
+  const flattened = technologies.map(({ data, filename }) => flattenTechnology(data, filename));
+  const json = JSON.stringify(flattened, null, 2);
+
+  fs.writeFileSync("./radar/sdtr.json", json);
+  fs.writeFileSync("./mcp/sdtr.json", json);
+}
+
+/**
+ * Flatten the page/links/config sections of a parsed toml file into a single object
+ * @param {JSON} data parsed toml file
+ * @param {string} filename
+ * @returns flattened technology object
+ */
+function flattenTechnology(data, filename) {
+  return {
+    title: data.page.title,
+    description: data.page.description,
+    reason: data.page.reason,
+    support: data.page.support,
+    links: data.links,
+    label: data.config.label,
+    ring: data.config.ring,
+    quadrant: data.config.quadrant,
+    active: data.config.active,
+    moved: data.config.moved,
+    trend: data.config.trend,
+    since: data.config.since,
+    link: "./html/" + filename + ".html"
+  };
+}
+
 
   /**
     [config]
@@ -293,4 +325,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage}
+export {createCONFIG, createHTML, createDeprecatedPage, createSDTR}

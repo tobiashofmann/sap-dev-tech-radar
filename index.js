@@ -2,9 +2,10 @@ import {load} from 'js-toml';
 import { glob } from 'glob'
 import path from 'path';
 import fs from 'node:fs'
-import {createCONFIG, createHTML, createDeprecatedPage} from './convert.js';
+import {createCONFIG, createHTML, createDeprecatedPage, createSDTR} from './convert.js';
 
 const tomlFilePath = "./definitions/**/*.toml";
+const technologies = [];
 
 // read toml files
 glob.sync( tomlFilePath ).forEach( function( file ) {
@@ -23,6 +24,7 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
         //
         const tomlAsJson = load(data);
         //console.log(tomlAsJson);
+        technologies.push({ data: tomlAsJson, filename });
 
         //
         // create config file from toml file
@@ -39,6 +41,10 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
       }
 
   });
+
+  if (!process.argv.includes('--no-sdtr')) {
+    createSDTR(technologies);
+  }
 
   //
   // create deprecated page
