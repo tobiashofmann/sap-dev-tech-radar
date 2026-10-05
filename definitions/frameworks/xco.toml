@@ -1,0 +1,19 @@
+[page]
+title = "XCO Library"
+description = "The XCO (Extension Components) offers a modern, efficient and cloud ready library for ABAP development. The library offers modules to solve common programming tasks. The XCO library is availble in cloud and on-premise versions of ABAP."
+reason = "Recommended"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/c154dffe892b4d9ea4566722f0bcd5f1.html?locale=en-US"
+"SAP Help on premise" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/c154dffe892b4d9ea4566722f0bcd5f1.html?locale=en-US"
+"XCO Modules" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/b5670aaaa2364a29935f40b16499972d/25bfca890eec4b0d8cfc8be995ae7c64.html?locale=en-US"
+"SW Heros" = "https://software-heroes.com/xco-library-overview"
+
+[config]
+label = "XCO"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "stable"
