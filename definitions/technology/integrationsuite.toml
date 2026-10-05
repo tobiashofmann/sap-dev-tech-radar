@@ -1,0 +1,19 @@
+[page]
+title = "SAP Integration Suite"
+description = "Integration solution running on SAP Business Technology Platform or in a private landscape. Allows companies to integrate data, processes and applications between apps and with other companies. The suite offers various capabilities like API management, Event Mesh, OData provisioning or connectors."
+reason = "The strategic integration platform from SAP. Successor to PI/PO."
+support = "Supported."
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/integration-suite?locale=en-US"
+"SAP" = "https://www.sap.com/products/technology-platform/integration-suite.html"
+"Learning Journey" = "https://learning.sap.com/learning-journeys/developing-with-sap-integration-suite"
+"Course: Administering SAP Integration Suite" = "https://learning.sap.com/courses/administering-sap-integration-suite"
+
+[config]
+label = "Integration Suite"
+ring = "USE"
+quadrant = "Technology"
+active = true
+moved = 0
+trend = "stable"
