@@ -1,0 +1,18 @@
+[page]
+title = "SAP Analytics Cloud"
+description = "SAP Analytics Cloud (SAC) is an SaaS platform combining business intelligence, enterprise planning, and predictive analytics. Queries are used to build stories with dashboard-like user interfaces. A live destination is needed to access from connected systems like an ABAP based system."
+reason = "The recommended solution for analytics, cross-functional management reporting, dashboards, forecasting and complex analysis."
+support = "Supported"
+
+[links]
+"Product page" = "https://www.sap.com/products/data-cloud/cloud-analytics.html"
+"SAP Help" = "https://help.sap.com/docs/SAP_ANALYTICS_CLOUD?locale=en-US"
+"ABAP Analytics" = "https://help.sap.com/docs/abap-cloud/abap-analytics/sap-analytics-cloud?locale=en-US"
+
+[config]
+label = "SAC"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "stable"
