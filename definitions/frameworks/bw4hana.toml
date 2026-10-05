@@ -1,0 +1,17 @@
+[page]
+title = "BW/4HANA"
+description = "SAP BW/4HANA is a data warehouse solution optimized for SAP HANA. The solutions covers the tooling from data modeling to information access. Available as cloud and on-premise deployment."
+reason = "Success is SAP Analytical Cloud (SAC)"
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_BW4HANA?locale=en-US"
+"SAP Learning" = "https://learning.sap.com/products/business-technology-platform/data-analytics/bw4-hana"
+
+[config]
+label = "BW/4HANA"
+ring = "STOP"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "negative"
