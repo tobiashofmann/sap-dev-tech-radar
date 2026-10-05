@@ -1,0 +1,17 @@
+[page]
+title = "Embedded Analytics"
+description = "Embedded Analytics is a set of built-in reporting and analysis tools inside an SAP S/4HANA system. It lets you view live business data without needing a separate data warehouse. Based on CDS Views and VDM. Comes with a set of Fiori apps."
+reason = "Included in S/4HANA. Comes with predefined standard reports and KPIs. Custom reports can be created."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE/6b356c79dea443c4bbeeaf0865e04207/c53deb5765c7be12e10000000a4450e5.html?locale=en-US"
+"Course: Going Deeper with SAP S/4HANA Embedded Analytics" = "https://learning.sap.com/courses/sap-s-4hana-embedded-analytics"
+
+[config]
+label = "Embedded Analytics"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "stable"
