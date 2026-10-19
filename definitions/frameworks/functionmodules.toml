@@ -1,0 +1,17 @@
+[page]
+title = "Function Modules"
+description = "Function modules in function pools are procedures of the structured programming model that existed before the introduction of ABAP Objects. They are independent repository objects used for external calls or for providing reusable functions. With ABAP Objects, methods have taken over this role."
+reason = "ABAP programming guideline: No implementations in function modules and subroutines. Use ABAP Objects for new and further development. Only create function modules where technically required (RFC, update tasks, access to classic dynpros or selection screens) and use them only as thin wrappers that call the relevant methods, without implementing the function inside the function module."
+support = "Supported. Only as a technical wrapper for method calls."
+
+[links]
+"SAP Help Function Modules and Subroutines" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/function-modules-and-subroutines?locale=en-US"
+"SAP Help ABAP Objects as a Programming Model" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/abap-objects-as-programming-model?locale=en-US"
+
+[config]
+label = "Function Modules"
+ring = "HOLD"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "stable"
