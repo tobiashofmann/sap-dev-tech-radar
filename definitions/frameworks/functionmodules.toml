@@ -5,8 +5,8 @@ reason = "ABAP programming guideline: No implementations in function modules and
 support = "Supported. Only as a technical wrapper for method calls."
 
 [links]
-"SAP Help Function Modules and Subroutines" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/function-modules-and-subroutines?locale=en-US"
-"SAP Help ABAP Objects as a Programming Model" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/abap-objects-as-programming-model?locale=en-US"
+"Do not implement in function modules and subroutines - SAP Help" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/function-modules-and-subroutines"
+"SAP Help ABAP Objects as a Programming Model" = "https://help.sap.com/docs/abap-cloud/abap-keywords-standard-abap/abap-objects-as-programming-model"
 
 [config]
 label = "Function Modules"
