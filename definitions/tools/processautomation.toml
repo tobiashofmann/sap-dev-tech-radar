@@ -1,0 +1,21 @@
+[page]
+title = "Build Process Automation"
+description = "SAP Build Process Automation (SBPA) is the strategic tool from SAP for automating business processes on SAP Business Technology Platform (BTP). Offers low-code and no-code capabilities to design workflows, business rules and automate using robotic process automation. Users include citizen developers and pro code SAP developers that can use it building extensions and process-centric solutions on SAP BTP."
+reason = "Recommended tool on BTP for workflows und managing business processes. Customers should consider it as their workflow solution to achieve a clean core. Sucessor to BTP Workflow."
+support = "Supported"
+
+[links]
+"SAP Product Page" = "https://www.sap.com/products/technology-platform/process-automation.html"
+"SAP Help" = "https://help.sap.com/docs/PROCESS_AUTOMATION?locale=en-US"
+"Discovery Center" = "https://discovery-center.cloud.sap/serviceCatalog/sap-build-process-automation?region=all"
+"SAP Learning" = "https://learning.sap.com/courses/developing-with-sap-build-process-automation"
+"Workflow Solution in BTP" = "https://community.sap.com/t5/technology-blog-posts-by-sap/transition-your-sap-workflow-management-solutions-to-sap-build-process/ba-p/13549045"
+
+[config]
+label = "SBPA"
+ring = "USE"
+quadrant = "Tools"
+active = true
+moved = 0
+trend = "stable"
+since = "2026.12"
