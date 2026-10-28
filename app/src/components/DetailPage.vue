@@ -37,7 +37,7 @@ const voteLink = computed(() =>
 
     <section class="header-card">
       <h1>{{ entry.title }}</h1>
-      <p>{{ entry.description }}</p>
+      <p v-html="entry.description"></p>
       <p>
         <RingPill :ring="entry.ring" />
         {{ entry.quadrant }} &middot; trend: {{ entry.trend }}

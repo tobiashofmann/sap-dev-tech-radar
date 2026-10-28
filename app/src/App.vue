@@ -81,13 +81,17 @@ function backToRadar() {
 </template>
 
 <style scoped>
+#app { max-width: 1280px; margin: 0 auto; }
 .page-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem 1rem;
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #e5e5e5;
 }
+.page-header h1 { font-size: 1.3rem; }
 .tabs { display: flex; gap: 0.5rem; }
 .tabs button {
   background: none;

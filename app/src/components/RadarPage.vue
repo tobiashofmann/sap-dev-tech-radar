@@ -200,7 +200,7 @@ watch([visibleEntries, selectedId], renderChart)
         <ui5-card v-else>
           <ui5-card-header slot="header" title-text="Selected technology" :subtitle-text="selectedEntry.title"></ui5-card-header>
           <div class="card-body">
-            <p>{{ selectedEntry.description }}</p>
+            <p v-html="selectedEntry.description"></p>
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
               &middot; Trend: <b>{{ selectedEntry.trend }}</b></p>
             <p>Reason: {{ selectedEntry.reason }}</p>
@@ -210,31 +210,33 @@ watch([visibleEntries, selectedId], renderChart)
       </div>
     </div>
 
-    <table class="list-view">
-      <thead>
-        <tr>
-          <th @click="sortBy('title')">Technology</th>
-          <th @click="sortBy('quadrant')">Quadrant</th>
-          <th @click="sortBy('ring')">Ring</th>
-          <th>Trend</th>
-          <th @click="sortBy('lastChangedRelease')">Updated</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="e in sortedEntries"
-          :key="e.id"
-          :class="{ selected: e.id === selectedId }"
-          @click="selectEntry(e.id)"
-        >
-          <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
-          <td>{{ e.quadrant }}</td>
-          <td><RingPill :ring="e.ring" /></td>
-          <td>{{ e.trend }}</td>
-          <td>{{ e.lastChangedRelease ?? 'current' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrap">
+      <table class="list-view">
+        <thead>
+          <tr>
+            <th @click="sortBy('title')">Technology</th>
+            <th @click="sortBy('quadrant')">Quadrant</th>
+            <th @click="sortBy('ring')">Ring</th>
+            <th>Trend</th>
+            <th @click="sortBy('lastChangedRelease')">Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="e in sortedEntries"
+            :key="e.id"
+            :class="{ selected: e.id === selectedId }"
+            @click="selectEntry(e.id)"
+          >
+            <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
+            <td>{{ e.quadrant }}</td>
+            <td><RingPill :ring="e.ring" /></td>
+            <td>{{ e.trend }}</td>
+            <td>{{ e.lastChangedRelease ?? 'current' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -271,8 +273,8 @@ watch([visibleEntries, selectedId], renderChart)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-chart { flex: 1 1 auto; max-width: 560px; }
-.side-cards { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1rem; }
+.radar-chart { flex: 1 1 380px; width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+.side-cards { flex: 1 1 320px; max-width: 420px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance {
   display: grid;
@@ -284,9 +286,23 @@ watch([visibleEntries, selectedId], renderChart)
 }
 .rings-glance .row { display: contents; }
 .rings-glance .row span { color: var(--sap-text-muted, #5b738b); }
-.list-view { width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
+.table-wrap { overflow-x: auto; }
+.list-view { width: 100%; min-width: 640px; margin-top: 1.5rem; border-collapse: collapse; }
 .list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
 .list-view td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
 .list-view tr { cursor: pointer; }
 .list-view tr.selected { background: #eef4fb; }
+
+/* Tablet (iPad 10" portrait ~810-834px, landscape ~1080-1194px) and
+   anything narrower than the mock's fixed 1280px desktop frame: stack the
+   radar and side cards instead of forcing them side by side. */
+@media (max-width: 1100px) {
+  .main-area { flex-direction: column; }
+  .side-cards { max-width: none; width: 100%; }
+  .side-cards ui5-card { width: 100%; }
+}
+
+@media (max-width: 600px) {
+  .tiles ui5-card.tile { flex: 1 1 calc(50% - 0.75rem); }
+}
 </style>
