@@ -254,17 +254,6 @@ onBeforeUnmount(() => {
       </ui5-card>
 
       <div class="side-cards" ref="sideCards">
-        <ui5-card>
-          <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
-          <div class="card-body rings-glance">
-            <div class="row"><RingPill ring="ADOPT" /><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
-            <div class="row"><RingPill ring="USE" /><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
-            <div class="row"><RingPill ring="HOLD" /><b>Only if no alternative</b><span>Don't start new products with it</span></div>
-            <div class="row"><RingPill ring="STOP" /><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
-            <div class="row"><RingPill ring="DEPRECATED" /><b>Removed from radar</b><span>Not shown on the radar</span></div>
-          </div>
-        </ui5-card>
-
         <ui5-card v-if="!selectedEntry">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
           <div class="card-body">
@@ -288,6 +277,17 @@ onBeforeUnmount(() => {
               &middot; Trend: <b>{{ TREND_ARROWS[selectedEntry.trend] }} {{ selectedEntry.trend }}</b></p>
             <p>Reason: {{ selectedEntry.reason }}</p>
             <ui5-button @click="emit('open-detail', selectedEntry.id)">Open detail page &rarr;</ui5-button>
+          </div>
+        </ui5-card>
+
+        <ui5-card>
+          <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
+          <div class="card-body rings-glance">
+            <div class="row"><RingPill ring="ADOPT" /><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
+            <div class="row"><RingPill ring="USE" /><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
+            <div class="row"><RingPill ring="HOLD" /><b>Only if no alternative</b><span>Don't start new products with it</span></div>
+            <div class="row"><RingPill ring="STOP" /><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
+            <div class="row"><RingPill ring="DEPRECATED" /><b>Removed from radar</b><span>Not shown on the radar</span></div>
           </div>
         </ui5-card>
       </div>
