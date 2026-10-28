@@ -5,6 +5,7 @@ import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayou
 import { RING_COLORS } from '../ringColors.js'
 import RingPill from './RingPill.vue'
 import { sanitizeDescription } from '../sanitize.js'
+import { TREND_ARROWS } from '../trendIcons.js'
 
 const props = defineProps({
   entries: { type: Array, required: true },
@@ -274,7 +275,7 @@ onBeforeUnmount(() => {
           <div class="card-body">
             <p v-html="sanitizeDescription(selectedEntry.description)"></p>
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
-              &middot; Trend: <b>{{ selectedEntry.trend }}</b></p>
+              &middot; Trend: <b>{{ TREND_ARROWS[selectedEntry.trend] }} {{ selectedEntry.trend }}</b></p>
             <p>Reason: {{ selectedEntry.reason }}</p>
             <ui5-button @click="emit('open-detail', selectedEntry.id)">Open detail page &rarr;</ui5-button>
           </div>
@@ -303,7 +304,7 @@ onBeforeUnmount(() => {
             <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
             <td>{{ e.quadrant }}</td>
             <td><RingPill :ring="e.ring" /></td>
-            <td>{{ e.trend }}</td>
+            <td>{{ TREND_ARROWS[e.trend] }} {{ e.trend }}</td>
             <td>{{ e.lastChangedRelease ?? 'current' }}</td>
           </tr>
         </tbody>

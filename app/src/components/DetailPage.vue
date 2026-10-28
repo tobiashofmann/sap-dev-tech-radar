@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import RingPill from './RingPill.vue'
 import { sanitizeDescription } from '../sanitize.js'
+import { TREND_ARROWS } from '../trendIcons.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -41,7 +42,7 @@ const voteLink = computed(() =>
       <p v-html="sanitizeDescription(entry.description)"></p>
       <p>
         <RingPill :ring="entry.ring" />
-        {{ entry.quadrant }} &middot; trend: {{ entry.trend }}
+        {{ entry.quadrant }} &middot; trend: {{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}
       </p>
       <p v-if="lastChange.previousRing">
         Previous ring: <b>{{ lastChange.previousRing }}</b> &middot;
