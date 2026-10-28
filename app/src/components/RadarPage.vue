@@ -336,7 +336,13 @@ watch([selectedEntry, radarSize], layoutSideCards)
     </div>
 
     <div class="main-area">
-      <ui5-card class="radar-card" :style="radarSize ? { width: radarSize + 'px' } : {}">
+      <div class="radar-card-wrapper" :style="radarSize ? { width: radarSize + 'px' } : {}">
+        <ui5-card class="radar-card">
+          <div class="radar-card-inner" :style="radarSize ? { width: radarSize + 'px', height: radarSize + 'px' } : {}">
+            <svg ref="chart" class="radar-chart"></svg>
+          </div>
+        </ui5-card>
+
         <ui5-button
           class="fullscreen-toggle"
           :icon="isFullscreen ? 'exit-full-screen' : 'full-screen'"
@@ -345,10 +351,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
           :tooltip="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'"
           @click="isFullscreen = !isFullscreen"
         ></ui5-button>
-        <div class="radar-card-inner" :style="radarSize ? { width: radarSize + 'px', height: radarSize + 'px' } : {}">
-          <svg ref="chart" class="radar-chart"></svg>
-        </div>
-      </ui5-card>
+      </div>
 
       <div class="side-cards" ref="sideCards">
         <ui5-card v-if="!selectedEntry" ref="primaryCard">
@@ -485,7 +488,8 @@ watch([selectedEntry, radarSize], layoutSideCards)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-card { position: relative; flex: 0 0 auto; width: 600px; }
+.radar-card-wrapper { position: relative; flex: 0 0 auto; width: 600px; }
+.radar-card { display: block; width: 100%; }
 .fullscreen-toggle {
   position: absolute;
   top: -14px;
@@ -550,7 +554,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
    radar and side cards instead of forcing them side by side. */
 @media (max-width: 1100px) {
   .main-area { flex-direction: column; }
-  .radar-card { flex: 0 0 auto; width: 100% !important; }
+  .radar-card-wrapper { flex: 0 0 auto; width: 100% !important; }
   .radar-card-inner { width: 100% !important; height: auto !important; }
   .side-cards { flex: 0 0 auto; width: 100%; }
   .side-cards ui5-card { width: 100%; }
