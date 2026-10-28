@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
@@ -216,9 +216,72 @@ onBeforeUnmount(() => {
   clearTimeout(resizeTimer)
 })
 
-onBeforeUnmount(() => {
-  sideCardsObserver?.disconnect()
-})
+// Selecting a technology swaps "About this radar" for "Selected technology",
+// which can be much taller (a long description). Rule: the primary card
+// (About/Selected) may grow up to 60% of the fixed side-cards height
+// (radarSize) before it has to scroll internally; Rings-at-a-glance gets
+// whatever's left (as little as ~40%), scrolling internally too if even
+// that doesn't fit its own content. Measured in sequence (natural size,
+// then capped, then the other card's budget from what's actually left) -
+// one-directional, not a live two-way binding, so it can't loop.
+const primaryCard = ref(null)
+const primaryBody = ref(null)
+const glanceCard = ref(null)
+const glanceBody = ref(null)
+const primaryScroll = ref({ up: false, down: false })
+const glanceScroll = ref({ up: false, down: false })
+const GAP = 16
+
+function checkScrollFade(el, state) {
+  if (!el) return
+  state.up = el.scrollTop > 1
+  state.down = el.scrollTop + el.clientHeight < el.scrollHeight - 1
+}
+
+function capBodyHeight(cardEl, bodyEl, budget) {
+  if (!cardEl || !bodyEl) return
+  bodyEl.style.maxHeight = ''
+  const natural = cardEl.getBoundingClientRect().height
+  if (natural > budget) {
+    const bodyNatural = bodyEl.getBoundingClientRect().height
+    bodyEl.style.maxHeight = Math.max(0, bodyNatural - (natural - budget)) + 'px'
+  }
+}
+
+// Vue's nextTick only waits for Vue's own DOM patch - ui5-card is a Lit-
+// based web component with its own internal update cycle that can still be
+// pending right after that (verified: measuring immediately after
+// nextTick() read a stale, pre-layout height). A double rAF reliably waits
+// out a full browser layout/paint cycle on top of it.
+function waitForLayout() {
+  return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+}
+
+async function layoutSideCards() {
+  // selecting/deselecting a technology swaps which ui5-card primaryCard
+  // points to (v-if/v-else) - wait for that DOM patch before measuring,
+  // otherwise this runs against the about-to-be-replaced element.
+  await nextTick()
+  await waitForLayout()
+  if (!radarSize.value || !primaryCard.value) {
+    return
+  }
+  const total = radarSize.value
+
+  capBodyHeight(primaryCard.value, primaryBody.value, total * 0.6)
+  await waitForLayout()
+
+  if (glanceCard.value) {
+    const primaryActual = primaryCard.value.getBoundingClientRect().height
+    capBodyHeight(glanceCard.value, glanceBody.value, Math.max(0, total - primaryActual - GAP))
+    await waitForLayout()
+  }
+
+  checkScrollFade(primaryBody.value, primaryScroll.value)
+  checkScrollFade(glanceBody.value, glanceScroll.value)
+}
+
+watch([selectedEntry, radarSize], layoutSideCards)
 </script>
 
 <template>
@@ -277,9 +340,14 @@ onBeforeUnmount(() => {
       </ui5-card>
 
       <div class="side-cards" ref="sideCards">
-        <ui5-card v-if="!selectedEntry">
+        <ui5-card v-if="!selectedEntry" ref="primaryCard">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
-          <div class="card-body">
+          <div
+            class="card-body scroll-fade"
+            ref="primaryBody"
+            :class="{ 'fade-top': primaryScroll.up, 'fade-bottom': primaryScroll.down }"
+            @scroll="checkScrollFade(primaryBody, primaryScroll)"
+          >
             <p>The SAP Development Tech Radar gives guidance on which technologies to use when
               building SAP applications. Every technology sits in one quadrant and one ring.</p>
             <p>Select a blip or a filter to see details here.</p>
@@ -292,9 +360,14 @@ onBeforeUnmount(() => {
           </div>
         </ui5-card>
 
-        <ui5-card v-else>
+        <ui5-card v-else ref="primaryCard">
           <ui5-card-header slot="header" title-text="Selected technology" :subtitle-text="selectedEntry.title"></ui5-card-header>
-          <div class="card-body">
+          <div
+            class="card-body scroll-fade"
+            ref="primaryBody"
+            :class="{ 'fade-top': primaryScroll.up, 'fade-bottom': primaryScroll.down }"
+            @scroll="checkScrollFade(primaryBody, primaryScroll)"
+          >
             <p v-html="sanitizeDescription(selectedEntry.description)"></p>
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
               &middot; Trend: <b>{{ TREND_ARROWS[selectedEntry.trend] }} {{ selectedEntry.trend }}</b></p>
@@ -303,28 +376,35 @@ onBeforeUnmount(() => {
           </div>
         </ui5-card>
 
-        <ui5-card>
+        <ui5-card ref="glanceCard">
           <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
-          <div class="card-body rings-glance">
-            <div class="row">
-              <RingPill ring="ADOPT" />
-              <div class="row-text"><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
-            </div>
-            <div class="row">
-              <RingPill ring="USE" />
-              <div class="row-text"><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
-            </div>
-            <div class="row">
-              <RingPill ring="HOLD" />
-              <div class="row-text"><b>Only if no alternative</b><span>Don't start new products with it</span></div>
-            </div>
-            <div class="row">
-              <RingPill ring="STOP" />
-              <div class="row-text"><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
-            </div>
-            <div class="row">
-              <RingPill ring="DEPRECATED" />
-              <div class="row-text"><b>Removed from radar</b><span>Not shown on the radar</span></div>
+          <div
+            class="card-body scroll-fade"
+            ref="glanceBody"
+            :class="{ 'fade-top': glanceScroll.up, 'fade-bottom': glanceScroll.down }"
+            @scroll="checkScrollFade(glanceBody, glanceScroll)"
+          >
+            <div class="rings-glance">
+              <div class="row">
+                <RingPill ring="ADOPT" />
+                <div class="row-text"><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
+              </div>
+              <div class="row">
+                <RingPill ring="USE" />
+                <div class="row-text"><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
+              </div>
+              <div class="row">
+                <RingPill ring="HOLD" />
+                <div class="row-text"><b>Only if no alternative</b><span>Don't start new products with it</span></div>
+              </div>
+              <div class="row">
+                <RingPill ring="STOP" />
+                <div class="row-text"><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
+              </div>
+              <div class="row">
+                <RingPill ring="DEPRECATED" />
+                <div class="row-text"><b>Removed from radar</b><span>Not shown on the radar</span></div>
+              </div>
             </div>
           </div>
         </ui5-card>
@@ -399,6 +479,40 @@ onBeforeUnmount(() => {
 .radar-chart { width: 100%; height: 100%; display: block; }
 .side-cards { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
+
+/* scrollable card bodies (side-cards is a fixed height once a technology
+   is selected - see layoutSideCards): no visible scrollbar, instead a
+   gray-to-transparent fade at whichever edge(s) still have more content,
+   using sticky pseudo-elements so no extra wrapper markup is needed. */
+.scroll-fade {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.scroll-fade::-webkit-scrollbar { display: none; }
+.scroll-fade::before,
+.scroll-fade::after {
+  content: '';
+  display: block;
+  position: sticky;
+  left: 0;
+  right: 0;
+  height: 28px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.scroll-fade::before {
+  top: 0;
+  margin-bottom: -28px;
+  background: linear-gradient(to bottom, var(--sap-tile-bg, #fff), transparent);
+}
+.scroll-fade::after {
+  bottom: 0;
+  margin-top: -28px;
+  background: linear-gradient(to top, var(--sap-tile-bg, #fff), transparent);
+}
+.scroll-fade.fade-top::before { opacity: 1; }
+.scroll-fade.fade-bottom::after { opacity: 1; }
 .rings-glance { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; row-gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: contents; }
 .rings-glance :deep(.ring-pill) { justify-self: start; align-self: start; }
