@@ -177,25 +177,43 @@ function renderChart() {
 onMounted(renderChart)
 watch([visibleEntries, selectedId], renderChart)
 
-// Fixed rule: the radar card's bottom edge always lines up with the side
-// cards column's bottom edge. side-cards has a fixed width (see CSS,
-// immune to flex-grow/shrink) so its own height never depends on the
-// radar - only the radar's square size (both width and height) follows
-// side-cards' height. This one-directional dependency is what keeps it
-// stable; letting side-cards' width float based on leftover space here
-// would feed back into its height and chase its own tail.
+// Fixed rule: the radar card's bottom edge lines up with the side cards
+// column's bottom edge, and side-cards fills the rest of the row (up to
+// the tiles/table width) instead of a fixed column.
+//
+// This can't be a live two-way binding: side-cards' height depends on its
+// own width (text re-wraps), and its width depends on the radar's width
+// (which depends on side-cards' height, for the square match) - watching
+// side-cards and reacting on every resize chases that loop to a collapsed
+// extreme (verified: side-cards -> 0, radar -> huge). Instead this
+// measures once - side-cards' height at its CSS default width (see
+// .radar-card's flex-basis below, a reasonable starting guess) - sets the
+// radar's square size from that single reading, and stops. Not pixel-
+// perfect if that first guess was off, but stable. Re-measures (same
+// one-shot way) on real window resizes, debounced.
 const sideCards = ref(null)
 const radarSize = ref(null)
-let sideCardsObserver = null
+let resizeTimer = null
+
+function measureRadarSize() {
+  if (sideCards.value) {
+    radarSize.value = sideCards.value.getBoundingClientRect().height
+  }
+}
+
+function onWindowResize() {
+  clearTimeout(resizeTimer)
+  resizeTimer = setTimeout(measureRadarSize, 200)
+}
 
 onMounted(() => {
-  if (typeof ResizeObserver === 'undefined' || !sideCards.value) {
-    return
-  }
-  sideCardsObserver = new ResizeObserver((entries) => {
-    radarSize.value = entries[0].contentRect.height
-  })
-  sideCardsObserver.observe(sideCards.value)
+  requestAnimationFrame(measureRadarSize)
+  window.addEventListener('resize', onWindowResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onWindowResize)
+  clearTimeout(resizeTimer)
 })
 
 onBeforeUnmount(() => {
@@ -376,10 +394,10 @@ onBeforeUnmount(() => {
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-card { flex: 0 0 auto; }
+.radar-card { flex: 0 0 auto; width: 600px; }
 .radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
-.side-cards { flex: 0 0 480px; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
+.side-cards { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: flex; align-items: flex-start; gap: 0.75rem; }
