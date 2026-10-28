@@ -87,7 +87,7 @@ function toggleRingFilter(ring) {
 // --- radar chart ---
 const chart = ref(null)
 const CHART_SIZE = 680
-const OUTER_RADIUS = 280
+const OUTER_RADIUS = 200
 
 function renderChart() {
   const svg = d3.select(chart.value)
