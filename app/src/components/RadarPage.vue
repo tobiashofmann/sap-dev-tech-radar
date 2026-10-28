@@ -70,6 +70,10 @@ function selectEntry(id) {
   selectedId.value = id
 }
 
+function toggleRingFilter(ring) {
+  ringFilter.value = ringFilter.value === ring ? 'All' : ring
+}
+
 // --- radar chart ---
 const chart = ref(null)
 const CHART_SIZE = 560
@@ -124,26 +128,43 @@ watch([visibleEntries, selectedId], renderChart)
 <template>
   <div class="radar-page">
     <div class="tiles">
-      <ui5-card v-for="ring in RINGS" :key="ring" :class="{ active: ringFilter === ring }">
-        <ui5-card-header slot="header" :title-text="ring" :subtitle-text="`${tileCounts[ring]}`"></ui5-card-header>
+      <ui5-card
+        v-for="ring in RINGS"
+        :key="ring"
+        class="tile"
+        :class="{ active: ringFilter === ring }"
+        @click="toggleRingFilter(ring)"
+      >
+        <div class="tile-body">
+          <div class="tile-label">{{ ring }}</div>
+          <div class="tile-count" :style="{ color: RING_COLORS[ring] }">{{ tileCounts[ring] }}</div>
+        </div>
       </ui5-card>
     </div>
 
     <div class="filters">
-      <label>
-        <span>Quadrant:</span>
-        <ui5-select @change="(e) => quadrantFilter = e.target.value">
-          <ui5-option value="All" :selected="quadrantFilter === 'All'">All</ui5-option>
-          <ui5-option v-for="q in QUADRANTS" :key="q.name" :value="q.name" :selected="quadrantFilter === q.name">{{ q.name }}</ui5-option>
-        </ui5-select>
-      </label>
-      <label>
-        <span>Ring:</span>
-        <ui5-select @change="(e) => ringFilter = e.target.value">
-          <ui5-option value="All" :selected="ringFilter === 'All'">All</ui5-option>
-          <ui5-option v-for="r in RINGS" :key="r" :value="r" :selected="ringFilter === r">{{ r }}</ui5-option>
-        </ui5-select>
-      </label>
+      <div class="filter-group">
+        <span class="filter-label">Quadrant:</span>
+        <button class="chip" :class="{ on: quadrantFilter === 'All' }" @click="quadrantFilter = 'All'">All</button>
+        <button
+          v-for="q in QUADRANTS"
+          :key="q.name"
+          class="chip"
+          :class="{ on: quadrantFilter === q.name }"
+          @click="quadrantFilter = q.name"
+        >{{ q.name }}</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Ring:</span>
+        <button class="chip" :class="{ on: ringFilter === 'All' }" @click="ringFilter = 'All'">All</button>
+        <button
+          v-for="r in RINGS"
+          :key="r"
+          class="chip"
+          :class="{ on: ringFilter === r }"
+          @click="toggleRingFilter(r)"
+        ><span class="dot" :style="{ background: RING_COLORS[r] }"></span>{{ r }}</button>
+      </div>
     </div>
 
     <div class="main-area">
@@ -153,11 +174,11 @@ watch([visibleEntries, selectedId], renderChart)
         <ui5-card>
           <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
           <div class="card-body rings-glance">
-            <div><RingPill ring="ADOPT" /> <b>Assess now</b> - new, stabilizing - may succeed a HOLD/STOP tech</div>
-            <div><RingPill ring="USE" /> <b>Recommended for new projects</b> - supported, stable, with roadmap</div>
-            <div><RingPill ring="HOLD" /> <b>Only if no alternative</b> - don't start new products with it</div>
-            <div><RingPill ring="STOP" /> <b>Migrate away</b> - obsolete, EOL defined</div>
-            <div><RingPill ring="DEPRECATED" /> <b>Removed from radar</b> - not shown on the radar</div>
+            <div class="row"><RingPill ring="ADOPT" /><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
+            <div class="row"><RingPill ring="USE" /><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
+            <div class="row"><RingPill ring="HOLD" /><b>Only if no alternative</b><span>Don't start new products with it</span></div>
+            <div class="row"><RingPill ring="STOP" /><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
+            <div class="row"><RingPill ring="DEPRECATED" /><b>Removed from radar</b><span>Not shown on the radar</span></div>
           </div>
         </ui5-card>
 
@@ -220,15 +241,49 @@ watch([visibleEntries, selectedId], renderChart)
 <style scoped>
 .radar-page { padding: 1rem 1.5rem 2rem; }
 .tiles { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
-.tiles ui5-card { flex: 0 0 160px; }
-.tiles ui5-card.active { outline: 2px solid var(--sap-adopt, #0064d9); }
-.filters { display: flex; align-items: center; gap: 2rem; margin-bottom: 1rem; }
-.filters label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
+.tiles ui5-card.tile { flex: 0 0 160px; cursor: pointer; }
+.tiles ui5-card.tile.active { outline: 2px solid var(--sap-adopt, #0064d9); }
+.tile-body { padding: 0.9rem 1.1rem; }
+.tile-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.03em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.3rem; }
+.tile-count { font-size: 1.6rem; font-weight: 700; }
+
+.filters { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.filter-label { font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); margin-right: 0.3rem; }
+.chip {
+  border: 1px solid var(--sap-border, #d9d9d9);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.chip.on {
+  background: #e5f0fc;
+  border-color: var(--sap-adopt, #0064d9);
+  color: var(--sap-adopt, #0064d9);
+  font-weight: 600;
+}
+.chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
+
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
 .radar-chart { flex: 1 1 auto; max-width: 560px; }
 .side-cards { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
-.rings-glance > div { padding: 0.3rem 0; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+.rings-glance {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.85rem;
+}
+.rings-glance .row { display: contents; }
+.rings-glance .row span { color: var(--sap-text-muted, #5b738b); }
 .list-view { width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
 .list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
 .list-view td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
