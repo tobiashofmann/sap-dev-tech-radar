@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
 import RingPill from './RingPill.vue'
+import { sanitizeDescription } from '../sanitize.js'
 
 const props = defineProps({
   entries: { type: Array, required: true },
@@ -200,7 +201,7 @@ watch([visibleEntries, selectedId], renderChart)
         <ui5-card v-else>
           <ui5-card-header slot="header" title-text="Selected technology" :subtitle-text="selectedEntry.title"></ui5-card-header>
           <div class="card-body">
-            <p v-html="selectedEntry.description"></p>
+            <p v-html="sanitizeDescription(selectedEntry.description)"></p>
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
               &middot; Trend: <b>{{ selectedEntry.trend }}</b></p>
             <p>Reason: {{ selectedEntry.reason }}</p>

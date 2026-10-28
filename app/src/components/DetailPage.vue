@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import RingPill from './RingPill.vue'
+import { sanitizeDescription } from '../sanitize.js'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -37,7 +38,7 @@ const voteLink = computed(() =>
 
     <section class="header-card">
       <h1>{{ entry.title }}</h1>
-      <p v-html="entry.description"></p>
+      <p v-html="sanitizeDescription(entry.description)"></p>
       <p>
         <RingPill :ring="entry.ring" />
         {{ entry.quadrant }} &middot; trend: {{ entry.trend }}
