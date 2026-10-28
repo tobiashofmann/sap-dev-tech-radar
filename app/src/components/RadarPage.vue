@@ -79,8 +79,8 @@ function toggleRingFilter(ring) {
 
 // --- radar chart ---
 const chart = ref(null)
-const CHART_SIZE = 560
-const OUTER_RADIUS = 240
+const CHART_SIZE = 680
+const OUTER_RADIUS = 220
 
 function renderChart() {
   const svg = d3.select(chart.value)
@@ -91,7 +91,8 @@ function renderChart() {
 
   const g = svg.append('g').attr('transform', `translate(${center},${center})`)
 
-  ringBoundaryRadii(OUTER_RADIUS).forEach((r) => {
+  const boundaries = ringBoundaryRadii(OUTER_RADIUS)
+  boundaries.forEach((r) => {
     g.append('circle')
       .attr('r', r)
       .attr('fill', 'none')
@@ -106,6 +107,41 @@ function renderChart() {
       .attr('x2', OUTER_RADIUS * Math.cos(angle))
       .attr('y2', OUTER_RADIUS * Math.sin(angle))
       .attr('stroke', '#e5e5e5')
+  })
+
+  // ring labels, colored per design/DESIGN.md rule 5, along the UI/Technology
+  // boundary (straight up from center) at each ring's midpoint radius
+  const innerBoundaries = [0, ...boundaries.slice(0, -1)]
+  RINGS.forEach((ring, i) => {
+    const rMid = (innerBoundaries[i] + boundaries[i]) / 2
+    g.append('text')
+      .attr('x', 0)
+      .attr('y', -rMid)
+      .attr('dy', '-4')
+      .attr('text-anchor', 'middle')
+      .style('font-size', '11px')
+      .style('font-weight', '700')
+      .style('letter-spacing', '0.03em')
+      .style('fill', RING_COLORS[ring])
+      .text(ring)
+  })
+
+  // quadrant labels just outside the outer ring, per design/DESIGN.md rule 7
+  // (UI top-left, Technology top-right, Frameworks bottom-right, Tools bottom-left)
+  QUADRANTS.forEach((q) => {
+    const mid = ((q.radial_min + q.radial_max) / 2) * Math.PI
+    const r = OUTER_RADIUS + 22
+    const x = r * Math.cos(mid)
+    const y = r * Math.sin(mid)
+    g.append('text')
+      .attr('x', x)
+      .attr('y', y)
+      .attr('text-anchor', x < -5 ? 'end' : x > 5 ? 'start' : 'middle')
+      .attr('dominant-baseline', y < 0 ? 'auto' : 'hanging')
+      .style('font-size', '13px')
+      .style('font-weight', '700')
+      .style('fill', 'var(--sap-text-muted, #5b738b)')
+      .text(q.name)
   })
 
   g.selectAll('circle.blip')
