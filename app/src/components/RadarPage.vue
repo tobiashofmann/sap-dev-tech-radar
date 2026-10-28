@@ -350,11 +350,11 @@ watch([visibleEntries, selectedId], renderChart)
 }
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
-.main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-card { flex: 1 1 auto; min-width: 0; }
+.main-area { display: grid; grid-template-columns: 60% 40%; gap: 1.5rem; align-items: start; }
+.radar-card { min-width: 0; }
 .radar-card-inner { width: 100%; padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
-.side-cards { flex: 0 0 720px; max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
+.side-cards { min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: flex; align-items: flex-start; gap: 0.75rem; }
@@ -371,9 +371,7 @@ watch([visibleEntries, selectedId], renderChart)
    anything narrower than the mock's fixed 1280px desktop frame: stack the
    radar and side cards instead of forcing them side by side. */
 @media (max-width: 1100px) {
-  .main-area { flex-direction: column; }
-  .radar-card { flex: 0 0 auto; width: 100%; }
-  .side-cards { max-width: none; width: 100%; }
+  .main-area { grid-template-columns: 1fr; }
   .side-cards ui5-card { width: 100%; }
 }
 
