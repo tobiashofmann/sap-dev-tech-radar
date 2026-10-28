@@ -401,7 +401,7 @@ onBeforeUnmount(() => {
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; row-gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: contents; }
-.rings-glance :deep(.ring-pill) { justify-self: start; }
+.rings-glance :deep(.ring-pill) { justify-self: start; align-self: start; }
 .rings-glance .row-text { display: flex; flex-direction: column; gap: 0.2rem; }
 .rings-glance .row-text span { color: var(--sap-text-muted, #5b738b); }
 .table-wrap { overflow-x: auto; }
