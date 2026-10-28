@@ -89,6 +89,7 @@ function backToRadar() {
   justify-content: space-between;
   gap: 0.5rem 1rem;
   padding: 1rem 1.5rem;
+  background: var(--sap-tile-bg, #fff);
   border-bottom: 1px solid #e5e5e5;
 }
 .page-header h1 { font-size: 1.3rem; }

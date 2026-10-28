@@ -80,7 +80,7 @@ function toggleRingFilter(ring) {
 // --- radar chart ---
 const chart = ref(null)
 const CHART_SIZE = 680
-const OUTER_RADIUS = 220
+const OUTER_RADIUS = 280
 
 function renderChart() {
   const svg = d3.select(chart.value)
@@ -130,13 +130,13 @@ function renderChart() {
   // (UI top-left, Technology top-right, Frameworks bottom-right, Tools bottom-left)
   QUADRANTS.forEach((q) => {
     const mid = ((q.radial_min + q.radial_max) / 2) * Math.PI
-    const r = OUTER_RADIUS + 22
+    const r = OUTER_RADIUS + 16
     const x = r * Math.cos(mid)
     const y = r * Math.sin(mid)
     g.append('text')
       .attr('x', x)
       .attr('y', y)
-      .attr('text-anchor', x < -5 ? 'end' : x > 5 ? 'start' : 'middle')
+      .attr('text-anchor', 'middle')
       .attr('dominant-baseline', y < 0 ? 'auto' : 'hanging')
       .style('font-size', '13px')
       .style('font-weight', '700')
@@ -213,7 +213,11 @@ watch([visibleEntries, selectedId], renderChart)
     </div>
 
     <div class="main-area">
-      <svg ref="chart" class="radar-chart"></svg>
+      <ui5-card class="radar-card">
+        <div class="radar-card-inner">
+          <svg ref="chart" class="radar-chart"></svg>
+        </div>
+      </ui5-card>
 
       <div class="side-cards">
         <ui5-card>
@@ -318,8 +322,10 @@ watch([visibleEntries, selectedId], renderChart)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-chart { flex: 1 1 auto; width: 100%; max-width: none; height: auto; display: block; }
-.side-cards { flex: 0 1 460px; max-width: 460px; display: flex; flex-direction: column; gap: 1rem; }
+.radar-card { flex: 1 1 auto; min-width: 0; }
+.radar-card-inner { padding: 1rem; }
+.radar-chart { width: 100%; max-width: none; height: auto; display: block; }
+.side-cards { flex: 0 1 600px; max-width: 600px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance {
   display: grid;
@@ -343,6 +349,7 @@ watch([visibleEntries, selectedId], renderChart)
    radar and side cards instead of forcing them side by side. */
 @media (max-width: 1100px) {
   .main-area { flex-direction: column; }
+  .radar-card { flex: 0 0 auto; width: 100%; }
   .side-cards { max-width: none; width: 100%; }
   .side-cards ui5-card { width: 100%; }
 }
