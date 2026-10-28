@@ -258,7 +258,7 @@ watch([visibleEntries, selectedId], renderChart)
 .tile-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.03em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.3rem; }
 .tile-count { font-size: 1.6rem; font-weight: 700; }
 
-.filters { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+.filters { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0.5rem 2.5rem; margin-bottom: 1rem; }
 .filter-group { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
 .filter-label { font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); margin-right: 0.3rem; }
 .chip {
