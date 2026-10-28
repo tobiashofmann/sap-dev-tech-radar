@@ -6,4 +6,6 @@ node_modules/
 yarn-error.log
 html/
 radar/config.json
+radar/releases/
+radar/app/
 

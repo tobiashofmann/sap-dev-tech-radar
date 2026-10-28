@@ -22,10 +22,14 @@ function createCONFIG(tomlAsJson, filename) {
 
   // add to deprecated list if ring is DEPRECATED
   if (tomlAsJson.config.ring === "DEPRECATED") {
+    const since = tomlAsJson.config.since;
+    if (!/^\d{4}-(06|12)$/.test(since)) {
+      throw new Error(`"${filename}": since "${since}" must match YYYY-06 or YYYY-12 (e.g. "2026-06")`);
+    }
     deprecatedList.push({
       title: tomlAsJson.config.label,
       quadrant: tomlAsJson.config.quadrant,
-      since: tomlAsJson.config.since,
+      since: since,
       link: "./html/" + filename + ".html"
     });
   }
@@ -43,11 +47,13 @@ function createCONFIG(tomlAsJson, filename) {
    * convert toml to HTML
    * @param {JSON} tomlAsJson
    * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
+   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
    */
-function createHTML(tomlAsJson, filename) {
+function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
   let htmltemplate = loadHtmlTemplate();
-  writeHtmlToFile(tomlAsJson, htmltemplate, filename);
+  writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory);
   //console.log(htmltemplate);
 }
 
@@ -57,11 +63,11 @@ function createHTML(tomlAsJson, filename) {
    *
    * @param {string} htmltemplate
    */
-  function writeHtmlToFile(tomlAsJson, htmltemplate, filename) {
+  function writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
 
     if (htmltemplate !== -1) {
 
-        const html = conv2html(tomlAsJson, htmltemplate);
+        const html = conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory);
         //console.log(html);
 
         const path = "./radar/html/" + filename + ".html";
@@ -76,17 +82,20 @@ function createHTML(tomlAsJson, filename) {
    * @param {*} htmltemplate
    * @returns
    */
-  function conv2html(tomlAsJson, htmltemplate) {
+  function conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
     //console.log(tomlAsJson);
     //console.log(htmltemplate);
 
     htmltemplate = replacePlaceholder(htmltemplate, "%title%", tomlAsJson.page.title);
     htmltemplate = replacePlaceholder(htmltemplate, "%description%", tomlAsJson.page.description);
     htmltemplate = replacePlaceholder(htmltemplate, "%reason%", tomlAsJson.page.reason);
+    htmltemplate = replacePlaceholder(htmltemplate, "%recommendation%", tomlAsJson.page.recommendation || tomlAsJson.page.reason);
     htmltemplate = replacePlaceholder(htmltemplate, "%support%", tomlAsJson.page.support);
     htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", tomlAsJson.config.quadrant);
     htmltemplate = replacePlaceholder(htmltemplate, "%ring%", tomlAsJson.config.ring);
     htmltemplate = replacePlaceholder(htmltemplate, "%trend%", tomlAsJson.config.trend);
+    htmltemplate = replacePlaceholder(htmltemplate, "%related%", renderRelated(tomlAsJson, filename, entryByFilename));
+    htmltemplate = replacePlaceholder(htmltemplate, "%releasehistory%", renderReleaseHistory(tomlAsJson, releaseHistory));
 
     switch (tomlAsJson.config.trend) {
       case "positive":
@@ -115,6 +124,43 @@ function createHTML(tomlAsJson, filename) {
     htmltemplate = replacePlaceholder(htmltemplate, "%color%", getReplaceColor(tomlAsJson.config.ring));
 
     return htmltemplate;
+  }
+
+  /**
+   * Renders the curated "related technologies" list, resolving each
+   * configured id (a filename under definitions/) to its title/quadrant/ring.
+   * @param {*} tomlAsJson
+   * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename]
+   * @returns {string}
+   */
+  function renderRelated(tomlAsJson, filename, entryByFilename) {
+    const relatedIds = tomlAsJson.config.related || [];
+    let html = "";
+    relatedIds.forEach((id) => {
+      const related = entryByFilename && entryByFilename[id];
+      if (!related) {
+        throw new Error(`"${filename}": related id "${id}" does not match any definitions/**/*.toml filename`);
+      }
+      html += "<a href='./" +id+ ".html' class='list-group-item list-group-item-action link-primary'>" +related.title+ " (" +related.quadrant+ ", " +related.ring+ ")</a>";
+    });
+    return html;
+  }
+
+  /**
+   * Renders the ring-history timeline: one entry per past release this
+   * technology was already published in, plus the current (unreleased) ring.
+   * @param {*} tomlAsJson
+   * @param {{release: string, ring: string}[]} [releaseHistory] oldest first
+   * @returns {string}
+   */
+  function renderReleaseHistory(tomlAsJson, releaseHistory) {
+    let html = "";
+    (releaseHistory || []).forEach(({ release, ring }) => {
+      html += "<li class='list-group-item'>" +release+ ": <b>" +ring+ "</b></li>";
+    });
+    html += "<li class='list-group-item'>current: <b>" +tomlAsJson.config.ring+ "</b></li>";
+    return html;
   }
 
   function getReplaceColor(ring) {
@@ -293,4 +339,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage}
+export {createCONFIG, createHTML, createDeprecatedPage, json2config}

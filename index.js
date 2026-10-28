@@ -3,36 +3,62 @@ import { glob } from 'glob'
 import path from 'path';
 import fs from 'node:fs'
 import {createCONFIG, createHTML, createDeprecatedPage} from './convert.js';
+import {deriveAndArchiveHistory, validateForwardOnly} from './history.js';
 
 const tomlFilePath = "./definitions/**/*.toml";
 
-// read toml files
+//
+// first pass: read + parse every definition file, so related-id lookups
+// and release-history derivation can see the whole set before anything
+// is written
+//
+const entries = [];
 glob.sync( tomlFilePath ).forEach( function( file ) {
-    //console.log(file);
 
-    // get filename
     const filename = getFilename(file);
+
+    try {
+        const raw = fs.readFileSync(file, 'utf8');
+        const data = load(raw);
+        entries.push({filename, relPath: file, data});
+      } catch (err) {
+        console.error(err);
+      }
+
+  });
+
+// lookup used to resolve `related` ids to title/quadrant/ring
+const entryByFilename = {};
+entries.forEach(({filename, data}) => {
+  entryByFilename[filename] = {
+    title: data.page.title,
+    quadrant: data.config.quadrant,
+    ring: data.config.ring
+  };
+});
+
+// derive each technology's ring-per-release history from git tags, and
+// archive a config.json snapshot per past release under radar/releases/
+const historyByFilename = deriveAndArchiveHistory(entries.map(({filename, relPath}) => ({filename, relPath})));
+
+entries.forEach( function( {filename, data} ) {
     console.log(filename);
 
     try {
-        const data = fs.readFileSync(file, 'utf8');
-        //console.log(data);
-
         //
-        // input of toml converted to JSON
+        // forward-only ring check against derived history
         //
-        const tomlAsJson = load(data);
-        //console.log(tomlAsJson);
+        validateForwardOnly(filename, data.config.ring, historyByFilename[filename]);
 
         //
         // create config file from toml file
         //
-        createCONFIG(tomlAsJson, filename);
+        createCONFIG(data, filename);
 
         //
         // create HTML file from toml file
         //
-        createHTML(tomlAsJson, filename);
+        createHTML(data, filename, entryByFilename, historyByFilename[filename]);
 
       } catch (err) {
         console.error(err);

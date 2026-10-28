@@ -39,6 +39,11 @@ Please use the TOML file that already exists for the technology. Do not create a
 
 - When submtting information, ensure that the template info.toml is used.
 - Fill in all fields. Every property in section page and config must have a value. In section links, provide at least one link. The link should be from SAP Help or other official documentation, like the projects home page or git repository.
+- `[page].reason` explains *why* the technology is positioned where it is. `[page].recommendation` is an optional, separate, short, actionable sentence of *what to do* about it (e.g. "Use for new multi-platform mobile apps."); if omitted, the detail page falls back to showing `reason` in its place. Prefer adding a distinct `recommendation` where you can: reason is justification, recommendation is the instruction.
+- `[config].trend` is required: `positive`, `stable`, or `negative`.
+- `[config].related` is optional: an array of other entries' filenames (without `.toml`), e.g. `related = ["sapbuildapps", "kapsel"]`, for technologies worth cross-referencing from this one's detail page. Entries must exist under `definitions/`.
+- `[config].since` is only set when `ring = "DEPRECATED"`, and records the release in which it was deprecated, formatted `YYYY-MM` (zero-padded month, e.g. `"2026-06"` — not `"2026.6"`).
+- An optional `[links]` entry named `"Ring proposal & vote"` can point to the GitHub PR/issue where the current ring was proposed and voted on; it is rendered like any other link.
 
 ## Test it locally
 
