@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
@@ -176,6 +176,31 @@ function renderChart() {
 
 onMounted(renderChart)
 watch([visibleEntries, selectedId], renderChart)
+
+// Fixed rule: the radar card's bottom edge always lines up with the side
+// cards column's bottom edge. side-cards has a fixed width (see CSS,
+// immune to flex-grow/shrink) so its own height never depends on the
+// radar - only the radar's square size (both width and height) follows
+// side-cards' height. This one-directional dependency is what keeps it
+// stable; letting side-cards' width float based on leftover space here
+// would feed back into its height and chase its own tail.
+const sideCards = ref(null)
+const radarSize = ref(null)
+let sideCardsObserver = null
+
+onMounted(() => {
+  if (typeof ResizeObserver === 'undefined' || !sideCards.value) {
+    return
+  }
+  sideCardsObserver = new ResizeObserver((entries) => {
+    radarSize.value = entries[0].contentRect.height
+  })
+  sideCardsObserver.observe(sideCards.value)
+})
+
+onBeforeUnmount(() => {
+  sideCardsObserver?.disconnect()
+})
 </script>
 
 <template>
@@ -227,13 +252,13 @@ watch([visibleEntries, selectedId], renderChart)
     </div>
 
     <div class="main-area">
-      <ui5-card class="radar-card">
-        <div class="radar-card-inner">
+      <ui5-card class="radar-card" :style="radarSize ? { width: radarSize + 'px' } : {}">
+        <div class="radar-card-inner" :style="radarSize ? { width: radarSize + 'px', height: radarSize + 'px' } : {}">
           <svg ref="chart" class="radar-chart"></svg>
         </div>
       </ui5-card>
 
-      <div class="side-cards">
+      <div class="side-cards" ref="sideCards">
         <ui5-card v-if="!selectedEntry">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
           <div class="card-body">
@@ -350,11 +375,11 @@ watch([visibleEntries, selectedId], renderChart)
 }
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
-.main-area { display: grid; grid-template-columns: 60% 40%; gap: 1.5rem; align-items: start; }
-.radar-card { min-width: 0; }
-.radar-card-inner { width: 100%; padding: 1rem; aspect-ratio: 1 / 1; }
+.main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
+.radar-card { flex: 0 0 auto; }
+.radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
-.side-cards { min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
+.side-cards { flex: 0 0 480px; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: flex; align-items: flex-start; gap: 0.75rem; }
@@ -371,7 +396,10 @@ watch([visibleEntries, selectedId], renderChart)
    anything narrower than the mock's fixed 1280px desktop frame: stack the
    radar and side cards instead of forcing them side by side. */
 @media (max-width: 1100px) {
-  .main-area { grid-template-columns: 1fr; }
+  .main-area { flex-direction: column; }
+  .radar-card { flex: 0 0 auto; width: 100% !important; }
+  .radar-card-inner { width: 100% !important; height: auto !important; }
+  .side-cards { flex: 0 0 auto; width: 100%; }
   .side-cards ui5-card { width: 100%; }
 }
 
