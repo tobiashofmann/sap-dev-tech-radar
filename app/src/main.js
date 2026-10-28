@@ -12,5 +12,7 @@ import '@ui5/webcomponents/dist/Input.js'
 import '@ui5/webcomponents/dist/Select.js'
 import '@ui5/webcomponents/dist/Option.js'
 import '@ui5/webcomponents/dist/Dialog.js'
+import '@ui5/webcomponents-icons/dist/full-screen.js'
+import '@ui5/webcomponents-icons/dist/exit-full-screen.js'
 
 createApp(App).mount('#app')

@@ -17,6 +17,9 @@ const emit = defineEmits(['open-detail'])
 const quadrantFilter = ref('All')
 const ringFilter = ref('All')
 const selectedId = ref(null)
+// Screen F (fullscreen radar): button added here, the actual fullscreen
+// layout/behavior is a separate follow-up step.
+const isFullscreen = ref(false)
 
 const activeEntries = computed(() => props.entries.filter((e) => e.ring !== 'DEPRECATED'))
 
@@ -334,6 +337,14 @@ watch([selectedEntry, radarSize], layoutSideCards)
 
     <div class="main-area">
       <ui5-card class="radar-card" :style="radarSize ? { width: radarSize + 'px' } : {}">
+        <ui5-button
+          class="fullscreen-toggle"
+          :icon="isFullscreen ? 'exit-full-screen' : 'full-screen'"
+          design="Transparent"
+          :accessible-name="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'"
+          :tooltip="isFullscreen ? 'Exit fullscreen' : 'Fullscreen'"
+          @click="isFullscreen = !isFullscreen"
+        ></ui5-button>
         <div class="radar-card-inner" :style="radarSize ? { width: radarSize + 'px', height: radarSize + 'px' } : {}">
           <svg ref="chart" class="radar-chart"></svg>
         </div>
@@ -474,7 +485,16 @@ watch([selectedEntry, radarSize], layoutSideCards)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-card { flex: 0 0 auto; width: 600px; }
+.radar-card { position: relative; flex: 0 0 auto; width: 600px; }
+.fullscreen-toggle {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 2;
+  border-radius: 50%;
+  background: var(--sap-tile-bg, #fff);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
 .radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
 .side-cards { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
