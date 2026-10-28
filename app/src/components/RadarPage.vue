@@ -399,8 +399,8 @@ onBeforeUnmount(() => {
 .radar-chart { width: 100%; height: 100%; display: block; }
 .side-cards { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
-.rings-glance { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem; }
-.rings-glance .row { display: flex; align-items: flex-start; gap: 0.75rem; }
+.rings-glance { display: grid; grid-template-columns: auto 1fr; column-gap: 0.75rem; row-gap: 0.9rem; font-size: 0.85rem; }
+.rings-glance .row { display: contents; }
 .rings-glance .row-text { display: flex; flex-direction: column; gap: 0.2rem; }
 .rings-glance .row-text span { color: var(--sap-text-muted, #5b738b); }
 .table-wrap { overflow-x: auto; }
