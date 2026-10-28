@@ -318,8 +318,8 @@ watch([visibleEntries, selectedId], renderChart)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
-.radar-chart { flex: 1 1 460px; width: 100%; max-width: 660px; height: auto; display: block; margin: 0 auto; }
-.side-cards { flex: 1 1 380px; max-width: 520px; display: flex; flex-direction: column; gap: 1rem; }
+.radar-chart { flex: 1 1 auto; width: 100%; max-width: none; height: auto; display: block; }
+.side-cards { flex: 0 1 460px; max-width: 460px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance {
   display: grid;
