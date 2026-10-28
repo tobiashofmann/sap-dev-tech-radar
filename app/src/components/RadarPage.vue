@@ -36,6 +36,8 @@ const tileCounts = computed(() => {
   return counts
 })
 
+const totalCount = computed(() => quadrantFiltered.value.length)
+
 const selectedEntry = computed(() =>
   selectedId.value ? props.entries.find((e) => e.id === selectedId.value) : null
 )
@@ -129,6 +131,12 @@ watch([visibleEntries, selectedId], renderChart)
 <template>
   <div class="radar-page">
     <div class="tiles">
+      <ui5-card class="tile" :class="{ active: ringFilter === 'All' }" @click="ringFilter = 'All'">
+        <div class="tile-body">
+          <div class="tile-label">Total</div>
+          <div class="tile-count">{{ totalCount }}</div>
+        </div>
+      </ui5-card>
       <ui5-card
         v-for="ring in RINGS"
         :key="ring"
@@ -244,7 +252,7 @@ watch([visibleEntries, selectedId], renderChart)
 <style scoped>
 .radar-page { padding: 1rem 1.5rem 2rem; }
 .tiles { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
-.tiles ui5-card.tile { flex: 0 0 160px; cursor: pointer; }
+.tiles ui5-card.tile { flex: 1 1 0; min-width: 140px; cursor: pointer; }
 .tiles ui5-card.tile.active { outline: 2px solid var(--sap-adopt, #0064d9); }
 .tile-body { padding: 0.9rem 1.1rem; }
 .tile-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.03em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.3rem; }

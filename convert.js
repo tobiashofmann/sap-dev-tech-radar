@@ -13,12 +13,25 @@ let configJson = createConfigJson();
 // list for deprecated technologies
 let deprecatedList = [];
 
+const VALID_RINGS = ["ADOPT", "USE", "HOLD", "STOP", "DEPRECATED"];
+const VALID_QUADRANTS = ["Tools", "Frameworks", "UI", "Technology"];
+
   /**
    * convert toml to JSON
    * @param {JSON} tomlAsJson
    * @param {string} filename
    */
 function createCONFIG(tomlAsJson, filename) {
+
+  // getQuadrant/getRing silently default to 0 for an unrecognized value,
+  // so a typo like ring = "Adopt" would otherwise be mis-filed without
+  // any error - validate against the exact allowed set first.
+  if (!VALID_RINGS.includes(tomlAsJson.config.ring)) {
+    throw new Error(`"${filename}": ring "${tomlAsJson.config.ring}" must be one of ${VALID_RINGS.join(", ")}`);
+  }
+  if (!VALID_QUADRANTS.includes(tomlAsJson.config.quadrant)) {
+    throw new Error(`"${filename}": quadrant "${tomlAsJson.config.quadrant}" must be one of ${VALID_QUADRANTS.join(", ")}`);
+  }
 
   // add to deprecated list if ring is DEPRECATED
   if (tomlAsJson.config.ring === "DEPRECATED") {
