@@ -283,11 +283,26 @@ onBeforeUnmount(() => {
         <ui5-card>
           <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
           <div class="card-body rings-glance">
-            <div class="row"><RingPill ring="ADOPT" /><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
-            <div class="row"><RingPill ring="USE" /><b>Recommended for new projects</b><span>Supported, stable, with roadmap</span></div>
-            <div class="row"><RingPill ring="HOLD" /><b>Only if no alternative</b><span>Don't start new products with it</span></div>
-            <div class="row"><RingPill ring="STOP" /><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
-            <div class="row"><RingPill ring="DEPRECATED" /><b>Removed from radar</b><span>Not shown on the radar</span></div>
+            <div class="row">
+              <div class="row-head"><RingPill ring="ADOPT" /><b>Assess now</b></div>
+              <div class="row-desc">New, stabilizing - may succeed a HOLD/STOP tech</div>
+            </div>
+            <div class="row">
+              <div class="row-head"><RingPill ring="USE" /><b>Recommended for new projects</b></div>
+              <div class="row-desc">Supported, stable, with roadmap</div>
+            </div>
+            <div class="row">
+              <div class="row-head"><RingPill ring="HOLD" /><b>Only if no alternative</b></div>
+              <div class="row-desc">Don't start new products with it</div>
+            </div>
+            <div class="row">
+              <div class="row-head"><RingPill ring="STOP" /><b>Migrate away</b></div>
+              <div class="row-desc">Obsolete, EOL defined</div>
+            </div>
+            <div class="row">
+              <div class="row-head"><RingPill ring="DEPRECATED" /><b>Removed from radar</b></div>
+              <div class="row-desc">Not shown on the radar</div>
+            </div>
           </div>
         </ui5-card>
       </div>
@@ -359,18 +374,11 @@ onBeforeUnmount(() => {
 .radar-card { flex: 1 1 auto; min-width: 0; }
 .radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
-.side-cards { flex: 0 1 600px; max-width: 600px; display: flex; flex-direction: column; gap: 1rem; }
+.side-cards { flex: 0 1 720px; max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
-.rings-glance {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  column-gap: 0.75rem;
-  row-gap: 0.6rem;
-  align-items: baseline;
-  font-size: 0.85rem;
-}
-.rings-glance .row { display: contents; }
-.rings-glance .row span { color: var(--sap-text-muted, #5b738b); }
+.rings-glance { display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem; }
+.rings-glance .row-head { display: flex; align-items: center; gap: 0.6rem; }
+.rings-glance .row-desc { color: var(--sap-text-muted, #5b738b); margin-top: 0.15rem; }
 .table-wrap { overflow-x: auto; }
 .list-view { width: 100%; min-width: 640px; margin-top: 1.5rem; border-collapse: collapse; }
 .list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
