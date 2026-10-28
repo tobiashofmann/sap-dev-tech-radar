@@ -3,6 +3,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
+import RingPill from './RingPill.vue'
 
 const props = defineProps({
   entries: { type: Array, required: true },
@@ -130,18 +131,18 @@ watch([visibleEntries, selectedId], renderChart)
 
     <div class="filters">
       <label>
-        Quadrant:
-        <select v-model="quadrantFilter">
-          <option value="All">All</option>
-          <option v-for="q in QUADRANTS" :key="q.name" :value="q.name">{{ q.name }}</option>
-        </select>
+        <span>Quadrant:</span>
+        <ui5-select @change="(e) => quadrantFilter = e.target.value">
+          <ui5-option value="All" :selected="quadrantFilter === 'All'">All</ui5-option>
+          <ui5-option v-for="q in QUADRANTS" :key="q.name" :value="q.name" :selected="quadrantFilter === q.name">{{ q.name }}</ui5-option>
+        </ui5-select>
       </label>
       <label>
-        Ring:
-        <select v-model="ringFilter">
-          <option value="All">All</option>
-          <option v-for="r in RINGS" :key="r" :value="r">{{ r }}</option>
-        </select>
+        <span>Ring:</span>
+        <ui5-select @change="(e) => ringFilter = e.target.value">
+          <ui5-option value="All" :selected="ringFilter === 'All'">All</ui5-option>
+          <ui5-option v-for="r in RINGS" :key="r" :value="r" :selected="ringFilter === r">{{ r }}</ui5-option>
+        </ui5-select>
       </label>
     </div>
 
@@ -152,11 +153,11 @@ watch([visibleEntries, selectedId], renderChart)
         <ui5-card>
           <ui5-card-header slot="header" title-text="Rings at a glance"></ui5-card-header>
           <div class="card-body rings-glance">
-            <div><b>ADOPT</b> - Assess now: new, stabilizing - may succeed a HOLD/STOP tech</div>
-            <div><b>USE</b> - Recommended for new projects: supported, stable, with roadmap</div>
-            <div><b>HOLD</b> - Only if no alternative: don't start new products with it</div>
-            <div><b>STOP</b> - Migrate away: obsolete, EOL defined</div>
-            <div><b>DEPRECATED</b> - Removed from radar: not shown on the radar</div>
+            <div><RingPill ring="ADOPT" /> <b>Assess now</b> - new, stabilizing - may succeed a HOLD/STOP tech</div>
+            <div><RingPill ring="USE" /> <b>Recommended for new projects</b> - supported, stable, with roadmap</div>
+            <div><RingPill ring="HOLD" /> <b>Only if no alternative</b> - don't start new products with it</div>
+            <div><RingPill ring="STOP" /> <b>Migrate away</b> - obsolete, EOL defined</div>
+            <div><RingPill ring="DEPRECATED" /> <b>Removed from radar</b> - not shown on the radar</div>
           </div>
         </ui5-card>
 
@@ -182,7 +183,7 @@ watch([visibleEntries, selectedId], renderChart)
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
               &middot; Trend: <b>{{ selectedEntry.trend }}</b></p>
             <p>Reason: {{ selectedEntry.reason }}</p>
-            <button @click="emit('open-detail', selectedEntry.id)">Open detail page &rarr;</button>
+            <ui5-button @click="emit('open-detail', selectedEntry.id)">Open detail page &rarr;</ui5-button>
           </div>
         </ui5-card>
       </div>
@@ -207,7 +208,7 @@ watch([visibleEntries, selectedId], renderChart)
         >
           <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
           <td>{{ e.quadrant }}</td>
-          <td>{{ e.ring }}</td>
+          <td><RingPill :ring="e.ring" /></td>
           <td>{{ e.trend }}</td>
           <td>{{ e.lastChangedRelease ?? 'current' }}</td>
         </tr>
@@ -217,16 +218,20 @@ watch([visibleEntries, selectedId], renderChart)
 </template>
 
 <style scoped>
-.tiles { display: flex; gap: 1rem; padding: 1rem; }
-.tiles ui5-card.active { outline: 2px solid #0064d9; }
-.filters { display: flex; gap: 1.5rem; padding: 0 1rem 1rem; }
-.main-area { display: flex; gap: 1rem; padding: 0 1rem; align-items: flex-start; }
+.radar-page { padding: 1rem 1.5rem 2rem; }
+.tiles { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+.tiles ui5-card { flex: 0 0 160px; }
+.tiles ui5-card.active { outline: 2px solid var(--sap-adopt, #0064d9); }
+.filters { display: flex; align-items: center; gap: 2rem; margin-bottom: 1rem; }
+.filters label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
+.main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
 .radar-chart { flex: 1 1 auto; max-width: 560px; }
 .side-cards { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1rem; }
-.card-body { padding: 0.75rem 1rem; }
-.rings-glance > div { padding: 0.25rem 0; font-size: 0.9rem; }
-.list-view { width: 100%; margin-top: 1rem; border-collapse: collapse; }
-.list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid #ccc; padding: 0.4rem; }
-.list-view td { padding: 0.4rem; border-bottom: 1px solid #eee; }
+.card-body { padding: 0.75rem 1rem 1rem; }
+.rings-glance > div { padding: 0.3rem 0; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+.list-view { width: 100%; margin-top: 1.5rem; border-collapse: collapse; }
+.list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
+.list-view td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
+.list-view tr { cursor: pointer; }
 .list-view tr.selected { background: #eef4fb; }
 </style>

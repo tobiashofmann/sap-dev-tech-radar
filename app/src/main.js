@@ -7,5 +7,8 @@ import App from './App.vue'
 // (the Fiori Horizon theme the design mock specifies) is the built-in default.
 import '@ui5/webcomponents/dist/Card.js'
 import '@ui5/webcomponents/dist/CardHeader.js'
+import '@ui5/webcomponents/dist/Select.js'
+import '@ui5/webcomponents/dist/Option.js'
+import '@ui5/webcomponents/dist/Button.js'
 
 createApp(App).mount('#app')

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { RING_COLORS } from '../ringColors.js'
+import RingPill from './RingPill.vue'
 
 const props = defineProps({
   entry: { type: Object, required: true },
@@ -39,9 +39,7 @@ const voteLink = computed(() =>
       <h1>{{ entry.title }}</h1>
       <p>{{ entry.description }}</p>
       <p>
-        <span class="pill" :style="{ borderColor: RING_COLORS[entry.ring], color: RING_COLORS[entry.ring] }">
-          {{ entry.ring }}
-        </span>
+        <RingPill :ring="entry.ring" />
         {{ entry.quadrant }} &middot; trend: {{ entry.trend }}
       </p>
       <p v-if="lastChange.previousRing">
@@ -84,7 +82,7 @@ const voteLink = computed(() =>
           <tr v-for="r in entry.related" :key="r.id">
             <td><a href="#" @click.prevent="emit('open-detail', r.id)">{{ r.title }}</a></td>
             <td>{{ r.quadrant }}</td>
-            <td>{{ r.ring }}</td>
+            <td><RingPill :ring="r.ring" /></td>
           </tr>
         </tbody>
       </table>
@@ -93,11 +91,10 @@ const voteLink = computed(() =>
 </template>
 
 <style scoped>
-.detail-page { padding: 1rem 1.5rem; max-width: 900px; margin: 0 auto; }
-.breadcrumb { margin-bottom: 1rem; }
-.pill { display: inline-block; padding: 0.1rem 0.6rem; border: 1px solid; border-radius: 1rem; font-weight: bold; }
-.recommendation { font-weight: bold; }
+.detail-page { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+.breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
+.recommendation { font-weight: bold; font-size: 1.05rem; }
 section { margin-bottom: 1.5rem; }
 table { width: 100%; border-collapse: collapse; }
-th, td { text-align: left; padding: 0.3rem; border-bottom: 1px solid #eee; }
+th, td { text-align: left; padding: 0.4rem 0.3rem; border-bottom: 1px solid #f0f0f0; }
 </style>
