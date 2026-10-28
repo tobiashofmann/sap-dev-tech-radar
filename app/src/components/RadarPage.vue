@@ -86,8 +86,8 @@ function toggleRingFilter(ring) {
 
 // --- radar chart ---
 const chart = ref(null)
-const CHART_SIZE = 680
-const OUTER_RADIUS = 200
+const CHART_SIZE = 640
+const OUTER_RADIUS = 300
 
 function renderChart() {
   const svg = d3.select(chart.value)
@@ -133,17 +133,20 @@ function renderChart() {
       .text(ring)
   })
 
-  // quadrant labels pinned near the four corners of the chart itself
-  // (not the circle), per design/DESIGN.md rule 7 (UI top-left, Technology
-  // top-right, Frameworks bottom-right, Tools bottom-left)
-  const CORNER_MARGIN = 14
-  const edge = center - CORNER_MARGIN
+  // quadrant labels in the small corner gaps between the circle and its own
+  // bounding square (the circle fills the chart almost entirely - there's
+  // no margin "outside" it to put labels in), per design/DESIGN.md rule 7
+  // (UI top-left, Technology top-right, Frameworks bottom-right, Tools
+  // bottom-left). Positioned exactly at (+-OUTER_RADIUS, +-OUTER_RADIUS) -
+  // the circle's own bounding-square corner - with the anchor/baseline set
+  // so the text grows inward from that corner, never past the tangent
+  // lines at the circle's outermost points.
   QUADRANTS.forEach((q) => {
     const mid = ((q.radial_min + q.radial_max) / 2) * Math.PI
     const signX = Math.sign(Math.cos(mid))
     const signY = Math.sign(Math.sin(mid))
-    const x = signX * edge
-    const y = signY * edge
+    const x = signX * OUTER_RADIUS
+    const y = signY * OUTER_RADIUS
     g.append('text')
       .attr('x', x)
       .attr('y', y)
