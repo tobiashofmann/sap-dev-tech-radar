@@ -219,6 +219,44 @@ onBeforeUnmount(() => {
   clearTimeout(resizeTimer)
 })
 
+// Screen F: fullscreen radar. Tiles/filters/side-cards/list hide, the
+// radar card breaks out of #app's max-width and centers at 70% of the
+// actual viewport width (not the constrained content width), height
+// following via the existing aspect-ratio: 1/1 - no JS sizing needed
+// there. radarSize (the bottom-alignment measurement) is irrelevant while
+// fullscreen, so skip it; re-measure once on exit in case the window was
+// resized meanwhile.
+const radarCardWrapperStyle = computed(() =>
+  isFullscreen.value
+    ? { width: '70vw' }
+    : radarSize.value ? { width: radarSize.value + 'px' } : {}
+)
+const radarCardInnerStyle = computed(() =>
+  isFullscreen.value || !radarSize.value
+    ? {}
+    : { width: radarSize.value + 'px', height: radarSize.value + 'px' }
+)
+
+function onKeydown(e) {
+  if (e.key === 'Escape' && isFullscreen.value) {
+    isFullscreen.value = false
+  }
+}
+
+watch(isFullscreen, (value) => {
+  if (!value) {
+    requestAnimationFrame(measureRadarSize)
+  }
+})
+
+onMounted(() => {
+  window.addEventListener('keydown', onKeydown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
+
 // Selecting a technology swaps "About this radar" for "Selected technology",
 // which can be much taller (a long description). Rule: the primary card
 // (About/Selected) may grow up to 60% of the fixed side-cards height
@@ -288,8 +326,8 @@ watch([selectedEntry, radarSize], layoutSideCards)
 </script>
 
 <template>
-  <div class="radar-page">
-    <div class="tiles">
+  <div class="radar-page" :class="{ fullscreen: isFullscreen }">
+    <div v-if="!isFullscreen" class="tiles">
       <ui5-card class="tile" :class="{ active: ringFilter === 'All' }" @click="ringFilter = 'All'">
         <div class="tile-body">
           <div class="tile-label">Total</div>
@@ -310,7 +348,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
       </ui5-card>
     </div>
 
-    <div class="filters">
+    <div v-if="!isFullscreen" class="filters">
       <div class="filter-group">
         <span class="filter-label">Quadrant:</span>
         <button class="chip" :class="{ on: quadrantFilter === 'All' }" @click="quadrantFilter = 'All'">All</button>
@@ -336,9 +374,9 @@ watch([selectedEntry, radarSize], layoutSideCards)
     </div>
 
     <div class="main-area">
-      <div class="radar-card-wrapper" :style="radarSize ? { width: radarSize + 'px' } : {}">
+      <div class="radar-card-wrapper" :style="radarCardWrapperStyle">
         <ui5-card class="radar-card">
-          <div class="radar-card-inner" :style="radarSize ? { width: radarSize + 'px', height: radarSize + 'px' } : {}">
+          <div class="radar-card-inner" :style="radarCardInnerStyle">
             <svg ref="chart" class="radar-chart"></svg>
           </div>
         </ui5-card>
@@ -353,7 +391,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
         ></ui5-button>
       </div>
 
-      <div class="side-cards" ref="sideCards">
+      <div v-if="!isFullscreen" class="side-cards" ref="sideCards">
         <ui5-card v-if="!selectedEntry" ref="primaryCard">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
           <div
@@ -425,7 +463,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
       </div>
     </div>
 
-    <div class="table-wrap">
+    <div v-if="!isFullscreen" class="table-wrap">
       <table class="list-view">
         <thead>
           <tr>
@@ -488,6 +526,17 @@ watch([selectedEntry, radarSize], layoutSideCards)
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
+
+/* Screen F: break .main-area out of #app's max-width: 1280px so the
+   radar can center on the full viewport width, not just the constrained
+   content column. */
+.radar-page.fullscreen .main-area {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  margin-left: -50vw;
+  justify-content: center;
+}
 .radar-card-wrapper { position: relative; flex: 0 0 auto; width: 600px; }
 .radar-card { display: block; width: 100%; }
 .fullscreen-toggle {
