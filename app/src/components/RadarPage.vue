@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
@@ -176,29 +176,6 @@ function renderChart() {
 
 onMounted(renderChart)
 watch([visibleEntries, selectedId], renderChart)
-
-// keep the radar card's height in sync with the side cards column, so
-// both bottoms line up instead of the (otherwise width-driven, square)
-// radar card running taller than "Rings at a glance" + "About this radar"
-// combined. Only applied side-by-side - the stacked tablet layout (see the
-// max-width: 1100px media query below) overrides this back to auto.
-const sideCards = ref(null)
-const radarCardHeight = ref(null)
-let sideCardsObserver = null
-
-onMounted(() => {
-  if (typeof ResizeObserver === 'undefined' || !sideCards.value) {
-    return
-  }
-  sideCardsObserver = new ResizeObserver((entries) => {
-    radarCardHeight.value = entries[0].contentRect.height
-  })
-  sideCardsObserver.observe(sideCards.value)
-})
-
-onBeforeUnmount(() => {
-  sideCardsObserver?.disconnect()
-})
 </script>
 
 <template>
@@ -251,12 +228,12 @@ onBeforeUnmount(() => {
 
     <div class="main-area">
       <ui5-card class="radar-card">
-        <div class="radar-card-inner" :style="radarCardHeight ? { height: radarCardHeight + 'px' } : {}">
+        <div class="radar-card-inner">
           <svg ref="chart" class="radar-chart"></svg>
         </div>
       </ui5-card>
 
-      <div class="side-cards" ref="sideCards">
+      <div class="side-cards">
         <ui5-card v-if="!selectedEntry">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
           <div class="card-body">
@@ -375,9 +352,9 @@ onBeforeUnmount(() => {
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
 .radar-card { flex: 1 1 auto; min-width: 0; }
-.radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
+.radar-card-inner { width: 100%; padding: 1rem; aspect-ratio: 1 / 1; }
 .radar-chart { width: 100%; height: 100%; display: block; }
-.side-cards { flex: 0 1 720px; max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
+.side-cards { flex: 0 0 720px; max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
 .rings-glance { display: flex; flex-direction: column; gap: 0.9rem; font-size: 0.85rem; }
 .rings-glance .row { display: flex; align-items: flex-start; gap: 0.75rem; }
@@ -396,7 +373,6 @@ onBeforeUnmount(() => {
 @media (max-width: 1100px) {
   .main-area { flex-direction: column; }
   .radar-card { flex: 0 0 auto; width: 100%; }
-  .radar-card-inner { height: auto !important; }
   .side-cards { max-width: none; width: 100%; }
   .side-cards ui5-card { width: 100%; }
 }
