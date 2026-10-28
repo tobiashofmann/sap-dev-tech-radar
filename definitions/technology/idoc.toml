@@ -1,0 +1,17 @@
+[page]
+title = "IDoc (Intermediate Document)"
+description = "Propietary exchange format for asychronous data exchange between SAP systems. Structures hierarchically configurable segments for transmitting master data and transactional data. Includes control and data records and status processing with built-in error handling."
+reason = "IDocs are not natively available in SAP's cloud solutions S/4HANA PC or Steampunk. For modern architecture, other integration and exchange soluitons should be used."
+support = "Supported"
+
+[links]
+"SAP Help" = "https://help.sap.com/docs/ABAP_PLATFORM_NEW/8f3819b0c24149b5959ab31070b64058/4b38625bad7f74fee10000000a421937.html?locale=en-US"
+"SAP Help IDoc" = "https://help.sap.com/docs/SAP_ERP/be79bfef64c049f88262cf6cb5de1c1f/18f1b025ff5bd44a9733687e56c11ee9.html?locale=en-US"
+
+[config]
+label = "IDoc"
+ring = "HOLD"
+quadrant = "Technology"
+active = true
+moved = 0
+trend = "stable"

@@ -1,0 +1,18 @@
+[page]
+title = "HANA Cloud"
+description = "SAP HANA Cloud is the fully managed DB as a Service (DBaaS) version of HANA on SAP Business Technology Platform (BTP). It offers relational modelling, document and vector store."
+reason = "The recommended DBaaS from SAP for cloud solutions."
+support = "Supported"
+
+[links]
+"Product page" = "https://www.sap.com/products/data-cloud/hana.html"
+"SAP Help" = "https://help.sap.com/docs/hana-cloud?locale=en-US"
+"SAP Learning" = "https://learning.sap.com/products/hana"
+
+[config]
+label = "HANA Cloud"
+ring = "USE"
+quadrant = "Technology"
+active = true
+moved = 0
+trend = "stable"

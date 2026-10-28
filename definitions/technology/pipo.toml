@@ -1,0 +1,20 @@
+[page]
+title = "SAP Process Integration / Process Orchestration (PI/PO)"
+description = "Middleware for A2A and B2B integrations. Based on NetWeaver Java/ABAP."
+reason = "Success is the SAP Integration Suite. End of support in 2027/2030. No new integration scenarios based on PI/PO should be created."
+support = "Reaching end of support in 2027"
+
+[links]
+"SAP" = "https://www.sap.com/products/technology-platform/process-orchestration.html"
+"SAP Help" = "https://help.sap.com/docs/SAP_NETWEAVER_PI?locale=en-US"
+"SCN" = "https://pages.community.sap.com/topics/process-orchestration"
+"Learning Journey" = "https://learning.sap.com/learning-journeys/developing-business-processes-with-sap-process-orchestration"
+
+[config]
+label = "PI/PO"
+ring = "DEPRECATED"
+quadrant = "Technology"
+active = true
+moved = 0
+trend = "stable"
+since = "2026.12"
