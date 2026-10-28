@@ -127,18 +127,22 @@ function renderChart() {
       .text(ring)
   })
 
-  // quadrant labels just outside the outer ring, per design/DESIGN.md rule 7
-  // (UI top-left, Technology top-right, Frameworks bottom-right, Tools bottom-left)
+  // quadrant labels pinned near the four corners of the chart itself
+  // (not the circle), per design/DESIGN.md rule 7 (UI top-left, Technology
+  // top-right, Frameworks bottom-right, Tools bottom-left)
+  const CORNER_MARGIN = 14
+  const edge = center - CORNER_MARGIN
   QUADRANTS.forEach((q) => {
     const mid = ((q.radial_min + q.radial_max) / 2) * Math.PI
-    const r = OUTER_RADIUS + 16
-    const x = r * Math.cos(mid)
-    const y = r * Math.sin(mid)
+    const signX = Math.sign(Math.cos(mid))
+    const signY = Math.sign(Math.sin(mid))
+    const x = signX * edge
+    const y = signY * edge
     g.append('text')
       .attr('x', x)
       .attr('y', y)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', y < 0 ? 'auto' : 'hanging')
+      .attr('text-anchor', signX < 0 ? 'start' : 'end')
+      .attr('dominant-baseline', signY < 0 ? 'hanging' : 'auto')
       .style('font-size', '13px')
       .style('font-weight', '700')
       .style('fill', 'var(--sap-text-muted, #5b738b)')
