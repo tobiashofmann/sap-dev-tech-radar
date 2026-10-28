@@ -6,23 +6,29 @@ import { defineConfig } from 'vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Dev-only: serves the sibling repo's generated radar/data.json at
-// /data.json, so `npm run dev` behaves like the production build (where
-// radar/app/ and radar/data.json sit next to each other as static files).
+// Dev-only: serves the sibling repo's generated radar/*.json files at fixed
+// dev URLs, so `npm run dev` behaves like the production build (where
+// radar/app/ and those files sit next to each other as static files).
 function serveReleaseData() {
+  const files = {
+    '/data.json': '../radar/data.json',
+    '/releases-manifest.json': '../radar/releases/manifest.json'
+  }
   return {
     name: 'serve-release-data',
     configureServer(server) {
-      server.middlewares.use('/data.json', (req, res) => {
-        const filePath = path.resolve(__dirname, '../radar/data.json')
-        fs.readFile(filePath, (err, data) => {
-          if (err) {
-            res.statusCode = 404
-            res.end('radar/data.json not found - run "npm run conv" in the repo root first.')
-            return
-          }
-          res.setHeader('Content-Type', 'application/json')
-          res.end(data)
+      Object.entries(files).forEach(([url, relPath]) => {
+        server.middlewares.use(url, (req, res) => {
+          const filePath = path.resolve(__dirname, relPath)
+          fs.readFile(filePath, (err, data) => {
+            if (err) {
+              res.statusCode = 404
+              res.end(`${relPath} not found - run "npm run conv" in the repo root first.`)
+              return
+            }
+            res.setHeader('Content-Type', 'application/json')
+            res.end(data)
+          })
         })
       })
     }

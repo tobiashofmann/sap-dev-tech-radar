@@ -9,7 +9,8 @@ import { TREND_ARROWS } from '../trendIcons.js'
 
 const props = defineProps({
   entries: { type: Array, required: true },
-  changes: { type: Object, required: true }
+  changes: { type: Object, required: true },
+  searchQuery: { type: String, default: '' }
 })
 const emit = defineEmits(['open-detail'])
 
@@ -25,11 +26,16 @@ const quadrantFiltered = computed(() =>
     : activeEntries.value.filter((e) => e.quadrant === quadrantFilter.value)
 )
 
-const visibleEntries = computed(() =>
+const ringFiltered = computed(() =>
   ringFilter.value === 'All'
     ? quadrantFiltered.value
     : quadrantFiltered.value.filter((e) => e.ring === ringFilter.value)
 )
+
+const visibleEntries = computed(() => {
+  const q = props.searchQuery.trim().toLowerCase()
+  return q ? ringFiltered.value.filter((e) => e.title.toLowerCase().includes(q)) : ringFiltered.value
+})
 
 const tileCounts = computed(() => {
   const counts = { ADOPT: 0, USE: 0, HOLD: 0, STOP: 0 }
