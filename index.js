@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'node:fs'
 import {createCONFIG, createHTML, createDeprecatedPage} from './convert.js';
 import {deriveAndArchiveHistory, validateForwardOnly} from './history.js';
+import {writeReleaseData} from './release-data.js';
 
 const tomlFilePath = "./definitions/**/*.toml";
 
@@ -40,6 +41,17 @@ entries.forEach(({filename, data}) => {
 // derive each technology's ring-per-release history from git tags, and
 // archive a config.json snapshot per past release under radar/releases/
 const historyByFilename = deriveAndArchiveHistory(entries.map(({filename, relPath}) => ({filename, relPath})));
+
+//
+// one enriched JSON for the current (not-yet-released) state - the input
+// the Vue front end reads to render the radar, list, filters, detail
+// pages and the changes page
+//
+try {
+  writeReleaseData(entries, entryByFilename, historyByFilename);
+} catch (err) {
+  console.error(err);
+}
 
 entries.forEach( function( {filename, data} ) {
     console.log(filename);

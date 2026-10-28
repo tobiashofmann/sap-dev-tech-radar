@@ -1,98 +1,82 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import * as d3 from 'd3'
+import { ref, computed, onMounted } from 'vue'
+import RadarPage from './components/RadarPage.vue'
+import DetailPage from './components/DetailPage.vue'
 
-// Proof of concept only: exercises the three stack pieces chosen in the
-// plan (Vue 3 reactivity + native UI5 Web Components + D3 for the radar
-// chart) together in one Vite-bundled, static-output app. It does not
-// implement the real A1-G screens or fetch the generated radar data yet.
+const releaseData = ref(null)
+const loadError = ref(null)
+const view = ref('radar')
+const selectedId = ref(null)
+const activeTab = ref('Radar')
 
-const tabs = ['Radar', 'List', 'Changes']
-const activeTab = ref(tabs[0])
+// radar/data.json lives next to this app's build output once deployed
+// (radar/app/ + radar/data.json side by side); in dev it's served by the
+// small middleware in vite.config.js.
+const dataUrl = import.meta.env.DEV ? '/data.json' : '../data.json'
 
-// static stand-in for radar/releases/manifest.json until this is wired
-// into the real data pipeline
-const releases = ['2026-06', '2025-12', '2025-06', '2024-12', '2024-06']
-const selectedRelease = ref(releases[0])
-
-const ringColors = {
-  ADOPT: '#0064d9',
-  USE: '#256f3a',
-  HOLD: '#f0ab00',
-  STOP: '#d20a0a'
-}
-const demoBlips = [
-  { ring: 'ADOPT', angle: 20, radius: 40 },
-  { ring: 'USE', angle: 100, radius: 70 },
-  { ring: 'USE', angle: 190, radius: 75 },
-  { ring: 'HOLD', angle: 260, radius: 100 },
-  { ring: 'STOP', angle: 320, radius: 120 }
-]
-
-const chart = ref(null)
-
-onMounted(() => {
-  const size = 280
-  const center = size / 2
-  const svg = d3.select(chart.value)
-    .attr('width', size)
-    .attr('height', size)
-    .attr('viewBox', `0 0 ${size} ${size}`)
-
-  const radii = [40, 70, 100, 130]
-  svg.selectAll('circle.ring')
-    .data(radii)
-    .join('circle')
-    .attr('class', 'ring')
-    .attr('cx', center)
-    .attr('cy', center)
-    .attr('r', (d) => d)
-    .attr('fill', 'none')
-    .attr('stroke', 'var(--sapNeutralBorderColor, #ccc)')
-
-  const toXY = (angleDeg, radius) => {
-    const rad = (angleDeg * Math.PI) / 180
-    return [center + radius * Math.cos(rad), center + radius * Math.sin(rad)]
+onMounted(async () => {
+  try {
+    const res = await fetch(dataUrl)
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`)
+    }
+    releaseData.value = await res.json()
+  } catch (err) {
+    loadError.value = `Could not load ${dataUrl} - run "npm run conv" in the repo root first. (${err.message})`
   }
-
-  svg.selectAll('circle.blip')
-    .data(demoBlips)
-    .join('circle')
-    .attr('class', 'blip')
-    .attr('cx', (d) => toXY(d.angle, d.radius)[0])
-    .attr('cy', (d) => toXY(d.angle, d.radius)[1])
-    .attr('r', 6)
-    .attr('fill', (d) => ringColors[d.ring])
 })
+
+const selectedEntry = computed(() =>
+  releaseData.value && selectedId.value
+    ? releaseData.value.entries.find((e) => e.id === selectedId.value)
+    : null
+)
+
+function openDetail(id) {
+  selectedId.value = id
+  view.value = 'detail'
+}
+
+function backToRadar() {
+  view.value = 'radar'
+  activeTab.value = 'Radar'
+}
 </script>
 
 <template>
   <div id="app">
     <header class="page-header">
-      <h1>SAP Development Tech Radar</h1>
-      <ui5-select @change="(e) => selectedRelease = e.target.value">
-        <ui5-option v-for="r in releases" :key="r" :value="r" :selected="r === selectedRelease">
-          Release: {{ r }}
-        </ui5-option>
-      </ui5-select>
+      <h1>SAP Development Tech Radar <small v-if="releaseData">&middot; {{ releaseData.date }}</small></h1>
+      <nav class="tabs">
+        <button
+          v-for="t in ['Radar', 'List', 'Changes']"
+          :key="t"
+          :class="{ active: activeTab === t }"
+          @click="activeTab = t; view = 'radar'"
+        >{{ t }}</button>
+      </nav>
     </header>
 
-    <ui5-tabcontainer @tab-select="(e) => activeTab = e.detail.tab.textContent">
-      <ui5-tab v-for="t in tabs" :key="t" :text="t" :selected="t === activeTab"></ui5-tab>
-    </ui5-tabcontainer>
+    <p v-if="loadError" class="error">{{ loadError }}</p>
 
-    <p>Active tab: <b>{{ activeTab }}</b> &middot; selected release: <b>{{ selectedRelease }}</b></p>
+    <template v-else-if="releaseData">
+      <DetailPage
+        v-if="view === 'detail' && selectedEntry"
+        :entry="selectedEntry"
+        :all-entries="releaseData.entries"
+        @back="backToRadar"
+        @open-detail="openDetail"
+      />
+      <RadarPage
+        v-else-if="activeTab === 'Radar'"
+        :entries="releaseData.entries"
+        :changes="releaseData.changes"
+        @open-detail="openDetail"
+      />
+      <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
+    </template>
 
-    <div class="cards">
-      <ui5-card>
-        <ui5-card-header title-text="ADOPT" subtitle-text="9 technologies"></ui5-card-header>
-      </ui5-card>
-      <ui5-card>
-        <ui5-card-header title-text="USE" subtitle-text="34 technologies"></ui5-card-header>
-      </ui5-card>
-    </div>
-
-    <svg ref="chart"></svg>
+    <p v-else>Loading&hellip;</p>
   </div>
 </template>
 
@@ -101,15 +85,18 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e5e5e5;
 }
-.cards {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
+.tabs { display: flex; gap: 0.5rem; }
+.tabs button {
+  background: none;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font: inherit;
 }
-svg {
-  display: block;
-  margin: 0 auto;
-}
+.tabs button.active { border-bottom: 2px solid #0064d9; font-weight: bold; }
+.error { color: #d20a0a; padding: 1rem 1.5rem; }
+.not-implemented { padding: 1rem 1.5rem; color: #666; }
 </style>

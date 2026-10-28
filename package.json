@@ -27,7 +27,7 @@
     "start": "browser-sync radar -w",
     "conv": "node index.js",
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
-    "lint:js": "eslint convert.js index.js history.js",
+    "lint:js": "eslint convert.js index.js history.js release-data.js",
     "lint:toml": "eslint definitions/**/*.toml",
     "lint:html": "eslint radar/**/*.html"
   }

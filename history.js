@@ -174,4 +174,4 @@ function validateForwardOnly(filename, currentRing, history) {
   }
 }
 
-export { deriveAndArchiveHistory, validateForwardOnly };
+export { deriveAndArchiveHistory, validateForwardOnly, getReleaseTags };
