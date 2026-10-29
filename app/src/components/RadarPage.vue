@@ -192,7 +192,7 @@ function renderChart() {
     .attr('class', 'blip')
     .attr('cx', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
     .attr('cy', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
-    .attr('r', (d) => (isFullscreen.value ? 11 : d.id === selectedId.value ? 8 : 5))
+    .attr('r', (d) => (d.id === selectedId.value ? 11 : 8))
     .attr('fill', (d) => RING_COLORS[d.ring])
     .attr('stroke', (d) => (d.id === selectedId.value ? '#131e29' : 'none'))
     .attr('stroke-width', 2)
@@ -201,27 +201,21 @@ function renderChart() {
     .append('title')
     .text((d) => `${d.title} (${d.ring}, ${d.quadrant})`)
 
-  // --- Screen F: numbered blips in fullscreen, see quadrantLegends/
-  // blipNumbers above for the matching per-quadrant list. Self-contained
-  // (easy to revert: this block + the r: 11 case above + the two
-  // computeds). Replaces the earlier "name next to every blip" version.
-  if (isFullscreen.value) {
-    g.selectAll('text.blip-number')
-      .data(visibleEntries.value, (d) => d.id)
-      .join('text')
-      .attr('class', 'blip-number')
-      .attr('x', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
-      .attr('y', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
-      .style('font-size', '9px')
-      .style('font-weight', '700')
-      .style('fill', '#fff')
-      .style('pointer-events', 'none')
-      .text((d) => blipNumbers.value[d.id])
-  } else {
-    g.selectAll('text.blip-number').remove()
-  }
+  // Per-quadrant blip number (see quadrantLegends/blipNumbers above),
+  // always shown now - also used as the table's first column.
+  g.selectAll('text.blip-number')
+    .data(visibleEntries.value, (d) => d.id)
+    .join('text')
+    .attr('class', 'blip-number')
+    .attr('x', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
+    .attr('y', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
+    .attr('text-anchor', 'middle')
+    .attr('dominant-baseline', 'central')
+    .style('font-size', '9px')
+    .style('font-weight', '700')
+    .style('fill', '#fff')
+    .style('pointer-events', 'none')
+    .text((d) => blipNumbers.value[d.id])
   // --- end Screen F blip numbers -----------------------------------------
 }
 
@@ -554,6 +548,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
       <table class="list-view">
         <thead>
           <tr>
+            <th class="num-col">#</th>
             <th @click="sortBy('title')">Technology</th>
             <th @click="sortBy('quadrant')">Quadrant</th>
             <th @click="sortBy('ring')">Ring</th>
@@ -568,6 +563,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
             :class="{ selected: e.id === selectedId }"
             @click="selectEntry(e.id)"
           >
+            <td class="num-col">{{ blipNumbers[e.id] }}</td>
             <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
             <td>{{ e.quadrant }}</td>
             <td><RingPill :ring="e.ring" /></td>
@@ -727,6 +723,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
 .list-view { width: 100%; min-width: 640px; margin-top: 1.5rem; border-collapse: collapse; }
 .list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
 .list-view td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
+.list-view .num-col { width: 2rem; color: var(--sap-text-muted, #5b738b); cursor: default; }
 .list-view tr { cursor: pointer; }
 .list-view tr.selected { background: #eef4fb; }
 
