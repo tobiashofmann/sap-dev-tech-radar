@@ -261,7 +261,7 @@ function openPrivacy() {
           <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement &#8599;</a>
         </div>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div class="dialog-footer">
         <ui5-button @click="infoOpen = false">Close</ui5-button>
       </div>
     </ui5-dialog>
@@ -306,6 +306,7 @@ function openPrivacy() {
    box despite it living in shadow DOM (verified - unlike ui5-card, which
    needed ::part()). */
 .info-dialog { width: 620px; border-radius: 1rem; }
+.info-dialog::part(header) { justify-content: center; }
 
 .info-section { padding: 1rem 1.5rem; }
 .info-section + .info-section { border-top: 1px solid var(--sap-border, #e4e7eb); }
@@ -313,14 +314,13 @@ function openPrivacy() {
 .info-grid { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.4rem 1rem; }
 .info-muted { color: var(--sap-text-muted, #5b738b); }
 .info-links { display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }
-/* ui5-dialog's own [part="footer"] is a flex container that does NOT
-   stretch its slotted child to the available width by default, so a
-   plain justify-content:flex-end here had nothing to push against -
-   width:100% is what actually moves the button to the right edge. */
+/* Rendered as a trailing content section (not slot="footer") - that
+   slot's [part="footer"] has a fixed, non-content-reactive height (UI5's
+   standard footer-bar convention), which clipped/overflowed once this
+   needed more than its default space for the bottom spacing below. */
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
-  width: 100%;
   padding: 0.75rem 1.5rem 1.25rem;
   border-top: 1px solid var(--sap-border, #e4e7eb);
 }
