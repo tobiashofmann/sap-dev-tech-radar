@@ -13,7 +13,10 @@ const props = defineProps({
   searchQuery: { type: String, default: '' },
   // bumped by the header's "List" tab on every click, including repeat
   // clicks while already on this page - see the watcher below.
-  jumpToList: { type: Number, default: 0 }
+  jumpToList: { type: Number, default: 0 },
+  // set by the detail page's "Show on full radar" link (via App.vue) to
+  // select that technology once we're back here.
+  preselectId: { type: String, default: null }
 })
 const emit = defineEmits(['open-detail'])
 
@@ -26,7 +29,6 @@ watch(
     tableWrapRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 )
-
 const quadrantFilter = ref('All')
 const ringFilter = ref('All')
 const trendFilter = ref('All')
@@ -34,6 +36,12 @@ const selectedId = ref(null)
 // Screen F (fullscreen radar): button added here, the actual fullscreen
 // layout/behavior is a separate follow-up step.
 const isFullscreen = ref(false)
+
+watch(
+  () => props.preselectId,
+  (id) => { if (id) selectedId.value = id },
+  { immediate: true }
+)
 
 const activeEntries = computed(() => props.entries.filter((e) => e.ring !== 'DEPRECATED'))
 

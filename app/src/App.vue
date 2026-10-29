@@ -16,6 +16,9 @@ const historicalNotice = ref(false)
 // bumped on every "List" tab click (even if already active) so RadarPage's
 // watcher re-triggers the scroll-to-table jump each time, not just once.
 const listJumpToken = ref(0)
+// set by the detail page's "Show on full radar" link, passed through to
+// RadarPage to select that technology once we're back on the radar.
+const radarPreselectId = ref(null)
 
 function selectTab(t) {
   activeTab.value = t
@@ -115,6 +118,14 @@ function backToRadar() {
     window.history.pushState({}, '', basePath)
   }
 }
+
+// Detail page's "Show on full radar ->" link (design/DESIGN.md screen B):
+// go back to the radar with that technology selected, same as clicking its
+// blip or list row directly.
+function showOnRadar(id) {
+  radarPreselectId.value = id
+  backToRadar()
+}
 </script>
 
 <template>
@@ -166,6 +177,7 @@ function backToRadar() {
         :all-entries="releaseData.entries"
         @back="backToRadar"
         @open-detail="openDetail"
+        @show-on-radar="showOnRadar"
       />
       <RadarPage
         v-else-if="activeTab === 'Radar' || activeTab === 'List'"
@@ -173,6 +185,7 @@ function backToRadar() {
         :changes="releaseData.changes"
         :search-query="searchQuery"
         :jump-to-list="listJumpToken"
+        :preselect-id="radarPreselectId"
         @open-detail="openDetail"
       />
       <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
