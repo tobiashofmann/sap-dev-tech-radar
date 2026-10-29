@@ -94,25 +94,25 @@ const positionOnRadar = computed(() => {
       {{ entry.quadrant }} &rsaquo; {{ entry.title }}
     </nav>
 
+    <ui5-card class="header-card">
+      <div class="card-body">
+        <h1>{{ entry.title }}</h1>
+        <p class="description" v-html="sanitizeDescription(entry.description)"></p>
+        <div class="meta-row">
+          <RingPill :ring="entry.ring" />
+          <span class="tag">{{ entry.quadrant }}</span>
+          <span class="tag">{{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}</span>
+        </div>
+        <p v-if="lastChange.previousRing" class="meta-line">
+          Previous ring: <b>{{ lastChange.previousRing }}</b> &middot;
+          Last change: <b>{{ lastChange.release ?? 'current (not yet released)' }}</b>
+        </p>
+        <p class="meta-line">Support: {{ entry.support }}</p>
+      </div>
+    </ui5-card>
+
     <div class="detail-layout">
       <div class="detail-main">
-        <ui5-card class="header-card">
-          <div class="card-body">
-            <h1>{{ entry.title }}</h1>
-            <p class="description" v-html="sanitizeDescription(entry.description)"></p>
-            <div class="meta-row">
-              <RingPill :ring="entry.ring" />
-              <span class="tag">{{ entry.quadrant }}</span>
-              <span class="tag">{{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}</span>
-            </div>
-            <p v-if="lastChange.previousRing" class="meta-line">
-              Previous ring: <b>{{ lastChange.previousRing }}</b> &middot;
-              Last change: <b>{{ lastChange.release ?? 'current (not yet released)' }}</b>
-            </p>
-            <p class="meta-line">Support: {{ entry.support }}</p>
-          </div>
-        </ui5-card>
-
         <ui5-card>
           <ui5-card-header slot="header" title-text="What to do"></ui5-card-header>
           <div class="card-body">
@@ -196,6 +196,7 @@ const positionOnRadar = computed(() => {
 .detail-page { padding: 1.5rem; max-width: 1280px; margin: 0 auto; }
 .breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
 
+.header-card { margin-bottom: 1.5rem; }
 .detail-layout { display: flex; align-items: flex-start; gap: 1.5rem; }
 .detail-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 .detail-side { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1.5rem; }
