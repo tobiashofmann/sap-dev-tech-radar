@@ -13,6 +13,17 @@ const infoOpen = ref(false)
 const pastReleases = ref([])
 const selectedRelease = ref('current')
 const historicalNotice = ref(false)
+// bumped on every "List" tab click (even if already active) so RadarPage's
+// watcher re-triggers the scroll-to-table jump each time, not just once.
+const listJumpToken = ref(0)
+
+function selectTab(t) {
+  activeTab.value = t
+  view.value = 'radar'
+  if (t === 'List') {
+    listJumpToken.value++
+  }
+}
 
 // radar/data.json and radar/releases/manifest.json live next to this app's
 // build output once deployed (radar/app/ + radar/*.json side by side); in
@@ -73,7 +84,7 @@ function backToRadar() {
             v-for="t in ['Radar', 'List', 'Changes']"
             :key="t"
             :class="{ active: activeTab === t }"
-            @click="activeTab = t; view = 'radar'"
+            @click="selectTab(t)"
           >{{ t }}</button>
         </nav>
       </div>
@@ -114,10 +125,11 @@ function backToRadar() {
         @open-detail="openDetail"
       />
       <RadarPage
-        v-else-if="activeTab === 'Radar'"
+        v-else-if="activeTab === 'Radar' || activeTab === 'List'"
         :entries="releaseData.entries"
         :changes="releaseData.changes"
         :search-query="searchQuery"
+        :jump-to-list="listJumpToken"
         @open-detail="openDetail"
       />
       <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>

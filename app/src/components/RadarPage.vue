@@ -10,9 +10,22 @@ import { TREND_ARROWS, TRENDS } from '../trendIcons.js'
 const props = defineProps({
   entries: { type: Array, required: true },
   changes: { type: Object, required: true },
-  searchQuery: { type: String, default: '' }
+  searchQuery: { type: String, default: '' },
+  // bumped by the header's "List" tab on every click, including repeat
+  // clicks while already on this page - see the watcher below.
+  jumpToList: { type: Number, default: 0 }
 })
 const emit = defineEmits(['open-detail'])
+
+const tableWrapRef = ref(null)
+watch(
+  () => props.jumpToList,
+  async (value) => {
+    if (!value) return
+    await nextTick()
+    tableWrapRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+)
 
 const quadrantFilter = ref('All')
 const ringFilter = ref('All')
@@ -571,7 +584,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
       </div>
     </div>
 
-    <div v-if="!isFullscreen" class="table-wrap">
+    <div v-if="!isFullscreen" ref="tableWrapRef" class="table-wrap">
       <table class="list-view">
         <thead>
           <tr>
