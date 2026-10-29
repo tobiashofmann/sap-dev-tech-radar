@@ -107,6 +107,7 @@ const positionOnRadar = computed(() => {
             <span class="tag">{{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}</span>
           </div>
         </div>
+        <hr class="header-divider" />
         <p v-if="lastChange.previousRing" class="meta-line">
           Previous ring: <b>{{ lastChange.previousRing }}</b> &middot;
           Last change: <b>{{ lastChange.release ?? 'current (not yet released)' }}</b>
@@ -212,6 +213,7 @@ const positionOnRadar = computed(() => {
 .recommendation { font-weight: bold; font-size: 1.05rem; }
 
 .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 0.75rem; }
+.header-divider { border: none; border-top: 1px solid var(--sap-border, #e4e7eb); margin: 0.75rem 0; }
 .header-text { flex: 1 1 auto; min-width: 0; }
 .meta-row { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; }
 .tag {
