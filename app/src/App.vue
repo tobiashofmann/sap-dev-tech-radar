@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import RadarPage from './components/RadarPage.vue'
 import DetailPage from './components/DetailPage.vue'
 
@@ -23,6 +23,9 @@ function selectTab(t) {
   if (t === 'List') {
     listJumpToken.value++
   }
+  if (window.location.pathname !== basePath) {
+    window.history.pushState({}, '', basePath)
+  }
 }
 
 // radar/data.json and radar/releases/manifest.json live next to this app's
@@ -31,6 +34,38 @@ function selectTab(t) {
 const dataUrl = import.meta.env.DEV ? '/data.json' : '../data.json'
 const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : '../releases/manifest.json'
 
+// Deep linking: /details/<id> (id = the technology's TOML filename, already
+// unique and URL-safe per CONTRIBUTING.md's naming rule - no need to use
+// config.label, which can contain spaces and isn't pipeline-enforced unique).
+// Pure client-side (History API), no router dependency. Direct hard loads of
+// /details/<id> on GitHub Pages still need the standard 404.html SPA-fallback
+// trick once app/ is wired into the deploy workflow - not done yet, flagged
+// separately in design/DESIGN.md's follow-up notes.
+const basePath = import.meta.env.BASE_URL
+const detailPrefix = basePath + 'details/'
+
+function detailPath(id) {
+  return detailPrefix + encodeURIComponent(id)
+}
+
+function idFromLocation() {
+  const { pathname } = window.location
+  return pathname.startsWith(detailPrefix) ? decodeURIComponent(pathname.slice(detailPrefix.length)) : null
+}
+
+function syncViewFromLocation() {
+  const id = idFromLocation()
+  if (id && releaseData.value?.entries.some((e) => e.id === id)) {
+    selectedId.value = id
+    view.value = 'detail'
+  } else {
+    view.value = 'radar'
+  }
+}
+
+window.addEventListener('popstate', syncViewFromLocation)
+onBeforeUnmount(() => window.removeEventListener('popstate', syncViewFromLocation))
+
 onMounted(async () => {
   try {
     const res = await fetch(dataUrl)
@@ -38,6 +73,7 @@ onMounted(async () => {
       throw new Error(`${res.status} ${res.statusText}`)
     }
     releaseData.value = await res.json()
+    syncViewFromLocation()
   } catch (err) {
     loadError.value = `Could not load ${dataUrl} - run "npm run conv" in the repo root first. (${err.message})`
   }
@@ -66,11 +102,18 @@ const selectedEntry = computed(() =>
 function openDetail(id) {
   selectedId.value = id
   view.value = 'detail'
+  const path = detailPath(id)
+  if (window.location.pathname !== path) {
+    window.history.pushState({}, '', path)
+  }
 }
 
 function backToRadar() {
   view.value = 'radar'
   activeTab.value = 'Radar'
+  if (window.location.pathname !== basePath) {
+    window.history.pushState({}, '', basePath)
+  }
 }
 </script>
 
