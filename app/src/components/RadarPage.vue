@@ -59,7 +59,7 @@ const changeCounts = computed(() => {
 })
 
 // --- sortable list ---
-const sortKey = ref('title')
+const sortKey = ref('number')
 const sortAsc = ref(true)
 function sortBy(key) {
   if (sortKey.value === key) {
@@ -72,8 +72,8 @@ function sortBy(key) {
 const sortedEntries = computed(() => {
   const list = [...visibleEntries.value]
   list.sort((a, b) => {
-    const av = a[sortKey.value] ?? ''
-    const bv = b[sortKey.value] ?? ''
+    const av = sortKey.value === 'number' ? blipNumbers.value[a.id] : a[sortKey.value] ?? ''
+    const bv = sortKey.value === 'number' ? blipNumbers.value[b.id] : b[sortKey.value] ?? ''
     return av < bv ? -1 : av > bv ? 1 : 0
   })
   return sortAsc.value ? list : list.reverse()
@@ -551,7 +551,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
       <table class="list-view">
         <thead>
           <tr>
-            <th class="num-col">#</th>
+            <th class="num-col" @click="sortBy('number')">#</th>
             <th @click="sortBy('title')">Technology</th>
             <th @click="sortBy('quadrant')">Quadrant</th>
             <th @click="sortBy('ring')">Ring</th>
@@ -726,7 +726,8 @@ watch([selectedEntry, radarSize], layoutSideCards)
 .list-view { width: 100%; min-width: 640px; margin-top: 1.5rem; border-collapse: collapse; }
 .list-view th { text-align: left; cursor: pointer; border-bottom: 1px solid var(--sap-border, #ccc); padding: 0.5rem 0.4rem; font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); text-transform: uppercase; letter-spacing: 0.02em; }
 .list-view td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
-.list-view .num-col { width: 2rem; color: var(--sap-text-muted, #5b738b); cursor: default; }
+.list-view .num-col { width: 2rem; color: var(--sap-text-muted, #5b738b); }
+.list-view td.num-col { cursor: default; }
 .list-view tr { cursor: pointer; }
 .list-view tr.selected { background: #eef4fb; }
 
