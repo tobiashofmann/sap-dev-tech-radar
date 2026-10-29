@@ -229,6 +229,28 @@ function renderChart() {
       .attr('stroke', '#e5e5e5')
   })
 
+  // design mock A2: filtering by quadrant fades the other three quadrants
+  // with a semi-transparent white overlay over their ring bands/divider
+  // lines (drawn after those, before the ring/quadrant labels below so
+  // those labels - and the blips, which quadrantFiltered already drops
+  // entirely for other quadrants - stay unaffected/fully visible).
+  if (quadrantFilter.value !== 'All') {
+    QUADRANTS.forEach((q) => {
+      if (q.name === quadrantFilter.value) return
+      const mid = ((q.radial_min + q.radial_max) / 2) * Math.PI
+      const signX = Math.sign(Math.cos(mid))
+      const signY = Math.sign(Math.sin(mid))
+      g.append('rect')
+        .attr('x', signX < 0 ? -OUTER_RADIUS : 0)
+        .attr('y', signY < 0 ? -OUTER_RADIUS : 0)
+        .attr('width', OUTER_RADIUS)
+        .attr('height', OUTER_RADIUS)
+        .attr('fill', '#fff')
+        .attr('opacity', 0.72)
+        .style('pointer-events', 'none')
+    })
+  }
+
   // ring labels, colored per design/DESIGN.md rule 5, along the UI/Technology
   // boundary (straight up from center) at each ring's midpoint radius
   const innerBoundaries = [0, ...boundaries.slice(0, -1)]
