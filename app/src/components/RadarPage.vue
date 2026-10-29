@@ -5,7 +5,7 @@ import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayou
 import { RING_COLORS } from '../ringColors.js'
 import RingPill from './RingPill.vue'
 import { sanitizeDescription } from '../sanitize.js'
-import { TREND_ARROWS } from '../trendIcons.js'
+import { TREND_ARROWS, TRENDS } from '../trendIcons.js'
 
 const props = defineProps({
   entries: { type: Array, required: true },
@@ -16,6 +16,7 @@ const emit = defineEmits(['open-detail'])
 
 const quadrantFilter = ref('All')
 const ringFilter = ref('All')
+const trendFilter = ref('All')
 const selectedId = ref(null)
 // Screen F (fullscreen radar): button added here, the actual fullscreen
 // layout/behavior is a separate follow-up step.
@@ -29,10 +30,16 @@ const quadrantFiltered = computed(() =>
     : activeEntries.value.filter((e) => e.quadrant === quadrantFilter.value)
 )
 
+const trendQuadrantFiltered = computed(() =>
+  trendFilter.value === 'All'
+    ? quadrantFiltered.value
+    : quadrantFiltered.value.filter((e) => e.trend === trendFilter.value)
+)
+
 const ringFiltered = computed(() =>
   ringFilter.value === 'All'
-    ? quadrantFiltered.value
-    : quadrantFiltered.value.filter((e) => e.ring === ringFilter.value)
+    ? trendQuadrantFiltered.value
+    : trendQuadrantFiltered.value.filter((e) => e.ring === ringFilter.value)
 )
 
 const visibleEntries = computed(() => {
@@ -42,11 +49,11 @@ const visibleEntries = computed(() => {
 
 const tileCounts = computed(() => {
   const counts = { ADOPT: 0, USE: 0, HOLD: 0, STOP: 0 }
-  quadrantFiltered.value.forEach((e) => { counts[e.ring]++ })
+  trendQuadrantFiltered.value.forEach((e) => { counts[e.ring]++ })
   return counts
 })
 
-const totalCount = computed(() => quadrantFiltered.value.length)
+const totalCount = computed(() => trendQuadrantFiltered.value.length)
 
 const selectedEntry = computed(() =>
   selectedId.value ? props.entries.find((e) => e.id === selectedId.value) : null
@@ -85,6 +92,10 @@ function selectEntry(id) {
 
 function toggleRingFilter(ring) {
   ringFilter.value = ringFilter.value === ring ? 'All' : ring
+}
+
+function toggleTrendFilter(trend) {
+  trendFilter.value = trendFilter.value === trend ? 'All' : trend
 }
 
 // --- Screen F: numbered blips + per-quadrant legend lists (fullscreen) --
@@ -415,6 +426,17 @@ watch([selectedEntry, radarSize], layoutSideCards)
           :class="{ on: ringFilter === r }"
           @click="toggleRingFilter(r)"
         ><span class="dot" :style="{ background: RING_COLORS[r] }"></span>{{ r }}</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Trend:</span>
+        <button class="chip" :class="{ on: trendFilter === 'All' }" @click="trendFilter = 'All'">All</button>
+        <button
+          v-for="t in TRENDS"
+          :key="t"
+          class="chip"
+          :class="{ on: trendFilter === t }"
+          @click="toggleTrendFilter(t)"
+        >{{ TREND_ARROWS[t] }} {{ t }}</button>
       </div>
     </div>
 

@@ -4,3 +4,5 @@ export const TREND_ARROWS = {
   stable: '→',
   negative: '↓'
 }
+
+export const TRENDS = ['positive', 'stable', 'negative']
