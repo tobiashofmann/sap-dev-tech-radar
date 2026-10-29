@@ -87,6 +87,31 @@ function toggleRingFilter(ring) {
   ringFilter.value = ringFilter.value === ring ? 'All' : ring
 }
 
+// --- Screen F: numbered blips + per-quadrant legend lists (fullscreen) --
+// Replaces the earlier "name next to every blip" attempt, which was too
+// cluttered in dense areas. Each quadrant gets its own 1..N numbering
+// (alphabetical by label, so it's predictable) and its own list, rendered
+// outside the radar; the blip itself just shows that number.
+const quadrantLegends = computed(() => {
+  const legends = {}
+  QUADRANTS.forEach((q) => {
+    legends[q.name] = visibleEntries.value
+      .filter((e) => e.quadrant === q.name)
+      .slice()
+      .sort((a, b) => a.label.localeCompare(b.label))
+      .map((e, i) => ({ number: i + 1, id: e.id, label: e.label }))
+  })
+  return legends
+})
+
+const blipNumbers = computed(() => {
+  const map = {}
+  Object.values(quadrantLegends.value).forEach((items) => {
+    items.forEach((item) => { map[item.id] = item.number })
+  })
+  return map
+})
+
 // --- radar chart ---
 const chart = ref(null)
 const CHART_SIZE = 640
@@ -167,7 +192,7 @@ function renderChart() {
     .attr('class', 'blip')
     .attr('cx', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
     .attr('cy', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
-    .attr('r', (d) => (d.id === selectedId.value ? 8 : 5))
+    .attr('r', (d) => (isFullscreen.value ? 11 : d.id === selectedId.value ? 8 : 5))
     .attr('fill', (d) => RING_COLORS[d.ring])
     .attr('stroke', (d) => (d.id === selectedId.value ? '#131e29' : 'none'))
     .attr('stroke-width', 2)
@@ -176,27 +201,28 @@ function renderChart() {
     .append('title')
     .text((d) => `${d.title} (${d.ring}, ${d.quadrant})`)
 
-  // --- Screen F: blip name labels in fullscreen ------------------------
-  // Self-contained on purpose (easy to revert: remove this block and drop
-  // isFullscreen from the watch list below - nothing else depends on it).
-  // No collision handling yet (design/DESIGN.md mentions flipping labels
-  // left/above to avoid overlaps); plain offset labels first, to see if
-  // that's even needed before adding the complexity.
+  // --- Screen F: numbered blips in fullscreen, see quadrantLegends/
+  // blipNumbers above for the matching per-quadrant list. Self-contained
+  // (easy to revert: this block + the r: 11 case above + the two
+  // computeds). Replaces the earlier "name next to every blip" version.
   if (isFullscreen.value) {
-    g.selectAll('text.blip-label')
+    g.selectAll('text.blip-number')
       .data(visibleEntries.value, (d) => d.id)
       .join('text')
-      .attr('class', 'blip-label')
-      .attr('x', (d) => (blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0) + 8)
-      .attr('y', (d) => (blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0) + 3)
-      .style('font-size', '10px')
-      .style('fill', 'var(--sap-text, #1a2733)')
+      .attr('class', 'blip-number')
+      .attr('x', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
+      .attr('y', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'central')
+      .style('font-size', '9px')
+      .style('font-weight', '700')
+      .style('fill', '#fff')
       .style('pointer-events', 'none')
-      .text((d) => d.label)
+      .text((d) => blipNumbers.value[d.id])
   } else {
-    g.selectAll('text.blip-label').remove()
+    g.selectAll('text.blip-number').remove()
   }
-  // --- end Screen F blip labels -----------------------------------------
+  // --- end Screen F blip numbers -----------------------------------------
 }
 
 onMounted(renderChart)
@@ -413,6 +439,45 @@ watch([selectedEntry, radarSize], layoutSideCards)
         ></ui5-button>
       </div>
 
+      <template v-if="isFullscreen">
+        <div class="quadrant-legend legend-left">
+          <div class="legend-block">
+            <h4>UI</h4>
+            <ol>
+              <li v-for="item in quadrantLegends.UI" :key="item.id" @click="selectEntry(item.id)">
+                <span class="num">{{ item.number }}</span>{{ item.label }}
+              </li>
+            </ol>
+          </div>
+          <div class="legend-block">
+            <h4>Tools</h4>
+            <ol>
+              <li v-for="item in quadrantLegends.Tools" :key="item.id" @click="selectEntry(item.id)">
+                <span class="num">{{ item.number }}</span>{{ item.label }}
+              </li>
+            </ol>
+          </div>
+        </div>
+        <div class="quadrant-legend legend-right">
+          <div class="legend-block">
+            <h4>Technology</h4>
+            <ol>
+              <li v-for="item in quadrantLegends.Technology" :key="item.id" @click="selectEntry(item.id)">
+                <span class="num">{{ item.number }}</span>{{ item.label }}
+              </li>
+            </ol>
+          </div>
+          <div class="legend-block">
+            <h4>Frameworks</h4>
+            <ol>
+              <li v-for="item in quadrantLegends.Frameworks" :key="item.id" @click="selectEntry(item.id)">
+                <span class="num">{{ item.number }}</span>{{ item.label }}
+              </li>
+            </ol>
+          </div>
+        </div>
+      </template>
+
       <div v-if="!isFullscreen" class="side-cards" ref="sideCards">
         <ui5-card v-if="!selectedEntry" ref="primaryCard">
           <ui5-card-header slot="header" title-text="About this radar"></ui5-card-header>
@@ -558,6 +623,51 @@ watch([selectedEntry, radarSize], layoutSideCards)
   left: 50%;
   margin-left: -50vw;
   justify-content: center;
+}
+
+/* Screen F: per-quadrant legend lists in the margins left/right of the
+   centered (70vw) radar - UI/Tools on the left (matching their top-left/
+   bottom-left blip positions), Technology/Frameworks on the right. */
+.quadrant-legend {
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  width: 15vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.8rem;
+}
+.quadrant-legend.legend-left { left: 0; padding-left: 1rem; }
+.quadrant-legend.legend-right { right: 0; padding-right: 1rem; }
+.legend-block { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
+.legend-block h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--sap-text-muted, #5b738b);
+}
+.legend-block ol {
+  flex: 1 1 auto;
+  min-height: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+.legend-block li {
+  padding: 0.1rem 0;
+  cursor: pointer;
+}
+.legend-block li:hover { color: var(--sap-adopt, #0064d9); }
+.legend-block .num {
+  display: inline-block;
+  width: 1.6em;
+  font-weight: 700;
+  color: var(--sap-text-muted, #5b738b);
 }
 .radar-card-wrapper { position: relative; flex: 0 0 auto; width: 600px; }
 .radar-card { display: block; width: 100%; }
