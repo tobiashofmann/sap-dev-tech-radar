@@ -36,6 +36,13 @@ const selectedId = ref(null)
 // Screen F (fullscreen radar): button added here, the actual fullscreen
 // layout/behavior is a separate follow-up step.
 const isFullscreen = ref(false)
+// Screen G (radar hover): which blip is hovered, and the tooltip's pixel
+// position within .radar-card-inner. Position is computed once per
+// mouseenter from the blip's own coordinates (not tracked via mousemove),
+// so the tooltip stays anchored "next to" the blip per design/DESIGN.md
+// rather than following the cursor.
+const hoveredId = ref(null)
+const tooltipPos = ref({ x: 0, y: 0 })
 
 watch(
   () => props.preselectId,
@@ -67,6 +74,10 @@ const visibleEntries = computed(() => {
   const q = props.searchQuery.trim().toLowerCase()
   return q ? ringFiltered.value.filter((e) => e.title.toLowerCase().includes(q)) : ringFiltered.value
 })
+
+const hoveredEntry = computed(() =>
+  hoveredId.value ? visibleEntries.value.find((e) => e.id === hoveredId.value) ?? null : null
+)
 
 const tileCounts = computed(() => {
   const counts = { ADOPT: 0, USE: 0, HOLD: 0, STOP: 0 }
@@ -155,6 +166,25 @@ const OUTER_RADIUS = 300
 const RING_BAND_GREY = '#f5f6f7'
 const RING_BAND_WHITE = '#fff'
 
+// Pixel position of a blip, relative to .radar-card-inner (the chart's
+// positioned parent, used for the hover tooltip's CSS position) - derived
+// from the SVG's actual rendered size rather than assumed constants, so it
+// stays correct however the chart is scaled (desktop/tablet/fullscreen).
+function blipScreenPos(d) {
+  const pos = blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)
+  if (!pos || !chart.value) {
+    return { x: 0, y: 0 }
+  }
+  const svgRect = chart.value.getBoundingClientRect()
+  const containerRect = chart.value.parentElement.getBoundingClientRect()
+  const scale = svgRect.width / CHART_SIZE
+  const center = CHART_SIZE / 2
+  return {
+    x: svgRect.left - containerRect.left + (center + pos.x) * scale,
+    y: svgRect.top - containerRect.top + (center + pos.y) * scale
+  }
+}
+
 function renderChart() {
   const svg = d3.select(chart.value)
   svg.selectAll('*').remove()
@@ -228,20 +258,45 @@ function renderChart() {
       .text(q.name)
   })
 
+  // Screen G: soft halo behind the hovered blip, drawn before (so
+  // underneath) the blips themselves. Filtering the data to just the
+  // hovered entry keeps this a no-op when nothing is hovered.
+  g.selectAll('circle.blip-halo')
+    .data(visibleEntries.value.filter((d) => d.id === hoveredId.value), (d) => d.id)
+    .join('circle')
+    .attr('class', 'blip-halo')
+    .attr('cx', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
+    .attr('cy', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
+    .attr('r', 18)
+    .attr('fill', (d) => RING_COLORS[d.ring])
+    .attr('opacity', 0.22)
+    .style('pointer-events', 'none')
+
   g.selectAll('circle.blip')
     .data(visibleEntries.value, (d) => d.id)
     .join('circle')
     .attr('class', 'blip')
     .attr('cx', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0)
     .attr('cy', (d) => blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0)
-    .attr('r', (d) => (d.id === selectedId.value ? 11 : 8))
+    .attr('r', (d) => (d.id === selectedId.value || d.id === hoveredId.value ? 11 : 8))
     .attr('fill', (d) => RING_COLORS[d.ring])
-    .attr('stroke', (d) => (d.id === selectedId.value ? '#131e29' : 'none'))
-    .attr('stroke-width', 2)
+    .attr('stroke', (d) => {
+      if (d.id === selectedId.value) return '#131e29'
+      if (d.id === hoveredId.value) return '#fff'
+      return 'none'
+    })
+    .attr('stroke-width', (d) => (d.id === hoveredId.value && d.id !== selectedId.value ? 2.5 : 2))
     .style('cursor', 'pointer')
     .on('click', (_, d) => selectEntry(d.id))
-    .append('title')
-    .text((d) => `${d.title} (${d.ring}, ${d.quadrant})`)
+    .on('mouseenter', function (_, d) {
+      hoveredId.value = d.id
+      tooltipPos.value = blipScreenPos(d)
+    })
+    .on('mouseleave', (_, d) => {
+      if (hoveredId.value === d.id) {
+        hoveredId.value = null
+      }
+    })
 
   // Per-quadrant blip number (see quadrantLegends/blipNumbers above),
   // always shown now - also used as the table's first column.
@@ -262,7 +317,7 @@ function renderChart() {
 }
 
 onMounted(renderChart)
-watch([visibleEntries, selectedId, isFullscreen], renderChart)
+watch([visibleEntries, selectedId, isFullscreen, hoveredId], renderChart)
 
 // Fixed rule: the radar card's bottom edge lines up with the side cards
 // column's bottom edge, and side-cards fills the rest of the row (up to
@@ -475,6 +530,18 @@ watch([selectedEntry, radarSize], layoutSideCards)
         <ui5-card class="radar-card">
           <div class="radar-card-inner" :style="radarCardInnerStyle">
             <svg ref="chart" class="radar-chart"></svg>
+            <div
+              v-if="hoveredEntry"
+              class="blip-tooltip"
+              :style="{ left: tooltipPos.x + 'px', top: tooltipPos.y + 'px' }"
+            >
+              <div class="tooltip-title">{{ hoveredEntry.title }}</div>
+              <div class="tooltip-meta">
+                <RingPill :ring="hoveredEntry.ring" />
+                <span class="tooltip-detail">{{ hoveredEntry.quadrant }}</span>
+                <span class="tooltip-detail">{{ TREND_ARROWS[hoveredEntry.trend] }} {{ hoveredEntry.trend }}</span>
+              </div>
+            </div>
           </div>
         </ui5-card>
 
@@ -740,7 +807,22 @@ watch([selectedEntry, radarSize], layoutSideCards)
   background: var(--sap-tile-bg, #fff);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
-.radar-card-inner { padding: 1rem; aspect-ratio: 1 / 1; }
+.radar-card-inner { position: relative; padding: 1rem; aspect-ratio: 1 / 1; }
+
+.blip-tooltip {
+  position: absolute;
+  transform: translate(14px, -50%);
+  z-index: 20;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  padding: 0.6rem 0.75rem;
+  min-width: 160px;
+  pointer-events: none;
+}
+.tooltip-title { font-weight: 700; margin-bottom: 0.4rem; }
+.tooltip-meta { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.tooltip-detail { font-size: 0.8rem; color: var(--sap-text-muted, #5b738b); }
 .radar-chart { width: 100%; height: 100%; display: block; }
 .side-cards { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 1rem; }
 .card-body { padding: 0.75rem 1rem 1rem; }
