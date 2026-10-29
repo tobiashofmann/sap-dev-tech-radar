@@ -18,7 +18,7 @@ const props = defineProps({
   // select that technology once we're back here.
   preselectId: { type: String, default: null }
 })
-const emit = defineEmits(['open-detail'])
+const emit = defineEmits(['open-detail', 'open-deprecated'])
 
 const tableWrapRef = ref(null)
 watch(
@@ -98,7 +98,18 @@ const tileCounts = computed(() => {
   return counts
 })
 
-const totalCount = computed(() => trendQuadrantFiltered.value.length)
+// Deprecated technologies aren't on the radar at all (design/DESIGN.md rule
+// 3) - no ring/trend concept applies, so this only respects the quadrant
+// filter, not ring/trend. Total now counts every technology, deprecated
+// included.
+const deprecatedCount = computed(() => {
+  const deprecated = props.entries.filter((e) => e.ring === 'DEPRECATED')
+  return quadrantFilter.value === 'All'
+    ? deprecated.length
+    : deprecated.filter((e) => e.quadrant === quadrantFilter.value).length
+})
+
+const totalCount = computed(() => trendQuadrantFiltered.value.length + deprecatedCount.value)
 
 const selectedEntry = computed(() =>
   selectedId.value ? props.entries.find((e) => e.id === selectedId.value) : null
@@ -518,6 +529,12 @@ watch([selectedEntry, radarSize], layoutSideCards)
         <div class="tile-body">
           <div class="tile-label">{{ ring }}</div>
           <div class="tile-count" :style="{ color: RING_COLORS[ring] }">{{ tileCounts[ring] }}</div>
+        </div>
+      </ui5-card>
+      <ui5-card class="tile" @click="emit('open-deprecated')">
+        <div class="tile-body">
+          <div class="tile-label">Deprecated</div>
+          <div class="tile-count" :style="{ color: RING_COLORS.DEPRECATED }">{{ deprecatedCount }}</div>
         </div>
       </ui5-card>
     </div>

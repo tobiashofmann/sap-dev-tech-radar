@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import RadarPage from './components/RadarPage.vue'
 import DetailPage from './components/DetailPage.vue'
 import PrivacyPage from './components/PrivacyPage.vue'
+import DeprecatedPage from './components/DeprecatedPage.vue'
 
 const releaseData = ref(null)
 const loadError = ref(null)
@@ -66,6 +67,7 @@ function pastReleaseUrl(version) {
 const basePath = import.meta.env.BASE_URL
 const detailPrefix = basePath + 'details/'
 const privacyPath = basePath + 'privacy'
+const deprecatedPath = basePath + 'deprecated'
 // Makes the List tab's scroll position visible/shareable in the URL -
 // reflected on every List click, and read back on load/back-forward so a
 // link with this hash lands on the table instead of the bare radar.
@@ -89,6 +91,10 @@ function syncViewFromLocation() {
   }
   if (window.location.pathname === privacyPath) {
     view.value = 'privacy'
+    return
+  }
+  if (window.location.pathname === deprecatedPath) {
+    view.value = 'deprecated'
     return
   }
   view.value = 'radar'
@@ -206,6 +212,14 @@ function openPrivacy() {
     window.history.pushState({}, '', privacyPath)
   }
 }
+
+// Radar page's "Deprecated" tile (design/DESIGN.md screen C)
+function openDeprecated() {
+  view.value = 'deprecated'
+  if (window.location.pathname !== deprecatedPath) {
+    window.history.pushState({}, '', deprecatedPath)
+  }
+}
 </script>
 
 <template>
@@ -264,6 +278,12 @@ function openPrivacy() {
           @show-on-radar="showOnRadar"
         />
         <PrivacyPage v-else-if="view === 'privacy'" @back="backToRadar" />
+        <DeprecatedPage
+          v-else-if="view === 'deprecated'"
+          :entries="activeData.entries"
+          @back="backToRadar"
+          @open-detail="openDetail"
+        />
         <RadarPage
           v-else-if="activeTab === 'Radar' || activeTab === 'List'"
           :entries="activeData.entries"
@@ -272,6 +292,7 @@ function openPrivacy() {
           :jump-to-list="listJumpToken"
           :preselect-id="radarPreselectId"
           @open-detail="openDetail"
+          @open-deprecated="openDeprecated"
         />
         <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
       </template>
