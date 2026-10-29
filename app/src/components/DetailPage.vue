@@ -71,6 +71,18 @@ function ringChipStyle(ring) {
   return { color, borderColor: color, background: hexToRgba(color, 0.12) }
 }
 
+// "What to do" card is tinted in the technology's own ring color (design
+// mock: light green fill + green border for a USE entry), not a fixed
+// info-blue - the ring itself IS the recommendation's color coding.
+// ui5-card paints its own white background inside shadow DOM, so a plain
+// inline background/border on the host is invisible - these go through
+// as CSS custom properties instead, read by the ::part(root) rule below
+// (the only way to reach the shadow background from outside).
+const whatToDoStyle = computed(() => {
+  const color = RING_COLORS[props.entry.ring]
+  return { '--what-to-do-bg': hexToRgba(color, 0.08), '--what-to-do-border': color }
+})
+
 // --- "Position on radar": a quadrant excerpt (design/DESIGN.md screen B) --
 // Reuses the same quadrant angle ranges and ring boundaries the full radar
 // (RadarPage.vue) draws with, just cropped to this technology's own
@@ -158,7 +170,7 @@ const positionOnRadar = computed(() => {
 
     <div class="detail-layout">
       <div class="detail-main">
-        <ui5-card>
+        <ui5-card class="what-to-do-card" :style="whatToDoStyle">
           <ui5-card-header slot="header" title-text="What to do"></ui5-card-header>
           <div class="card-body">
             <p class="recommendation">{{ entry.recommendation }}</p>
@@ -251,6 +263,10 @@ const positionOnRadar = computed(() => {
 .breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
 
 .header-card { margin-bottom: 1.5rem; }
+.what-to-do-card::part(root) {
+  background: var(--what-to-do-bg) !important;
+  border: 1px solid var(--what-to-do-border) !important;
+}
 .detail-layout { display: flex; align-items: flex-start; gap: 1.5rem; }
 .detail-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 .detail-side { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1.5rem; }
@@ -277,7 +293,7 @@ const positionOnRadar = computed(() => {
 .ring-timeline { display: flex; align-items: flex-start; flex-wrap: wrap; row-gap: 1rem; }
 .timeline-item { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
 .timeline-item .release { font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
-.timeline-connector { flex: 1 1 2rem; min-width: 1.5rem; height: 1px; background: var(--sap-border, #d9d9d9); margin: 0.65rem 0.5rem 0; }
+.timeline-connector { flex: 1 1 2rem; min-width: 1.5rem; height: 1px; background: var(--sap-text-muted, #5b738b); margin: 0.65rem 0.5rem 0; }
 .ring-chip {
   display: inline-block;
   padding: 0.15rem 0.7rem;
