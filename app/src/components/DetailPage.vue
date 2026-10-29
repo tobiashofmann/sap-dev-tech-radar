@@ -31,6 +31,32 @@ const voteLink = computed(() =>
   props.entry.links.find((l) => l.name === 'Ring proposal & vote')
 )
 
+// Ring history timeline (design/DESIGN.md screen B), capped to the last 5
+// positions. If the ring hasn't changed since its most recent release, that
+// release entry itself is marked "now" rather than appending a separate,
+// dateless "current" entry - so a stable technology just shows its real
+// release history with the last pill tagged "now".
+const MAX_TIMELINE_ENTRIES = 5
+const timelineEntries = computed(() => {
+  const history = props.entry.releaseHistory
+  const lastHistoryRing = history.length ? history[history.length - 1].ring : null
+  const entries =
+    lastHistoryRing === props.entry.ring
+      ? history.map((h, i) => ({ release: h.release, ring: h.ring, isNow: i === history.length - 1 }))
+      : [...history.map((h) => ({ release: h.release, ring: h.ring, isNow: false })), { release: null, ring: props.entry.ring, isNow: true }]
+  return entries.slice(-MAX_TIMELINE_ENTRIES)
+})
+
+function hexToRgba(hex, alpha) {
+  const n = parseInt(hex.slice(1), 16)
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
+}
+
+function ringChipStyle(ring) {
+  const color = RING_COLORS[ring]
+  return { color, borderColor: color, background: hexToRgba(color, 0.12) }
+}
+
 // --- "Position on radar": a quadrant excerpt (design/DESIGN.md screen B) --
 // Reuses the same quadrant angle ranges and ring boundaries the full radar
 // (RadarPage.vue) draws with, just cropped to this technology's own
@@ -131,16 +157,17 @@ const positionOnRadar = computed(() => {
         <ui5-card>
           <ui5-card-header slot="header" title-text="Ring history"></ui5-card-header>
           <div class="card-body">
-            <ol class="ring-timeline">
-              <li v-for="h in entry.releaseHistory" :key="h.release">
-                <span class="release">{{ h.release }}</span>
-                <RingPill :ring="h.ring" />
-              </li>
-              <li>
-                <span class="release">current</span>
-                <RingPill :ring="entry.ring" />
-              </li>
-            </ol>
+            <div class="ring-timeline">
+              <template v-for="(item, i) in timelineEntries" :key="item.release ?? 'now'">
+                <div v-if="i > 0" class="timeline-connector" aria-hidden="true"></div>
+                <div class="timeline-item" :class="{ now: item.isNow }">
+                  <span class="ring-chip" :style="ringChipStyle(item.ring)">
+                    {{ item.ring }}<template v-if="item.isNow"> &middot; now</template>
+                  </span>
+                  <span class="release">{{ item.release ?? 'now' }}</span>
+                </div>
+              </template>
+            </div>
           </div>
         </ui5-card>
 
@@ -225,9 +252,22 @@ const positionOnRadar = computed(() => {
   color: var(--sap-text-muted, #5b738b);
 }
 
-.ring-timeline { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.ring-timeline li { display: flex; align-items: center; gap: 0.75rem; }
-.ring-timeline .release { width: 5rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
+.ring-timeline { display: flex; align-items: flex-start; flex-wrap: wrap; row-gap: 1rem; }
+.timeline-item { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.timeline-item .release { font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
+.timeline-connector { flex: 1 1 2rem; min-width: 1.5rem; height: 1px; background: var(--sap-border, #d9d9d9); margin: 0.65rem 0.5rem 0; }
+.ring-chip {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border: 1px solid;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.timeline-item.now .ring-chip { box-shadow: 0 0 0 3px rgba(0, 100, 217, 0.15); border-color: var(--sap-adopt, #0064d9); }
 
 .reference-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
 
