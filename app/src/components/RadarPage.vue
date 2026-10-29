@@ -639,8 +639,8 @@ watch([selectedEntry, radarSize], layoutSideCards)
   gap: 1rem;
   font-size: 0.8rem;
 }
-.quadrant-legend.legend-left { left: 0; padding-left: 1rem; }
-.quadrant-legend.legend-right { right: 0; padding-right: 1rem; }
+.quadrant-legend.legend-left { left: 0; padding: 0 2.5rem 0 1rem; }
+.quadrant-legend.legend-right { right: 0; padding: 0 1rem 0 2.5rem; }
 .legend-block { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; }
 .legend-block h4 {
   margin: 0 0 0.4rem;
