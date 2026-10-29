@@ -267,6 +267,10 @@ const positionOnRadar = computed(() => {
   background: var(--what-to-do-bg) !important;
   border: 1px solid var(--what-to-do-border) !important;
 }
+.what-to-do-card ui5-card-header::part(root) {
+  border-bottom: 1px solid var(--what-to-do-border) !important;
+}
+.what-to-do-card .card-body { padding-top: 0.5rem; }
 .detail-layout { display: flex; align-items: flex-start; gap: 1.5rem; }
 .detail-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
 .detail-side { flex: 0 0 320px; display: flex; flex-direction: column; gap: 1.5rem; }
@@ -275,7 +279,7 @@ const positionOnRadar = computed(() => {
 .header-card .card-body { padding-top: 1.25rem; }
 .description { color: var(--sap-text, #1a2733); }
 .meta-line { color: var(--sap-text-muted, #5b738b); font-size: 0.9rem; }
-.recommendation { font-weight: bold; font-size: 1.05rem; }
+.recommendation { font-weight: 600; font-size: 1.05rem; }
 
 .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 0.75rem; }
 .header-divider { border: none; border-top: 1px solid var(--sap-border, #e4e7eb); margin: 0.75rem 0; }
