@@ -26,8 +26,21 @@ watch(
   async (value) => {
     if (!value) return
     await nextTick()
+    // ui5-card (Lit-based) finishes its own async layout after Vue's
+    // nextTick, so on a fresh mount (coming from the detail page) the
+    // page isn't at its full scroll height yet here - waitForLayout()
+    // (defined below, hoisted) waits out that extra cycle, same fix as
+    // layoutSideCards() uses elsewhere in this file.
+    await waitForLayout()
     tableWrapRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  },
+  // Clicking "List" from the detail page mounts RadarPage fresh with
+  // jumpToList already at its bumped value (App.vue's v-if/v-else-if
+  // swaps DetailPage out for RadarPage) - a plain (non-immediate) watch
+  // never sees that as a "change" and silently skips the scroll. immediate
+  // covers that case too; the `if (!value) return` guard above still
+  // skips the harmless initial 0 on a normal page load.
+  { immediate: true }
 )
 const quadrantFilter = ref('All')
 const ringFilter = ref('All')
