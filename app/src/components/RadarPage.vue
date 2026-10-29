@@ -192,7 +192,7 @@ function renderChart() {
       .style('font-size', '10px')
       .style('fill', 'var(--sap-text, #1a2733)')
       .style('pointer-events', 'none')
-      .text((d) => d.title)
+      .text((d) => d.label)
   } else {
     g.selectAll('text.blip-label').remove()
   }

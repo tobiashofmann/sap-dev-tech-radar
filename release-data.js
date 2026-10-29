@@ -55,6 +55,7 @@ function buildEntry(data, filename, entryByFilename, history) {
   return {
     id: filename,
     title: data.page.title,
+    label: data.config.label,
     description: data.page.description,
     reason: data.page.reason,
     recommendation: data.page.recommendation || data.page.reason,
