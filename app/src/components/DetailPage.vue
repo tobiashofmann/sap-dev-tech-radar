@@ -174,7 +174,8 @@ const positionOnRadar = computed(() => {
           <ui5-card-header slot="header" title-text="What to do"></ui5-card-header>
           <div class="card-body">
             <p class="recommendation">{{ entry.recommendation }}</p>
-            <p class="meta-line">Reason: {{ entry.reason }}
+            <p v-if="entry.reason !== entry.recommendation || voteLink" class="meta-line">
+              <template v-if="entry.reason !== entry.recommendation">Reason: {{ entry.reason }}</template>
               <a v-if="voteLink" :href="voteLink.url" target="_blank" rel="noopener">View ring proposal &amp; vote</a>
             </p>
           </div>
