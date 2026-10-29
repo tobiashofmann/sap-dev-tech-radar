@@ -31,6 +31,20 @@ const voteLink = computed(() =>
   props.entry.links.find((l) => l.name === 'Ring proposal & vote')
 )
 
+// shown separately under "What to do" above - excluded here to avoid
+// listing it twice
+const referenceLinks = computed(() =>
+  props.entry.links.filter((l) => l.name !== 'Ring proposal & vote')
+)
+
+function hostnameOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return ''
+  }
+}
+
 // Ring history timeline (design/DESIGN.md screen B), capped to the last 5
 // positions. If the ring hasn't changed since its most recent release, that
 // release entry itself is marked "now" rather than appending a separate,
@@ -171,14 +185,22 @@ const positionOnRadar = computed(() => {
           </div>
         </ui5-card>
 
-        <ui5-card v-if="entry.links.length">
+        <ui5-card v-if="referenceLinks.length">
           <ui5-card-header slot="header" title-text="References"></ui5-card-header>
           <div class="card-body">
-            <ul class="reference-list">
-              <li v-for="l in entry.links" :key="l.name">
-                <a :href="l.url" target="_blank" rel="noopener">{{ l.name }}</a>
-              </li>
-            </ul>
+            <div class="reference-grid">
+              <a
+                v-for="l in referenceLinks"
+                :key="l.name"
+                :href="l.url"
+                target="_blank"
+                rel="noopener"
+                class="reference-chip"
+              >
+                <span class="reference-text"><b>{{ l.name }}</b> <span class="reference-host">{{ hostnameOf(l.url) }}</span></span>
+                <span class="reference-arrow" aria-hidden="true">&#8599;</span>
+              </a>
+            </div>
           </div>
         </ui5-card>
       </div>
@@ -269,7 +291,24 @@ const positionOnRadar = computed(() => {
 }
 .timeline-item.now .ring-chip { box-shadow: 0 0 0 3px rgba(0, 100, 217, 0.15); border-color: var(--sap-adopt, #0064d9); }
 
-.reference-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.reference-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.reference-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--sap-border, #d9d9d9);
+  border-radius: 0.5rem;
+  background: #fff;
+  color: var(--sap-text, #1a2733);
+  text-decoration: none;
+}
+.reference-chip:hover { border-color: var(--sap-adopt, #0064d9); }
+.reference-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reference-host { color: var(--sap-text-muted, #5b738b); font-weight: 400; margin-left: 0.3rem; font-size: 0.85rem; }
+.reference-arrow { flex: 0 0 auto; color: var(--sap-text-muted, #5b738b); }
 
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 0.4rem 0.3rem; border-bottom: 1px solid #f0f0f0; }
@@ -280,5 +319,9 @@ th, td { text-align: left; padding: 0.4rem 0.3rem; border-bottom: 1px solid #f0f
 @media (max-width: 900px) {
   .detail-layout { flex-direction: column; }
   .detail-side { flex: 1 1 auto; width: 100%; }
+}
+
+@media (max-width: 640px) {
+  .reference-grid { grid-template-columns: 1fr; }
 }
 </style>
