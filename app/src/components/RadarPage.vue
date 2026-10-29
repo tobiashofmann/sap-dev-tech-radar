@@ -175,10 +175,32 @@ function renderChart() {
     .on('click', (_, d) => selectEntry(d.id))
     .append('title')
     .text((d) => `${d.title} (${d.ring}, ${d.quadrant})`)
+
+  // --- Screen F: blip name labels in fullscreen ------------------------
+  // Self-contained on purpose (easy to revert: remove this block and drop
+  // isFullscreen from the watch list below - nothing else depends on it).
+  // No collision handling yet (design/DESIGN.md mentions flipping labels
+  // left/above to avoid overlaps); plain offset labels first, to see if
+  // that's even needed before adding the complexity.
+  if (isFullscreen.value) {
+    g.selectAll('text.blip-label')
+      .data(visibleEntries.value, (d) => d.id)
+      .join('text')
+      .attr('class', 'blip-label')
+      .attr('x', (d) => (blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.x ?? 0) + 8)
+      .attr('y', (d) => (blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)?.y ?? 0) + 3)
+      .style('font-size', '10px')
+      .style('fill', 'var(--sap-text, #1a2733)')
+      .style('pointer-events', 'none')
+      .text((d) => d.title)
+  } else {
+    g.selectAll('text.blip-label').remove()
+  }
+  // --- end Screen F blip labels -----------------------------------------
 }
 
 onMounted(renderChart)
-watch([visibleEntries, selectedId], renderChart)
+watch([visibleEntries, selectedId, isFullscreen], renderChart)
 
 // Fixed rule: the radar card's bottom edge lines up with the side cards
 // column's bottom edge, and side-cards fills the rest of the row (up to
