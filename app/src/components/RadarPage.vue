@@ -151,6 +151,9 @@ const quadrantLegends = computed(() => {
 const chart = ref(null)
 const CHART_SIZE = 640
 const OUTER_RADIUS = 300
+// design/Tech Radar Recommendations.html mock's exact ring-band colors
+const RING_BAND_GREY = '#f5f6f7'
+const RING_BAND_WHITE = '#fff'
 
 function renderChart() {
   const svg = d3.select(chart.value)
@@ -161,11 +164,15 @@ function renderChart() {
 
   const g = svg.append('g').attr('transform', `translate(${center},${center})`)
 
+  // Alternating ring-band fills (design mock: STOP/USE light grey,
+  // HOLD/ADOPT white), drawn outside-in so each smaller circle simply
+  // overpaints the inner part of the previous one - no donut paths needed.
   const boundaries = ringBoundaryRadii(OUTER_RADIUS)
-  boundaries.forEach((r) => {
+  RINGS.forEach((ring, i) => {
+    const idx = RINGS.length - 1 - i // outside-in: STOP(3), HOLD(2), USE(1), ADOPT(0)
     g.append('circle')
-      .attr('r', r)
-      .attr('fill', 'none')
+      .attr('r', boundaries[idx])
+      .attr('fill', idx % 2 === 1 ? RING_BAND_GREY : RING_BAND_WHITE)
       .attr('stroke', '#d9d9d9')
   })
 

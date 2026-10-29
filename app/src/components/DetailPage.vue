@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import RingPill from './RingPill.vue'
 import { sanitizeDescription } from '../sanitize.js'
 import { TREND_ARROWS } from '../trendIcons.js'
-import { QUADRANTS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
+import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
 
 const props = defineProps({
@@ -91,6 +91,10 @@ const whatToDoStyle = computed(() => {
 // top-right, Tools bottom-left, Frameworks bottom-right).
 const BOX = 200
 const MAX_R = 190
+// same mock colors as the main radar (RadarPage.vue) - STOP/USE light
+// grey, HOLD/ADOPT white
+const RING_BAND_GREY = '#f5f6f7'
+const RING_BAND_WHITE = '#fff'
 const QUADRANT_ORIGIN = {
   UI: { x: BOX, y: BOX },
   Technology: { x: 0, y: BOX },
@@ -110,17 +114,22 @@ const positionOnRadar = computed(() => {
   const angleMax = quadrant.radial_max * Math.PI
   const point = (angle, r) => ({ x: origin.x + r * Math.cos(angle), y: origin.y + r * Math.sin(angle) })
 
-  const edgeMin = point(angleMin, MAX_R)
-  const edgeMax = point(angleMax, MAX_R)
-  const sectorPath = `M ${origin.x} ${origin.y} L ${edgeMin.x} ${edgeMin.y} A ${MAX_R} ${MAX_R} 0 0 1 ${edgeMax.x} ${edgeMax.y} Z`
-
-  const ringArcs = ringBoundaryRadii(MAX_R)
-    .slice(0, -1)
-    .map((r) => {
-      const a = point(angleMin, r)
-      const b = point(angleMax, r)
-      return `M ${a.x} ${a.y} A ${r} ${r} 0 0 1 ${b.x} ${b.y}`
-    })
+  // Alternating ring-band fills (design mock: STOP/USE light grey, HOLD/
+  // ADOPT white), one full wedge per ring drawn outside-in so each
+  // smaller wedge overpaints the inner part of the previous one - same
+  // technique as the main radar's concentric circles, just cropped to
+  // this quadrant's angle range.
+  const boundaries = ringBoundaryRadii(MAX_R)
+  const ringWedges = RINGS.map((ring, i) => {
+    const idx = RINGS.length - 1 - i // outside-in: STOP(3), HOLD(2), USE(1), ADOPT(0)
+    const r = boundaries[idx]
+    const a = point(angleMin, r)
+    const b = point(angleMax, r)
+    return {
+      path: `M ${origin.x} ${origin.y} L ${a.x} ${a.y} A ${r} ${r} 0 0 1 ${b.x} ${b.y} Z`,
+      fill: idx % 2 === 1 ? RING_BAND_GREY : RING_BAND_WHITE
+    }
+  })
 
   const otherBlips = props.allEntries
     .filter((e) => e.quadrant === props.entry.quadrant && e.ring !== 'DEPRECATED' && e.id !== props.entry.id)
@@ -131,8 +140,7 @@ const positionOnRadar = computed(() => {
     .filter(Boolean)
 
   return {
-    sectorPath,
-    ringArcs,
+    ringWedges,
     otherBlips,
     own: { x: origin.x + ownPos.x, y: origin.y + ownPos.y, color: RING_COLORS[props.entry.ring] }
   }
@@ -223,8 +231,13 @@ const positionOnRadar = computed(() => {
           <ui5-card-header slot="header" title-text="Position on radar" :subtitle-text="entry.quadrant"></ui5-card-header>
           <div class="card-body">
             <svg viewBox="0 0 200 200" class="position-svg">
-              <path :d="positionOnRadar.sectorPath" fill="#f3f4f6"></path>
-              <path v-for="(d, i) in positionOnRadar.ringArcs" :key="i" :d="d" fill="none" stroke="#d9d9d9"></path>
+              <path
+                v-for="(wedge, i) in positionOnRadar.ringWedges"
+                :key="i"
+                :d="wedge.path"
+                :fill="wedge.fill"
+                stroke="#d9d9d9"
+              ></path>
               <circle v-for="b in positionOnRadar.otherBlips" :key="b.id" :cx="b.x" :cy="b.y" r="3" fill="#c3c9cf"></circle>
               <circle
                 :cx="positionOnRadar.own.x"
