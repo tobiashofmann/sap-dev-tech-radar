@@ -215,25 +215,35 @@ function showOnRadar(id) {
     <p v-else>Loading&hellip;</p>
 
     <ui5-dialog
-      header-text="About SAP Development Tech Radar"
+      class="info-dialog"
+      accessible-name="About SAP Development Tech Radar"
       :open="infoOpen"
       @close="infoOpen = false"
     >
+      <div slot="header" class="info-dialog-header">
+        <h3>About SAP Development Tech Radar</h3>
+        <button class="dialog-close" aria-label="Close" @click="infoOpen = false">&#10005;</button>
+      </div>
+
       <div class="info-section">
-        <h3>Version</h3>
-        <p>SDTR version <b>{{ releaseData ? releaseData.date : '...' }}</b><br/>
-          Source code: <a href="https://github.com/tobiashofmann/sap-dev-tech-radar" target="_blank" rel="noopener">github.com/tobiashofmann/sap-dev-tech-radar</a></p>
+        <div class="info-label">Version</div>
+        <div class="info-grid">
+          <span class="info-label">Release</span>
+          <span><b>{{ releaseData ? releaseData.date : '...' }}</b></span>
+          <span class="info-label">Source code</span>
+          <span><a href="https://github.com/tobiashofmann/sap-dev-tech-radar" target="_blank" rel="noopener">github.com/tobiashofmann/sap-dev-tech-radar &#8599;</a></span>
+        </div>
       </div>
       <div class="info-section">
-        <h3>About</h3>
+        <div class="info-label">About</div>
         <p>The SAP Development Tech Radar gives guidance on which technologies to use when
           building SAP applications. Every technology sits in one quadrant and one ring.</p>
-        <p>Rings: Adopt &rarr; Use &rarr; Hold &rarr; Stop. Deprecated technologies are not shown
+        <p class="info-muted">Rings: Adopt &rarr; Use &rarr; Hold &rarr; Stop. Deprecated technologies are not shown
           on the radar but on the Deprecated page.</p>
       </div>
       <div class="info-section">
-        <h3>Legal &amp; Privacy</h3>
-        <p>This site is hosted on GitHub Pages. When you open it, GitHub may process technical
+        <div class="info-label">Legal &amp; Privacy</div>
+        <p class="info-muted">This site is hosted on GitHub Pages. When you open it, GitHub may process technical
           data such as your IP address in server logs.</p>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -275,7 +285,39 @@ function showOnRadar(id) {
 .error { color: #d20a0a; padding: 1rem 1.5rem; }
 .not-implemented { padding: 1rem 1.5rem; color: #666; }
 
-.info-section { margin-bottom: 1.25rem; }
-.info-section h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.4rem; }
-.dialog-footer { display: flex; justify-content: flex-end; padding: 0.5rem; }
+/* Screen E (design/Tech Radar Recommendations.html "Info dialog"): fixed,
+   near-square width rather than ui5-dialog's content-based auto width;
+   plain host-level width/border-radius do reach the dialog's own popup
+   box despite it living in shadow DOM (verified - unlike ui5-card, which
+   needed ::part()). */
+.info-dialog { width: 620px; border-radius: 1rem; }
+
+.info-dialog-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--sap-border, #e4e7eb);
+}
+.info-dialog-header h3 { margin: 0; font-size: 1.1rem; }
+.dialog-close {
+  margin-left: auto;
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--sap-text-muted, #5b738b);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+.dialog-close:hover { color: var(--sap-text, #1a2733); }
+
+.error { color: #d20a0a; padding: 1rem 1.5rem; }
+.not-implemented { padding: 1rem 1.5rem; color: #666; }
+
+.info-section { padding: 1rem 1.5rem; }
+.info-section + .info-section { border-top: 1px solid var(--sap-border, #e4e7eb); }
+.info-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.5rem; }
+.info-grid { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.4rem 1rem; }
+.info-muted { color: var(--sap-text-muted, #5b738b); }
+.dialog-footer { display: flex; justify-content: flex-end; padding: 0.75rem 1.5rem; border-top: 1px solid var(--sap-border, #e4e7eb); }
 </style>
