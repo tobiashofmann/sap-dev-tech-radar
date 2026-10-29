@@ -441,7 +441,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
           <div class="legend-block">
             <h4>UI</h4>
             <ol>
-              <li v-for="item in quadrantLegends.UI" :key="item.id" @click="selectEntry(item.id)">
+              <li v-for="item in quadrantLegends.UI" :key="item.id" :class="{ selected: item.id === selectedId }" @click="selectEntry(item.id)">
                 <span class="num">{{ item.number }}</span>{{ item.label }}
               </li>
             </ol>
@@ -449,7 +449,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
           <div class="legend-block">
             <h4>Tools</h4>
             <ol>
-              <li v-for="item in quadrantLegends.Tools" :key="item.id" @click="selectEntry(item.id)">
+              <li v-for="item in quadrantLegends.Tools" :key="item.id" :class="{ selected: item.id === selectedId }" @click="selectEntry(item.id)">
                 <span class="num">{{ item.number }}</span>{{ item.label }}
               </li>
             </ol>
@@ -459,7 +459,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
           <div class="legend-block">
             <h4>Technology</h4>
             <ol>
-              <li v-for="item in quadrantLegends.Technology" :key="item.id" @click="selectEntry(item.id)">
+              <li v-for="item in quadrantLegends.Technology" :key="item.id" :class="{ selected: item.id === selectedId }" @click="selectEntry(item.id)">
                 <span class="num">{{ item.number }}</span>{{ item.label }}
               </li>
             </ol>
@@ -467,7 +467,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
           <div class="legend-block">
             <h4>Frameworks</h4>
             <ol>
-              <li v-for="item in quadrantLegends.Frameworks" :key="item.id" @click="selectEntry(item.id)">
+              <li v-for="item in quadrantLegends.Frameworks" :key="item.id" :class="{ selected: item.id === selectedId }" @click="selectEntry(item.id)">
                 <span class="num">{{ item.number }}</span>{{ item.label }}
               </li>
             </ol>
@@ -658,10 +658,18 @@ watch([selectedEntry, radarSize], layoutSideCards)
   overflow-y: auto;
 }
 .legend-block li {
-  padding: 0.1rem 0;
+  padding: 0.1rem 0.3rem;
+  margin: 0 -0.3rem;
+  border-radius: 0.25rem;
   cursor: pointer;
 }
 .legend-block li:hover { color: var(--sap-adopt, #0064d9); }
+.legend-block li.selected {
+  background: #eef4fb;
+  color: var(--sap-adopt, #0064d9);
+  font-weight: 700;
+}
+.legend-block li.selected .num { color: var(--sap-adopt, #0064d9); }
 .legend-block .num {
   display: inline-block;
   width: 1.6em;
