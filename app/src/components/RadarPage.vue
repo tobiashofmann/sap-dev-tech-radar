@@ -753,7 +753,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
 <style scoped>
 .radar-page { padding: 1rem 1.5rem 2rem; }
 .tiles { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
-.tiles ui5-card.tile { flex: 1 1 0; min-width: 140px; cursor: pointer; }
+.tiles ui5-card.tile { flex: 1 1 0; min-width: 108px; cursor: pointer; }
 .tiles ui5-card.tile.active { outline: 2px solid var(--sap-adopt, #0064d9); }
 .tile-body { padding: 0.9rem 1.1rem; }
 .tile-label { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.03em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.3rem; }
