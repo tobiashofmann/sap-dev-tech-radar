@@ -433,10 +433,12 @@ watch([selectedEntry, radarSize], layoutSideCards)
         <button
           v-for="t in TRENDS"
           :key="t"
-          class="chip"
+          class="chip chip-icon"
           :class="{ on: trendFilter === t }"
+          :title="t"
+          :aria-label="t"
           @click="toggleTrendFilter(t)"
-        >{{ TREND_ARROWS[t] }} {{ t }}</button>
+        >{{ TREND_ARROWS[t] }}</button>
       </div>
     </div>
 
@@ -632,6 +634,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
   font-weight: 600;
 }
 .chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; display: inline-block; }
+.chip-icon { padding: 0.3rem 0.6rem; font-size: 0.9rem; line-height: 1; }
 
 .main-area { display: flex; gap: 1.5rem; align-items: flex-start; }
 
