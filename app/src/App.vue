@@ -13,7 +13,12 @@ const searchQuery = ref('')
 const infoOpen = ref(false)
 const pastReleases = ref([])
 const selectedRelease = ref('current')
-const historicalNotice = ref(false)
+// cache of already-fetched past releases' data.json, keyed by version, so
+// switching back to one already viewed doesn't refetch it - a published
+// release never changes, so there's nothing to invalidate.
+const pastReleaseCache = ref({})
+const pastReleaseLoading = ref(false)
+const pastReleaseError = ref(null)
 // bumped on every "List" tab click (even if already active) so RadarPage's
 // watcher re-triggers the scroll-to-table jump each time, not just once.
 const listJumpToken = ref(0)
@@ -46,6 +51,9 @@ function selectTab(t) {
 // dev they're served by the small middleware in vite.config.js.
 const dataUrl = import.meta.env.DEV ? '/data.json' : '../data.json'
 const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : '../releases/manifest.json'
+function pastReleaseUrl(version) {
+  return import.meta.env.DEV ? `/releases/${version}/data.json` : `../releases/${version}/data.json`
+}
 
 // Deep linking: /details/<id> (id = the technology's TOML filename, already
 // unique and URL-safe per CONTRIBUTING.md's naming rule - no need to use
@@ -117,14 +125,49 @@ onMounted(async () => {
   }
 })
 
-function onReleaseChange(e) {
-  selectedRelease.value = e.target.value
-  historicalNotice.value = e.target.value !== 'current'
+// Whichever release is currently selected - the live draft, or an
+// archived past release once fetched (radar/releases/<version>/data.json,
+// same {date, entries, changes} shape as the live one, so every consumer
+// below reads from this one source regardless of which is active).
+const activeData = computed(() =>
+  selectedRelease.value === 'current' ? releaseData.value : pastReleaseCache.value[selectedRelease.value] ?? null
+)
+
+async function onReleaseChange(e) {
+  const version = e.target.value
+  selectedRelease.value = version
+  pastReleaseError.value = null
+
+  if (version === 'current') {
+    return
+  }
+
+  // switching release shows that release's own radar overview, not
+  // whatever detail page happened to be open
+  view.value = 'radar'
+  activeTab.value = 'Radar'
+
+  if (pastReleaseCache.value[version]) {
+    return
+  }
+
+  pastReleaseLoading.value = true
+  try {
+    const res = await fetch(pastReleaseUrl(version))
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`)
+    }
+    pastReleaseCache.value = { ...pastReleaseCache.value, [version]: await res.json() }
+  } catch (err) {
+    pastReleaseError.value = `Could not load release ${version}: ${err.message}`
+  } finally {
+    pastReleaseLoading.value = false
+  }
 }
 
 const selectedEntry = computed(() =>
-  releaseData.value && selectedId.value
-    ? releaseData.value.entries.find((e) => e.id === selectedId.value)
+  activeData.value && selectedId.value
+    ? activeData.value.entries.find((e) => e.id === selectedId.value)
     : null
 )
 
@@ -168,7 +211,7 @@ function openPrivacy() {
   <div id="app">
     <header class="page-header">
       <div class="header-left">
-        <h1>SAP Development Tech Radar <small v-if="releaseData">&middot; Release {{ releaseData.date }}</small></h1>
+        <h1>SAP Development Tech Radar <small v-if="activeData">&middot; Release {{ activeData.date }}</small></h1>
         <nav class="tabs">
           <button
             v-for="t in ['Radar', 'List', 'Changes']"
@@ -204,28 +247,33 @@ function openPrivacy() {
     <p v-if="loadError" class="error">{{ loadError }}</p>
 
     <template v-else-if="releaseData">
-      <p v-if="historicalNotice" class="not-implemented">
-        Switching to a past release isn't implemented yet - showing the current (draft) state.
-      </p>
-      <DetailPage
-        v-if="view === 'detail' && selectedEntry"
-        :entry="selectedEntry"
-        :all-entries="releaseData.entries"
-        @back="backToRadar"
-        @open-detail="openDetail"
-        @show-on-radar="showOnRadar"
-      />
-      <PrivacyPage v-else-if="view === 'privacy'" @back="backToRadar" />
-      <RadarPage
-        v-else-if="activeTab === 'Radar' || activeTab === 'List'"
-        :entries="releaseData.entries"
-        :changes="releaseData.changes"
-        :search-query="searchQuery"
-        :jump-to-list="listJumpToken"
-        :preselect-id="radarPreselectId"
-        @open-detail="openDetail"
-      />
-      <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
+      <p v-if="pastReleaseLoading" class="historical-notice">Loading release {{ selectedRelease }}&hellip;</p>
+      <p v-else-if="pastReleaseError" class="error">{{ pastReleaseError }}</p>
+      <template v-else-if="activeData">
+        <p v-if="selectedRelease !== 'current'" class="historical-notice">
+          Showing archived release <b>{{ selectedRelease }}</b> as it was published - read-only.
+          <a href="#" @click.prevent="onReleaseChange({ target: { value: 'current' } })">Back to current &rarr;</a>
+        </p>
+        <DetailPage
+          v-if="view === 'detail' && selectedEntry"
+          :entry="selectedEntry"
+          :all-entries="activeData.entries"
+          @back="backToRadar"
+          @open-detail="openDetail"
+          @show-on-radar="showOnRadar"
+        />
+        <PrivacyPage v-else-if="view === 'privacy'" @back="backToRadar" />
+        <RadarPage
+          v-else-if="activeTab === 'Radar' || activeTab === 'List'"
+          :entries="activeData.entries"
+          :changes="activeData.changes"
+          :search-query="searchQuery"
+          :jump-to-list="listJumpToken"
+          :preselect-id="radarPreselectId"
+          @open-detail="openDetail"
+        />
+        <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
+      </template>
     </template>
 
     <p v-else>Loading&hellip;</p>
@@ -299,6 +347,15 @@ function openPrivacy() {
 
 .error { color: #d20a0a; padding: 1rem 1.5rem; }
 .not-implemented { padding: 1rem 1.5rem; color: #666; }
+.historical-notice {
+  margin: 1rem 1.5rem;
+  padding: 0.6rem 1rem;
+  background: #fff7e0;
+  border: 1px solid #f0ab00;
+  border-radius: 0.5rem;
+  color: #a34400;
+}
+.historical-notice a { margin-left: 0.5rem; }
 
 /* Screen E (design/Tech Radar Recommendations.html "Info dialog"): fixed,
    near-square width rather than ui5-dialog's content-based auto width;

@@ -187,7 +187,15 @@ function deriveAndArchiveReleaseData() {
       }
       const filename = path.basename(relPath, '.toml');
       try {
-        parsedByFilename[filename] = load(content);
+        const parsed = load(content);
+        // normalize ring casing defensively - a historical typo (e.g. a
+        // past commit had "Adopt" instead of "ADOPT", since fixed on
+        // main) shouldn't break case-sensitive ring lookups when
+        // rendering an archived release that predates the fix
+        if (parsed.config && parsed.config.ring) {
+          parsed.config.ring = parsed.config.ring.toUpperCase();
+        }
+        parsedByFilename[filename] = parsed;
       } catch (err) {
         console.error(`Could not parse ${relPath} at tag ${tag}, skipping it for release ${version}:`, err.message);
       }
