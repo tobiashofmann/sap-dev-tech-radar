@@ -92,24 +92,27 @@ function toggleRingFilter(ring) {
 // cluttered in dense areas. Each quadrant gets its own 1..N numbering
 // (alphabetical by label, so it's predictable) and its own list, rendered
 // outside the radar; the blip itself just shows that number.
+// Numbers are unique across the whole radar, not per quadrant - assign
+// them first (alphabetical by label, over every visible entry), then
+// group into the per-quadrant legend lists for display. A quadrant's list
+// therefore isn't 1..N itself; it just shows whichever global numbers
+// landed in that quadrant, in ascending order.
+const blipNumbers = computed(() => {
+  const sorted = visibleEntries.value.slice().sort((a, b) => a.label.localeCompare(b.label))
+  const map = {}
+  sorted.forEach((e, i) => { map[e.id] = i + 1 })
+  return map
+})
+
 const quadrantLegends = computed(() => {
   const legends = {}
   QUADRANTS.forEach((q) => {
     legends[q.name] = visibleEntries.value
       .filter((e) => e.quadrant === q.name)
-      .slice()
-      .sort((a, b) => a.label.localeCompare(b.label))
-      .map((e, i) => ({ number: i + 1, id: e.id, label: e.label }))
+      .map((e) => ({ number: blipNumbers.value[e.id], id: e.id, label: e.label }))
+      .sort((a, b) => a.number - b.number)
   })
   return legends
-})
-
-const blipNumbers = computed(() => {
-  const map = {}
-  Object.values(quadrantLegends.value).forEach((items) => {
-    items.forEach((item) => { map[item.id] = item.number })
-  })
-  return map
 })
 
 // --- radar chart ---
