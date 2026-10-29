@@ -96,12 +96,16 @@ const positionOnRadar = computed(() => {
 
     <ui5-card class="header-card">
       <div class="card-body">
-        <h1>{{ entry.title }}</h1>
-        <p class="description" v-html="sanitizeDescription(entry.description)"></p>
-        <div class="meta-row">
-          <RingPill :ring="entry.ring" />
-          <span class="tag">{{ entry.quadrant }}</span>
-          <span class="tag">{{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}</span>
+        <div class="header-top">
+          <div class="header-text">
+            <h1>{{ entry.title }}</h1>
+            <p class="description" v-html="sanitizeDescription(entry.description)"></p>
+          </div>
+          <div class="meta-row">
+            <RingPill :ring="entry.ring" />
+            <span class="tag">{{ entry.quadrant }}</span>
+            <span class="tag">{{ TREND_ARROWS[entry.trend] }} {{ entry.trend }}</span>
+          </div>
         </div>
         <p v-if="lastChange.previousRing" class="meta-line">
           Previous ring: <b>{{ lastChange.previousRing }}</b> &middot;
@@ -207,7 +211,9 @@ const positionOnRadar = computed(() => {
 .meta-line { color: var(--sap-text-muted, #5b738b); font-size: 0.9rem; }
 .recommendation { font-weight: bold; font-size: 1.05rem; }
 
-.meta-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.75rem 0; flex-wrap: wrap; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; margin-bottom: 0.75rem; }
+.header-text { flex: 1 1 auto; min-width: 0; }
+.meta-row { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; }
 .tag {
   display: inline-block;
   padding: 0.1rem 0.6rem;
