@@ -14,22 +14,35 @@ function serveReleaseData() {
     '/data.json': '../radar/data.json',
     '/releases-manifest.json': '../radar/releases/manifest.json'
   }
+
+  function serveFile(res, filePath) {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.statusCode = 404
+        res.end(`${filePath} not found - run "npm run conv" in the repo root first.`)
+        return
+      }
+      res.setHeader('Content-Type', 'application/json')
+      res.end(data)
+    })
+  }
+
   return {
     name: 'serve-release-data',
     configureServer(server) {
       Object.entries(files).forEach(([url, relPath]) => {
-        server.middlewares.use(url, (req, res) => {
-          const filePath = path.resolve(__dirname, relPath)
-          fs.readFile(filePath, (err, data) => {
-            if (err) {
-              res.statusCode = 404
-              res.end(`${relPath} not found - run "npm run conv" in the repo root first.`)
-              return
-            }
-            res.setHeader('Content-Type', 'application/json')
-            res.end(data)
-          })
-        })
+        server.middlewares.use(url, (req, res) => serveFile(res, path.resolve(__dirname, relPath)))
+      })
+      // per-release archives (radar/releases/<version>/data.json), mirroring
+      // the production relative path (../releases/<version>/data.json from
+      // radar/app/) exactly, so App.vue can build the same URL in both.
+      server.middlewares.use('/releases', (req, res, next) => {
+        const match = req.url.match(/^\/([^/]+)\/data\.json(?:\?.*)?$/)
+        if (!match) {
+          next()
+          return
+        }
+        serveFile(res, path.resolve(__dirname, '../radar/releases', match[1], 'data.json'))
       })
     }
   }

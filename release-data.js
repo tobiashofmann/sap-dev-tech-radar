@@ -6,9 +6,12 @@
 'use strict';
 
 import fs from 'node:fs';
-import { getReleaseTags } from './history.js';
+import path from 'node:path';
+import { load } from 'js-toml';
+import { getReleaseTags, getFileAtTag, listDefinitionFilesAtTag } from './history.js';
 
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 };
+const RELEASES_DIR = './radar/releases';
 
 /**
  * Resolves a technology's `related` ids to {id, title, quadrant, ring}.
@@ -143,4 +146,102 @@ function writeReleaseData(entries, entryByFilename, historyByFilename) {
   fs.writeFileSync('./radar/data.json', JSON.stringify(data));
 }
 
-export { writeReleaseData };
+/**
+ * Builds and archives radar/releases/<version>/data.json for every past
+ * release tag - the same enriched shape writeReleaseData() produces for
+ * the current draft (entries + changes-since-previous-release), so the
+ * Vue app can render a past release with its existing components
+ * unchanged, once wired up to fetch it. Reads each technology exactly as
+ * it existed in definitions/**\/*.toml at that tag (via the same
+ * git-show helpers history.js uses for its own config.json archive), so
+ * nothing here is hand-authored.
+ *
+ * A release's file is written once and never rewritten on later runs -
+ * "once released, no change" (matches history.js's config.json
+ * archiving) - so this is safe/cheap to call on every `npm run conv`.
+ */
+function deriveAndArchiveReleaseData() {
+  const tags = getReleaseTags();
+  if (tags.length === 0) {
+    return;
+  }
+
+  fs.mkdirSync(RELEASES_DIR, { recursive: true });
+
+  // progressive, oldest-first ring history - holds every release strictly
+  // before the tag currently being processed, advanced at the end of
+  // each iteration so a release's own data.json only ever sees its past
+  const historyByFilename = {};
+  let previousVersion = null;
+
+  tags.forEach(({ tag, version }) => {
+    const releaseDir = `${RELEASES_DIR}/${version}`;
+    const dataPath = `${releaseDir}/data.json`;
+    const alreadyArchived = fs.existsSync(dataPath);
+
+    const parsedByFilename = {};
+    listDefinitionFilesAtTag(tag).forEach((relPath) => {
+      const content = getFileAtTag(tag, relPath);
+      if (content === null) {
+        return;
+      }
+      const filename = path.basename(relPath, '.toml');
+      try {
+        parsedByFilename[filename] = load(content);
+      } catch (err) {
+        console.error(`Could not parse ${relPath} at tag ${tag}, skipping it for release ${version}:`, err.message);
+      }
+    });
+
+    const entryByFilename = {};
+    Object.entries(parsedByFilename).forEach(([filename, data]) => {
+      entryByFilename[filename] = { title: data.page.title, quadrant: data.config.quadrant, ring: data.config.ring };
+    });
+
+    const changeItems = [];
+    const releaseEntries = [];
+    Object.entries(parsedByFilename).forEach(([filename, data]) => {
+      const history = historyByFilename[filename] || [];
+      const currentRing = data.config.ring;
+      const previousRing = history.length ? history[history.length - 1].ring : null;
+
+      if (previousRing !== currentRing) {
+        changeItems.push({
+          id: filename,
+          title: data.page.title,
+          quadrant: data.config.quadrant,
+          type: previousRing === null ? 'new' : currentRing === 'DEPRECATED' ? 'deprecated' : 'moved',
+          previousRing,
+          currentRing,
+          reason: data.page.reason
+        });
+      }
+
+      try {
+        releaseEntries.push(buildEntry(data, filename, entryByFilename, history));
+      } catch (err) {
+        console.error(`Could not build release-data entry for "${filename}" at release ${version}, skipping it for that release:`, err.message);
+      }
+    });
+    changeItems.sort((a, b) => RING_ORDER[a.currentRing] - RING_ORDER[b.currentRing]);
+
+    if (!alreadyArchived) {
+      fs.mkdirSync(releaseDir, { recursive: true });
+      fs.writeFileSync(dataPath, JSON.stringify({
+        date: version,
+        entries: releaseEntries,
+        changes: { previousRelease: previousVersion, items: changeItems }
+      }));
+    }
+
+    Object.entries(parsedByFilename).forEach(([filename, data]) => {
+      if (!historyByFilename[filename]) {
+        historyByFilename[filename] = [];
+      }
+      historyByFilename[filename].push({ release: version, ring: data.config.ring });
+    });
+    previousVersion = version;
+  });
+}
+
+export { writeReleaseData, deriveAndArchiveReleaseData };
