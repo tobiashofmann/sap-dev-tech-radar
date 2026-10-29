@@ -25,9 +25,18 @@ function selectTab(t) {
   view.value = 'radar'
   if (t === 'List') {
     listJumpToken.value++
-  }
-  if (window.location.pathname !== basePath) {
-    window.history.pushState({}, '', basePath)
+    const target = basePath + TECHNOLOGIES_HASH
+    if (window.location.pathname + window.location.hash !== target) {
+      window.history.pushState({}, '', target)
+    }
+  } else {
+    // Clear any pending jump so a later unrelated remount of RadarPage
+    // (e.g. coming back from a detail page via this same "Radar" tab)
+    // doesn't replay a stale scroll-to-table from an earlier List click.
+    listJumpToken.value = 0
+    if (window.location.pathname !== basePath || window.location.hash) {
+      window.history.pushState({}, '', basePath)
+    }
   }
 }
 
@@ -46,6 +55,10 @@ const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : '../releas
 // separately in design/DESIGN.md's follow-up notes.
 const basePath = import.meta.env.BASE_URL
 const detailPrefix = basePath + 'details/'
+// Makes the List tab's scroll position visible/shareable in the URL -
+// reflected on every List click, and read back on load/back-forward so a
+// link with this hash lands on the table instead of the bare radar.
+const TECHNOLOGIES_HASH = '#technologies'
 
 function detailPath(id) {
   return detailPrefix + encodeURIComponent(id)
@@ -61,8 +74,15 @@ function syncViewFromLocation() {
   if (id && releaseData.value?.entries.some((e) => e.id === id)) {
     selectedId.value = id
     view.value = 'detail'
+    return
+  }
+  view.value = 'radar'
+  if (window.location.hash === TECHNOLOGIES_HASH) {
+    activeTab.value = 'List'
+    listJumpToken.value++
   } else {
-    view.value = 'radar'
+    activeTab.value = 'Radar'
+    listJumpToken.value = 0
   }
 }
 
@@ -114,7 +134,8 @@ function openDetail(id) {
 function backToRadar() {
   view.value = 'radar'
   activeTab.value = 'Radar'
-  if (window.location.pathname !== basePath) {
+  listJumpToken.value = 0
+  if (window.location.pathname !== basePath || window.location.hash) {
     window.history.pushState({}, '', basePath)
   }
 }
