@@ -46,13 +46,14 @@ function selectTab(t) {
   }
 }
 
-// radar/data.json and radar/releases/manifest.json live next to this app's
-// build output once deployed (radar/app/ + radar/*.json side by side); in
-// dev they're served by the small middleware in vite.config.js.
-const dataUrl = import.meta.env.DEV ? '/data.json' : '../data.json'
-const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : '../releases/manifest.json'
+// radar/data.json and radar/releases/** live right next to this app's own
+// build output once deployed (both land directly under radar/, see
+// vite.config.js's outDir); in dev they're served by the small middleware
+// in vite.config.js instead.
+const dataUrl = import.meta.env.DEV ? '/data.json' : './data.json'
+const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : './releases/manifest.json'
 function pastReleaseUrl(version) {
-  return import.meta.env.DEV ? `/releases/${version}/data.json` : `../releases/${version}/data.json`
+  return import.meta.env.DEV ? `/releases/${version}/data.json` : `./releases/${version}/data.json`
 }
 
 // Deep linking: /details/<id> (id = the technology's TOML filename, already

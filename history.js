@@ -11,13 +11,14 @@ import path from 'node:path';
 import { load } from 'js-toml';
 import { json2config } from './convert.js';
 
-const RELEASES_DIR = './radar/releases';
+const RELEASES_DIR = './old/releases';
 const RELEASE_TAG_PATTERN = /^\d{4}[.-]\d{1,2}$/;
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 };
 
-// Note: radar/config.json and radar/html/*.html are gitignored in this repo
+// Note: old/config.json and old/html/*.html are gitignored in this repo
 // (see .gitignore), so they were never committed at any past release tag -
-// `git show <tag>:radar/config.json` would always come back empty. Instead,
+// `git show <tag>:old/config.json` would always come back empty (and, before
+// the old/ vs radar/ split, `radar/config.json` never was either). Instead,
 // every past release's config.json is reconstructed from the definitions/
 // TOML files as they existed at that tag (same mapping convert.js uses for
 // the current build), which also works retroactively for releases tagged
@@ -90,7 +91,7 @@ function listDefinitionFilesAtTag(tag) {
 /**
  * Derives each technology's ring-per-release history from git tags, and
  * reconstructs + archives a config.json snapshot per past release into
- * radar/releases/. Nothing here is authored by hand - it's all read back
+ * old/releases/. Nothing here is authored by hand - it's all read back
  * out of the definitions/ TOML files as they existed at each release tag.
  *
  * @param {{filename: string}[]} entries current definitions/**\/*.toml files

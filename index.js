@@ -39,12 +39,13 @@ entries.forEach(({filename, data}) => {
 });
 
 // derive each technology's ring-per-release history from git tags, and
-// archive a config.json snapshot per past release under radar/releases/
+// archive a config.json snapshot per past release under old/releases/
 const historyByFilename = deriveAndArchiveHistory(entries.map(({filename, relPath}) => ({filename, relPath})));
 
-// archive the richer data.json-equivalent per past release too, in the
-// same shape as the current draft's radar/data.json, so the Vue app can
-// render a past release with its existing components once wired up
+// archive the richer data.json-equivalent per past release too, under
+// radar/releases/, in the same shape as the current draft's
+// radar/data.json, so the Vue app can render a past release with its
+// existing components
 try {
   deriveAndArchiveReleaseData();
 } catch (err) {

@@ -83,7 +83,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
         const html = conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory);
         //console.log(html);
 
-        const path = "./radar/html/" + filename + ".html";
+        const path = "./old/html/" + filename + ".html";
         fs.writeFileSync(path, html);
     }
   }
@@ -238,7 +238,7 @@ function createConfigJson() {
 
 
 function writeConfigJson2File(configJson) {
-  const path = "./radar/config.json";
+  const path = "./old/config.json";
 
   fs.writeFileSync(path, JSON.stringify(configJson));
 }
@@ -326,7 +326,7 @@ function writeConfigJson2File(configJson) {
  * Create the deprecated technologies page
  */
 function createDeprecatedPage() {
-  const path = "./radar/deprecated.html";
+  const path = "./old/deprecated.html";
   let html = fs.readFileSync(path, 'utf8');
 
   let tableRows = "";

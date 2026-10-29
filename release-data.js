@@ -250,6 +250,12 @@ function deriveAndArchiveReleaseData() {
     });
     previousVersion = version;
   });
+
+  // own copy of the version list, alongside this directory's data.json
+  // files - old/releases/manifest.json (history.js's) now lives in a
+  // separate tree, so radar/ needs its own for the release selector to
+  // fetch without reaching outside radar/
+  fs.writeFileSync(`${RELEASES_DIR}/manifest.json`, JSON.stringify(tags.map((t) => t.version)));
 }
 
 export { writeReleaseData, deriveAndArchiveReleaseData };

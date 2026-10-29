@@ -29,6 +29,6 @@
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
     "lint:js": "eslint convert.js index.js history.js release-data.js",
     "lint:toml": "eslint definitions/**/*.toml",
-    "lint:html": "eslint radar/**/*.html"
+    "lint:html": "eslint old/**/*.html"
   }
 }
