@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import RadarPage from './components/RadarPage.vue'
 import DetailPage from './components/DetailPage.vue'
+import PrivacyPage from './components/PrivacyPage.vue'
 
 const releaseData = ref(null)
 const loadError = ref(null)
@@ -55,6 +56,7 @@ const manifestUrl = import.meta.env.DEV ? '/releases-manifest.json' : '../releas
 // separately in design/DESIGN.md's follow-up notes.
 const basePath = import.meta.env.BASE_URL
 const detailPrefix = basePath + 'details/'
+const privacyPath = basePath + 'privacy'
 // Makes the List tab's scroll position visible/shareable in the URL -
 // reflected on every List click, and read back on load/back-forward so a
 // link with this hash lands on the table instead of the bare radar.
@@ -74,6 +76,10 @@ function syncViewFromLocation() {
   if (id && releaseData.value?.entries.some((e) => e.id === id)) {
     selectedId.value = id
     view.value = 'detail'
+    return
+  }
+  if (window.location.pathname === privacyPath) {
+    view.value = 'privacy'
     return
   }
   view.value = 'radar'
@@ -147,6 +153,15 @@ function showOnRadar(id) {
   radarPreselectId.value = id
   backToRadar()
 }
+
+// Info dialog's "Privacy notice" link
+function openPrivacy() {
+  infoOpen.value = false
+  view.value = 'privacy'
+  if (window.location.pathname !== privacyPath) {
+    window.history.pushState({}, '', privacyPath)
+  }
+}
 </script>
 
 <template>
@@ -200,6 +215,7 @@ function showOnRadar(id) {
         @open-detail="openDetail"
         @show-on-radar="showOnRadar"
       />
+      <PrivacyPage v-else-if="view === 'privacy'" @back="backToRadar" />
       <RadarPage
         v-else-if="activeTab === 'Radar' || activeTab === 'List'"
         :entries="releaseData.entries"
@@ -216,15 +232,10 @@ function showOnRadar(id) {
 
     <ui5-dialog
       class="info-dialog"
-      accessible-name="About SAP Development Tech Radar"
+      header-text="About SAP Development Tech Radar"
       :open="infoOpen"
       @close="infoOpen = false"
     >
-      <div slot="header" class="info-dialog-header">
-        <h3>About SAP Development Tech Radar</h3>
-        <button class="dialog-close" aria-label="Close" @click="infoOpen = false">&#10005;</button>
-      </div>
-
       <div class="info-section">
         <div class="info-label">Version</div>
         <div class="info-grid">
@@ -245,6 +256,10 @@ function showOnRadar(id) {
         <div class="info-label">Legal &amp; Privacy</div>
         <p class="info-muted">This site is hosted on GitHub Pages. When you open it, GitHub may process technical
           data such as your IP address in server logs.</p>
+        <div class="info-links">
+          <a href="#" @click.prevent="openPrivacy">Privacy notice</a>
+          <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement &#8599;</a>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <ui5-button @click="infoOpen = false">Close</ui5-button>
@@ -292,32 +307,21 @@ function showOnRadar(id) {
    needed ::part()). */
 .info-dialog { width: 620px; border-radius: 1rem; }
 
-.info-dialog-header {
-  display: flex;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--sap-border, #e4e7eb);
-}
-.info-dialog-header h3 { margin: 0; font-size: 1.1rem; }
-.dialog-close {
-  margin-left: auto;
-  border: none;
-  background: none;
-  font-size: 1.1rem;
-  line-height: 1;
-  color: var(--sap-text-muted, #5b738b);
-  cursor: pointer;
-  padding: 0.25rem;
-}
-.dialog-close:hover { color: var(--sap-text, #1a2733); }
-
-.error { color: #d20a0a; padding: 1rem 1.5rem; }
-.not-implemented { padding: 1rem 1.5rem; color: #666; }
-
 .info-section { padding: 1rem 1.5rem; }
 .info-section + .info-section { border-top: 1px solid var(--sap-border, #e4e7eb); }
 .info-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sap-text-muted, #5b738b); margin-bottom: 0.5rem; }
 .info-grid { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.4rem 1rem; }
 .info-muted { color: var(--sap-text-muted, #5b738b); }
-.dialog-footer { display: flex; justify-content: flex-end; padding: 0.75rem 1.5rem; border-top: 1px solid var(--sap-border, #e4e7eb); }
+.info-links { display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }
+/* ui5-dialog's own [part="footer"] is a flex container that does NOT
+   stretch its slotted child to the available width by default, so a
+   plain justify-content:flex-end here had nothing to push against -
+   width:100% is what actually moves the button to the right edge. */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0.75rem 1.5rem 1.25rem;
+  border-top: 1px solid var(--sap-border, #e4e7eb);
+}
 </style>
