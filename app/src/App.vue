@@ -4,6 +4,7 @@ import RadarPage from './components/RadarPage.vue'
 import DetailPage from './components/DetailPage.vue'
 import PrivacyPage from './components/PrivacyPage.vue'
 import DeprecatedPage from './components/DeprecatedPage.vue'
+import ChangesPage from './components/ChangesPage.vue'
 
 const releaseData = ref(null)
 const loadError = ref(null)
@@ -140,6 +141,31 @@ const activeData = computed(() =>
   selectedRelease.value === 'current' ? releaseData.value : pastReleaseCache.value[selectedRelease.value] ?? null
 )
 
+// Fetches+caches a past release's data.json (no-op if already cached, or
+// for 'current' which is always already loaded as releaseData). Shared by
+// the header's release selector and the Changes page's "Compare with"
+// picker - both just need a release's entries available on demand.
+async function fetchPastRelease(version) {
+  if (version === 'current' || pastReleaseCache.value[version]) {
+    return
+  }
+  const res = await fetch(pastReleaseUrl(version))
+  if (!res.ok) {
+    throw new Error(`${res.status} ${res.statusText}`)
+  }
+  pastReleaseCache.value = { ...pastReleaseCache.value, [version]: await res.json() }
+}
+
+// Entries for any already-loaded release, current or archived - null if a
+// past release hasn't been fetched yet (caller's responsibility to await
+// fetchPastRelease(version) first if it needs them).
+function releaseEntries(version) {
+  if (version === 'current') {
+    return releaseData.value ? releaseData.value.entries : null
+  }
+  return pastReleaseCache.value[version] ? pastReleaseCache.value[version].entries : null
+}
+
 async function onReleaseChange(e) {
   const version = e.target.value
   selectedRelease.value = version
@@ -154,17 +180,9 @@ async function onReleaseChange(e) {
   view.value = 'radar'
   activeTab.value = 'Radar'
 
-  if (pastReleaseCache.value[version]) {
-    return
-  }
-
   pastReleaseLoading.value = true
   try {
-    const res = await fetch(pastReleaseUrl(version))
-    if (!res.ok) {
-      throw new Error(`${res.status} ${res.statusText}`)
-    }
-    pastReleaseCache.value = { ...pastReleaseCache.value, [version]: await res.json() }
+    await fetchPastRelease(version)
   } catch (err) {
     pastReleaseError.value = `Could not load release ${version}: ${err.message}`
   } finally {
@@ -293,6 +311,18 @@ function openDeprecated() {
           :preselect-id="radarPreselectId"
           @open-detail="openDetail"
           @open-deprecated="openDeprecated"
+        />
+        <ChangesPage
+          v-else-if="activeTab === 'Changes'"
+          :entries="activeData.entries"
+          :changes="activeData.changes"
+          :release-date="activeData.date"
+          :search-query="searchQuery"
+          :past-releases="pastReleases"
+          :viewing-version="selectedRelease"
+          :release-entries="releaseEntries"
+          :fetch-past-release="fetchPastRelease"
+          @open-detail="openDetail"
         />
         <p v-else class="not-implemented">The "{{ activeTab }}" tab isn't implemented yet.</p>
       </template>
