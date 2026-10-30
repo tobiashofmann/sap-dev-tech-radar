@@ -706,7 +706,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
             <div class="rings-glance">
               <div class="row">
                 <RingPill ring="ADOPT" />
-                <div class="row-text"><b>Assess now</b><span>New, stabilizing - may succeed a HOLD/STOP tech</span></div>
+                <div class="row-text"><b>Assess now</b><span>New, stabilizing</span></div>
               </div>
               <div class="row">
                 <RingPill ring="USE" />
@@ -714,15 +714,15 @@ watch([selectedEntry, radarSize], layoutSideCards)
               </div>
               <div class="row">
                 <RingPill ring="HOLD" />
-                <div class="row-text"><b>Only if no alternative</b><span>Don't start new products with it</span></div>
+                <div class="row-text"><b>Only if no alternative</b><span>Don't start new projects with it</span></div>
               </div>
               <div class="row">
                 <RingPill ring="STOP" />
-                <div class="row-text"><b>Migrate away</b><span>Obsolete, EOL defined</span></div>
+                <div class="row-text"><b>Migrate away</b><span>Obsolete or EOL defined</span></div>
               </div>
               <div class="row">
                 <RingPill ring="DEPRECATED" />
-                <div class="row-text"><b>Removed from radar</b><span>Not shown on the radar</span></div>
+                <div class="row-text"><b>Outdated, legacy only</b><span>Removed from radar</span></div>
               </div>
             </div>
           </div>
