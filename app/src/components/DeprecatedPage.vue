@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import RingPill from './RingPill.vue'
 
 const props = defineProps({
   entries: { type: Array, required: true }
@@ -31,6 +32,7 @@ const deprecatedEntries = computed(() =>
             <tr>
               <th>Title</th>
               <th>Quadrant</th>
+              <th>Ring</th>
               <th>Deprecated since</th>
             </tr>
           </thead>
@@ -38,6 +40,7 @@ const deprecatedEntries = computed(() =>
             <tr v-for="e in deprecatedEntries" :key="e.id" @click="emit('open-detail', e.id)">
               <td><a href="#" @click.prevent="emit('open-detail', e.id)">{{ e.title }}</a></td>
               <td>{{ e.quadrant }}</td>
+              <td><RingPill ring="DEPRECATED" /></td>
               <td>{{ e.since }}</td>
             </tr>
           </tbody>
