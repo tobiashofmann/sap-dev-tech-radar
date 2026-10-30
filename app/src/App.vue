@@ -37,14 +37,16 @@ function selectTab(t) {
     if (window.location.pathname + window.location.hash !== target) {
       window.history.pushState({}, '', target)
     }
-  } else {
-    // Clear any pending jump so a later unrelated remount of RadarPage
-    // (e.g. coming back from a detail page via this same "Radar" tab)
-    // doesn't replay a stale scroll-to-table from an earlier List click.
-    listJumpToken.value = 0
-    if (window.location.pathname !== basePath || window.location.hash) {
-      window.history.pushState({}, '', basePath)
-    }
+    return
+  }
+
+  // Clear any pending jump so a later unrelated remount of RadarPage
+  // (e.g. coming back from a detail page via this same "Radar" tab)
+  // doesn't replay a stale scroll-to-table from an earlier List click.
+  listJumpToken.value = 0
+  const target = t === 'Changes' ? changesPath : basePath
+  if (window.location.pathname !== target || window.location.hash) {
+    window.history.pushState({}, '', target)
   }
 }
 
@@ -69,6 +71,7 @@ const basePath = import.meta.env.BASE_URL
 const detailPrefix = basePath + 'details/'
 const privacyPath = basePath + 'privacy'
 const deprecatedPath = basePath + 'deprecated'
+const changesPath = basePath + 'changes'
 // Makes the List tab's scroll position visible/shareable in the URL -
 // reflected on every List click, and read back on load/back-forward so a
 // link with this hash lands on the table instead of the bare radar.
@@ -99,7 +102,10 @@ function syncViewFromLocation() {
     return
   }
   view.value = 'radar'
-  if (window.location.hash === TECHNOLOGIES_HASH) {
+  if (window.location.pathname === changesPath) {
+    activeTab.value = 'Changes'
+    listJumpToken.value = 0
+  } else if (window.location.hash === TECHNOLOGIES_HASH) {
     activeTab.value = 'List'
     listJumpToken.value++
   } else {
