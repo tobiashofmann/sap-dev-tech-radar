@@ -14,6 +14,43 @@ import { json2config } from './convert.js';
 const RELEASES_DIR = './old/releases';
 const RELEASE_TAG_PATTERN = /^\d{4}[.-]\d{1,2}$/;
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 };
+const CANONICAL_RINGS = ['ADOPT', 'USE', 'HOLD', 'STOP', 'DEPRECATED'];
+const CANONICAL_QUADRANTS = ['UI', 'Technology', 'Tools', 'Frameworks'];
+
+/**
+ * Normalizes a single value against a canonical, case-sensitive list by
+ * comparing case-insensitively - a typo'd historical TOML (e.g. "Adopt" or
+ * "frameworks" instead of "ADOPT"/"Frameworks") still resolves to the
+ * correct canonical spelling instead of silently mismatching everywhere
+ * that compares ring/quadrant strings exactly. Values that don't match any
+ * canonical entry are left untouched, so real typos/garbage still surface
+ * as errors elsewhere rather than being silently swallowed here.
+ * @param {string} value
+ * @param {string[]} canonical
+ * @returns {string}
+ */
+function normalizeCase(value, canonical) {
+  if (!value) {
+    return value;
+  }
+  const match = canonical.find((c) => c.toUpperCase() === value.toUpperCase());
+  return match || value;
+}
+
+/**
+ * Normalizes the ring/quadrant casing on a just-parsed historical TOML's
+ * [config] table in place, against the same current CANONICAL_RINGS/
+ * CANONICAL_QUADRANTS this module validates ring order with.
+ * @param {*} parsed parsed TOML (mutated in place)
+ * @returns {*} the same object, for chaining
+ */
+function normalizeParsedConfig(parsed) {
+  if (parsed && parsed.config) {
+    parsed.config.ring = normalizeCase(parsed.config.ring, CANONICAL_RINGS);
+    parsed.config.quadrant = normalizeCase(parsed.config.quadrant, CANONICAL_QUADRANTS);
+  }
+  return parsed;
+}
 
 // Note: old/config.json and old/html/*.html are gitignored in this repo
 // (see .gitignore), so they were never committed at any past release tag -
@@ -123,7 +160,7 @@ function deriveAndArchiveHistory(entries) {
 
       let parsed;
       try {
-        parsed = load(content);
+        parsed = normalizeParsedConfig(load(content));
       } catch (err) {
         console.error(`Could not parse ${relPath} at tag ${tag}, skipping it for that release:`, err.message);
         return;
@@ -175,4 +212,11 @@ function validateForwardOnly(filename, currentRing, history) {
   }
 }
 
-export { deriveAndArchiveHistory, validateForwardOnly, getReleaseTags, getFileAtTag, listDefinitionFilesAtTag };
+export {
+  deriveAndArchiveHistory,
+  validateForwardOnly,
+  getReleaseTags,
+  getFileAtTag,
+  listDefinitionFilesAtTag,
+  normalizeParsedConfig
+};

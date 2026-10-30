@@ -8,7 +8,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { load } from 'js-toml';
-import { getReleaseTags, getFileAtTag, listDefinitionFilesAtTag } from './history.js';
+import { getReleaseTags, getFileAtTag, listDefinitionFilesAtTag, normalizeParsedConfig } from './history.js';
 
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 };
 const RELEASES_DIR = './radar/releases';
@@ -187,15 +187,12 @@ function deriveAndArchiveReleaseData() {
       }
       const filename = path.basename(relPath, '.toml');
       try {
-        const parsed = load(content);
-        // normalize ring casing defensively - a historical typo (e.g. a
-        // past commit had "Adopt" instead of "ADOPT", since fixed on
-        // main) shouldn't break case-sensitive ring lookups when
-        // rendering an archived release that predates the fix
-        if (parsed.config && parsed.config.ring) {
-          parsed.config.ring = parsed.config.ring.toUpperCase();
-        }
-        parsedByFilename[filename] = parsed;
+        // normalize ring/quadrant casing defensively (history.js's shared
+        // helper) - a historical typo (e.g. a past commit had "Adopt"
+        // instead of "ADOPT", or "frameworks" instead of "Frameworks",
+        // since fixed on main) shouldn't break case-sensitive lookups
+        // when rendering an archived release that predates the fix
+        parsedByFilename[filename] = normalizeParsedConfig(load(content));
       } catch (err) {
         console.error(`Could not parse ${relPath} at tag ${tag}, skipping it for release ${version}:`, err.message);
       }
