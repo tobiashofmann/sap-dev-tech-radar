@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "hbenl.vscode-nodejs-testrunner",
+    "ryanluker.vscode-coverage-gutters"
+  ]
+}
