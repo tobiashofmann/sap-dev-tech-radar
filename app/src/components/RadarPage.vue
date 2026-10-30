@@ -190,17 +190,23 @@ const OUTER_RADIUS = 300
 const RING_BAND_GREY = '#f5f6f7'
 const RING_BAND_WHITE = '#fff'
 
-// Pixel position of a blip, relative to .radar-card-inner (the chart's
-// positioned parent, used for the hover tooltip's CSS position) - derived
-// from the SVG's actual rendered size rather than assumed constants, so it
-// stays correct however the chart is scaled (desktop/tablet/fullscreen).
+// Pixel position of a blip, relative to .radar-card-wrapper (the hover
+// tooltip's positioned ancestor - a sibling of ui5-card, not a child of
+// it, so the tooltip isn't clipped by the card's own corner-rounding
+// overflow) - derived from the SVG's actual rendered size rather than
+// assumed constants, so it stays correct however the chart is scaled
+// (desktop/tablet/fullscreen).
 function blipScreenPos(d) {
   const pos = blipPosition(d.id, d.quadrant, d.ring, OUTER_RADIUS)
   if (!pos || !chart.value) {
     return { x: 0, y: 0 }
   }
+  const wrapper = chart.value.closest('.radar-card-wrapper')
+  if (!wrapper) {
+    return { x: 0, y: 0 }
+  }
   const svgRect = chart.value.getBoundingClientRect()
-  const containerRect = chart.value.parentElement.getBoundingClientRect()
+  const containerRect = wrapper.getBoundingClientRect()
   const scale = svgRect.width / CHART_SIZE
   const center = CHART_SIZE / 2
   return {
@@ -582,20 +588,26 @@ watch([selectedEntry, radarSize], layoutSideCards)
         <ui5-card class="radar-card">
           <div class="radar-card-inner" :style="radarCardInnerStyle">
             <svg ref="chart" class="radar-chart"></svg>
-            <div
-              v-if="hoveredEntry"
-              class="blip-tooltip"
-              :style="{ left: tooltipPos.x + 'px', top: tooltipPos.y + 'px' }"
-            >
-              <div class="tooltip-title">{{ hoveredEntry.title }}</div>
-              <div class="tooltip-meta">
-                <RingPill :ring="hoveredEntry.ring" />
-                <span class="tooltip-detail">{{ hoveredEntry.quadrant }}</span>
-                <span class="tooltip-detail">{{ TREND_ARROWS[hoveredEntry.trend] }} {{ hoveredEntry.trend }}</span>
-              </div>
-            </div>
           </div>
         </ui5-card>
+
+        <!-- sibling of ui5-card, not a child: ui5-card clips its own
+             content to its rounded corners (shadow DOM overflow), which
+             cut the tooltip off at the card edge instead of letting it
+             float freely above the radar - same reasoning as the
+             fullscreen-toggle button below. -->
+        <div
+          v-if="hoveredEntry"
+          class="blip-tooltip"
+          :style="{ left: tooltipPos.x + 'px', top: tooltipPos.y + 'px' }"
+        >
+          <div class="tooltip-title">{{ hoveredEntry.title }}</div>
+          <div class="tooltip-meta">
+            <RingPill :ring="hoveredEntry.ring" />
+            <span class="tooltip-detail">{{ hoveredEntry.quadrant }}</span>
+            <span class="tooltip-detail">{{ TREND_ARROWS[hoveredEntry.trend] }} {{ hoveredEntry.trend }}</span>
+          </div>
+        </div>
 
         <ui5-button
           class="fullscreen-toggle"
