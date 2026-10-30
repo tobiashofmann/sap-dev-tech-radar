@@ -66,7 +66,13 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Node.js
-        run: ${{ steps.detect-package-manager.outputs.manager }} run conv      
+        run: ${{ steps.detect-package-manager.outputs.manager }} run conv
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: ./app
+      - name: Build Vue app
+        run: npm run build
+        working-directory: ./app
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

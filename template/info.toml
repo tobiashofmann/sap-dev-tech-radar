@@ -2,7 +2,8 @@
 title = "TITLE"
 description = "DESCRIPTION"
 reason = "REASON FOR THE POSITIONING"
-eol "EOL DATE OR SUPPORTED"
+recommendation = "OPTIONAL SHORT, ACTIONABLE WHAT-TO-DO SENTENCE (e.g. 'Use for new multi-platform mobile apps.'); falls back to reason if omitted"
+support = "SUPPORTED OR EOL DATE"
 
 [links]
 name_link1 = "LINK1"
@@ -15,4 +16,6 @@ ring = "RING NAME"
 quadrant = "QUDRANT NAME"
 active = true
 moved = 0
-link = "adt"
+trend = "TREND (positive|stable|negative)"
+# optional: ids (filenames, without .toml) of related entries under definitions/
+# related = ["otherentry1", "otherentry2"]

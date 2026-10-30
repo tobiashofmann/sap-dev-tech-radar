@@ -23,7 +23,9 @@ Everyone can add a technology. While the SDTR is independent from SAP, SAP emplo
 
 A new published version is planned to occur at least twice a year, with a max of 4. Each quarter not more than one version must be published.
 
-The version name should reflect this: YEAR.COUNTER. While the year is the 4 digit number of the year, counter should indicate the month number in 2 digits. 2024.01 indicates that the version was published in January 2024. 2024.06 stands for the version published in June 2024. Even with two published version a year, the counter does not indicate the published number in that year. The version number therefore gives clear information on how old the current published SDTR is.
+The version name should reflect this: YYYY-MM (year, dash, 2-digit month). `2024-01` indicates that the version was published in January 2024. `2024-06` stands for the version published in June 2024. Even with two published versions a year, the month does not indicate the published number in that year. The version number therefore gives clear information on how old the current published SDTR is.
+
+The git tag for a release must use this same `YYYY-MM` form (zero-padded month, dash separator), since the release/archiving tooling (`npm run conv`) reads release history directly from git tags - see "Publishing" below. Earlier releases were tagged `YEAR.COUNTER` (dot, not always zero-padded, e.g. `2025.6`); the tooling still recognizes those old tags, but new tags should use the dash form.
 
 ### Propose changes
 
@@ -44,6 +46,8 @@ All proposals that passed the quality check are analyzed and voted for. The voti
 ### Publishing
 
 Pusblishing of accepted changes to the SDTR happens by merging the changes to the main branch. A new version is tagged as a release and published on the web page. After this, the new SDTR is automatically active and the new published version.
+
+Running `npm run conv` (e.g. right before tagging, or any time after) also derives each technology's ring-history and a `radar/releases/<version>/` snapshot directly from the git tags that already exist - see "Realizing version switching" in `design/DESIGN.md`/the implementation notes. No separate manual archiving step is needed: tagging the release is enough, the next `npm run conv` picks it up.
 
 ```mermaid
 gitGraph TB:

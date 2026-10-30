@@ -2,11 +2,20 @@ node_modules/
 .DS_Store
 .idea/
 .continue/
+design/
 
 # yarn
 yarn-error.log
 html/
-radar/config.json
+old/config.json
+old/releases/
+
+# radar/ is entirely generated: app/'s Vite build output plus the JSON
+# files npm run conv writes (radar/data.json, radar/releases/**) - see
+# CLAUDE.md. old/ is the legacy vanilla-JS radar's hand-maintained shell
+# (index.html, css/, js/, bootstrap/, deprecated.html) plus its own
+# generated bits (config.json, releases/, html/ - covered above).
+radar/
 
 # tests
 coverage/

@@ -1,0 +1,46 @@
+/* Base typography matching SAP Fiori apps: "72" is SAP's own font (loaded
+   by UI5 Web Components for their own shadow DOM content); light-DOM text
+   here falls back to a close system sans-serif, same convention SAP apps
+   use for the "72, 72override, Arial" stack. */
+:root {
+  --sap-text: #1a2733;
+  --sap-text-muted: #5b738b;
+  --sap-border: #e4e7eb;
+  --sap-bg: #f5f6f7;
+  --sap-tile-bg: #ffffff;
+  --sap-adopt: #0064d9;
+  --sap-use: #256f3a;
+  --sap-hold: #f0ab00;
+  --sap-stop: #d20a0a;
+  --sap-deprecated: #556b82;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "72", "72override", Arial, Helvetica, sans-serif;
+  color: var(--sap-text);
+  background: var(--sap-bg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  font-family: inherit;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.1rem; }
+
+a {
+  color: var(--sap-adopt);
+}
+
+table {
+  font-size: inherit;
+}

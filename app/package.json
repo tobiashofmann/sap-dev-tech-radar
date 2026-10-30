@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ui5/webcomponents": "^2.28.1",
+    "@ui5/webcomponents-fiori": "^2.28.1",
+    "@ui5/webcomponents-icons": "^2.28.1",
+    "d3": "^7.9.0",
+    "dompurify": "^3.4.17",
+    "vue": "^3.5.44"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.10",
+    "playwright": "^1.64.1",
+    "vite": "^8.3.5"
+  }
+}

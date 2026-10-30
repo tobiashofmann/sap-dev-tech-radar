@@ -10,7 +10,7 @@ support = "Supported. Available in ADT for Eclipse"
 
 [config]
 label = "KTD"
-ring = "Adopt"
+ring = "ADOPT"
 quadrant = "Technology"
 active = true
 moved = 0
