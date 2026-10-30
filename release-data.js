@@ -124,6 +124,20 @@ function computeChanges(entries, historyByFilename) {
 }
 
 /**
+ * The current month's version string (e.g. "2026-10") suffixed with
+ * "-draft" unless a git tag for that exact version already exists - i.e.
+ * unless this month's release has actually been published on GitHub.
+ * A local build or `main` push ahead of the actual release tag is this
+ * way clearly marked as not-yet-published when previewed.
+ * @returns {string}
+ */
+function currentVersionLabel() {
+  const version = new Date().getUTCFullYear() + '-' + new Date().toLocaleString('en', { month: '2-digit' });
+  const isPublished = getReleaseTags().some((t) => t.version === version);
+  return isPublished ? version : `${version}-draft`;
+}
+
+/**
  * Assembles and writes radar/data.json: everything the Vue app needs to
  * render the radar, list, filters, detail pages and the changes page for
  * the current (not-yet-released) state, in one file.
@@ -138,7 +152,7 @@ function writeReleaseData(entries, entryByFilename, historyByFilename) {
   );
 
   const data = {
-    date: new Date().getUTCFullYear() + '-' + new Date().toLocaleString('en', { month: '2-digit' }),
+    date: currentVersionLabel(),
     entries: releaseEntries,
     changes: computeChanges(entries, historyByFilename)
   };
