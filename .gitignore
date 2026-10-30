@@ -1,9 +1,12 @@
 node_modules/
 .DS_Store
 .idea/
+.continue/
 
 # yarn
 yarn-error.log
 html/
 radar/config.json
 
+# tests
+coverage/

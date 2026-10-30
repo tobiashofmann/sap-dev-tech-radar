@@ -7,36 +7,41 @@
 
 import fs from 'node:fs'
 
-// config file for tech radar
-let configJson = createConfigJson();
-
-// list for deprecated technologies
-let deprecatedList = [];
-
   /**
    * convert toml to JSON
    * @param {JSON} tomlAsJson
    * @param {string} filename
+   * @param {{configJson: object, deprecatedList: Array<object>}} [state]
+   * @returns {{configJson: object, deprecatedList: Array<object>}}
    */
-function createCONFIG(tomlAsJson, filename) {
+function createCONFIG(tomlAsJson, filename, state = null) {
+  if (!state) {
+    state = {
+      configJson: createConfigJson(),
+      deprecatedList: []
+    };
+  }
 
-  // add to deprecated list if ring is DEPRECATED
   if (tomlAsJson.config.ring === "DEPRECATED") {
-    deprecatedList.push({
-      title: tomlAsJson.config.label,
-      quadrant: tomlAsJson.config.quadrant,
-      since: tomlAsJson.config.since,
-      link: "./html/" + filename + ".html"
-    });
-  }
-  else {
-    configJson.entries.push(json2config(tomlAsJson, filename));
-    //console.log(configJson);
-
-    // write config json to file. Needed by tech radar web app
-    writeConfigJson2File(configJson);
+    state.deprecatedList.push(buildDeprecatedEntry(tomlAsJson, filename));
+  } else {
+    state.configJson.entries.push(buildConfigEntry(tomlAsJson, filename));
   }
 
+  return state;
+}
+
+function buildConfigEntry(tomlAsJson, filename) {
+  return json2config(tomlAsJson, filename);
+}
+
+function buildDeprecatedEntry(tomlAsJson, filename) {
+  return {
+    title: tomlAsJson.config.label,
+    quadrant: tomlAsJson.config.quadrant,
+    since: tomlAsJson.config.since,
+    link: "./html/" + filename + ".html"
+  };
 }
 
  /**
@@ -74,7 +79,7 @@ function createHTML(tomlAsJson, filename) {
    * Convert toml JSON to HTML
    * @param {*} tomlAsJson
    * @param {*} htmltemplate
-   * @returns
+   * @returns htmltemplate
    */
   function conv2html(tomlAsJson, htmltemplate) {
     //console.log(tomlAsJson);
@@ -266,7 +271,7 @@ function writeConfigJson2File(configJson) {
 /**
  * Create the deprecated technologies page
  */
-function createDeprecatedPage() {
+function createDeprecatedPage(deprecatedList = []) {
   const path = "./radar/deprecated.html";
   let html = fs.readFileSync(path, 'utf8');
 
@@ -293,4 +298,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage}
+export {createCONFIG, createHTML, createDeprecatedPage, createConfigJson, buildConfigEntry, buildDeprecatedEntry, writeConfigJson2File}

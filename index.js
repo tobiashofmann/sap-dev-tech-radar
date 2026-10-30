@@ -2,9 +2,25 @@ import {load} from 'js-toml';
 import { glob } from 'glob'
 import path from 'path';
 import fs from 'node:fs'
-import {createCONFIG, createHTML, createDeprecatedPage} from './convert.js';
+import {createCONFIG, createHTML, createDeprecatedPage, createConfigJson, writeConfigJson2File} from './convert.js';
 
 const tomlFilePath = "./definitions/**/*.toml";
+
+const state = {
+  configJson: createConfigJson(),
+  deprecatedList: []
+};
+
+/**
+ * Retrieves the filename (name without suffix .toml)
+ * @param {string} filepath
+ * @returns filename as string
+ */
+function getFilename(filepath) {
+      const extension = ".toml";
+      const filename = path.basename(filepath, extension);
+      return filename;
+}
 
 // read toml files
 glob.sync( tomlFilePath ).forEach( function( file ) {
@@ -15,43 +31,34 @@ glob.sync( tomlFilePath ).forEach( function( file ) {
     console.log(filename);
 
     try {
-        const data = fs.readFileSync(file, 'utf8');
-        //console.log(data);
+      const data = fs.readFileSync(file, 'utf8');
+      //console.log(data);
 
-        //
-        // input of toml converted to JSON
-        //
-        const tomlAsJson = load(data);
-        //console.log(tomlAsJson);
+      //
+      // input of toml converted to JSON
+      //
+      const tomlAsJson = load(data);
+      //console.log(tomlAsJson);
 
-        //
-        // create config file from toml file
-        //
-        createCONFIG(tomlAsJson, filename);
+      //
+      // create config file from toml file
+      //
+      createCONFIG(tomlAsJson, filename, state);
 
-        //
-        // create HTML file from toml file
-        //
-        createHTML(tomlAsJson, filename);
+      //
+      // create HTML file from toml file
+      //
+      createHTML(tomlAsJson, filename);
 
-      } catch (err) {
-        console.error(err);
-      }
+    } catch (err) {
+      console.error(err);
+    }
 
-  });
+});
 
-  //
-  // create deprecated page
-  //
-  createDeprecatedPage();
+writeConfigJson2File(state.configJson);
 
-  /**
-   * Retrieves the filename (name without suffix .toml)
-   * @param {string} filepath
-   * @returns filename as string
-   */
-  function getFilename(filepath) {
-        const extension = ".toml";
-        const filename = path.basename(filepath, extension);
-        return filename;
-  }
+//
+// create deprecated page
+//
+createDeprecatedPage(state.deprecatedList);
