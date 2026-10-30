@@ -1,7 +1,7 @@
 node_modules/
 .DS_Store
 .idea/
-coverage/
+.continue/
 design/
 
 # yarn
@@ -17,3 +17,5 @@ old/releases/
 # generated bits (config.json, releases/, html/ - covered above).
 radar/
 
+# tests
+coverage/
