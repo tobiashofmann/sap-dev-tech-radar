@@ -255,4 +255,11 @@ function deriveAndArchiveReleaseData() {
   fs.writeFileSync(`${RELEASES_DIR}/manifest.json`, JSON.stringify(tags.map((t) => t.version)));
 }
 
-export { writeReleaseData, deriveAndArchiveReleaseData };
+export {
+  writeReleaseData,
+  deriveAndArchiveReleaseData,
+  buildEntry,
+  resolveRelated,
+  lastChangedRelease,
+  computeChanges
+};

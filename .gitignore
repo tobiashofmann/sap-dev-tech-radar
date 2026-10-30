@@ -1,6 +1,8 @@
 node_modules/
 .DS_Store
 .idea/
+coverage/
+design/
 
 # yarn
 yarn-error.log

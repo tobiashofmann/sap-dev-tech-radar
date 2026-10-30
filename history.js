@@ -218,5 +218,6 @@ export {
   getReleaseTags,
   getFileAtTag,
   listDefinitionFilesAtTag,
-  normalizeParsedConfig
+  normalizeParsedConfig,
+  normalizeCase
 };
