@@ -354,12 +354,13 @@ function openDeprecated() {
 
     <ui5-dialog
       class="info-dialog"
-      header-text="About SAP Development Tech Radar"
+      accessible-name="About SAP Development Tech Radar"
       :open="infoOpen"
       @close="infoOpen = false"
     >
-      <div class="info-logo">
-        <img src="/favicon.svg" alt="" width="40" height="40" />
+      <div slot="header" class="info-header">
+        <img src="/favicon.svg" alt="" width="28" height="28" />
+        <span class="info-header-title">About SAP Development Tech Radar</span>
       </div>
       <div class="info-section">
         <div class="info-label">Version</div>
@@ -443,9 +444,15 @@ function openDeprecated() {
    box despite it living in shadow DOM (verified - unlike ui5-card, which
    needed ::part()). */
 .info-dialog { width: 620px; border-radius: 1rem; }
-.info-dialog::part(header) { justify-content: center; }
-.info-logo { display: flex; justify-content: center; padding: 1rem 1.5rem 0; }
-.info-logo img { width: 40px; height: 40px; }
+.info-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--sap-border, #e4e7eb);
+}
+.info-header img { width: 28px; height: 28px; flex-shrink: 0; }
+.info-header-title { font-size: 1.125rem; font-weight: 600; }
 
 .info-section { padding: 1rem 1.5rem; }
 .info-section + .info-section { border-top: 1px solid var(--sap-border, #e4e7eb); }
