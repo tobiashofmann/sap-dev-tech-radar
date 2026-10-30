@@ -59,11 +59,38 @@ function classify(currentRing, previousRing) {
   return currentRing === 'DEPRECATED' ? 'deprecated' : 'moved'
 }
 
+// True if release `a` is chronologically before release `b`. 'current'
+// (the live draft) is always the newest, after every real past release;
+// two real releases sort correctly as plain strings ("2025-12" < "2026-06").
+function isBefore(a, b) {
+  if (a === b) {
+    return false
+  }
+  if (a === 'current') {
+    return false
+  }
+  if (b === 'current') {
+    return true
+  }
+  return a < b
+}
+
+// Whether the currently viewed release is the earlier side of the
+// comparison (the normal case: "Compare with" picks something from the
+// past) or the later side (the user picked a release that comes *after*
+// what's being viewed - looking forward instead of back).
+const viewingIsEarlier = computed(() => isBefore(props.viewingVersion, compareWith.value))
+
 // When comparing against the release's own natural predecessor, the
 // precomputed `changes` prop already has this (and is cheaper to reuse);
-// for any other "Compare with" choice, diff this release's entries
-// against the chosen one's entries client-side, same classification rules
-// release-data.js's computeChanges() uses server-side.
+// for any other "Compare with" choice, diff the two releases' entries
+// client-side, same classification rules release-data.js's
+// computeChanges() uses server-side - but direction-aware: always treats
+// whichever release is chronologically earlier as "previous" and the
+// later one as "now", and always iterates the *later* release's entries
+// (not just whichever is being viewed), so a technology that's new in a
+// future "Compare with" release is never silently skipped, and ring
+// changes never end up labeled backwards.
 const items = computed(() => {
   if (compareWith.value === props.changes.previousRelease) {
     return props.changes.items
@@ -72,12 +99,16 @@ const items = computed(() => {
   if (!compareEntries) {
     return []
   }
-  const byId = {}
-  compareEntries.forEach((e) => { byId[e.id] = e })
+
+  const earlierEntries = viewingIsEarlier.value ? props.entries : compareEntries
+  const laterEntries = viewingIsEarlier.value ? compareEntries : props.entries
+
+  const earlierById = {}
+  earlierEntries.forEach((e) => { earlierById[e.id] = e })
 
   const diffed = []
-  props.entries.forEach((e) => {
-    const prev = byId[e.id]
+  laterEntries.forEach((e) => {
+    const prev = earlierById[e.id]
     const previousRing = prev ? prev.ring : null
     if (previousRing === e.ring) {
       return
@@ -95,6 +126,10 @@ const items = computed(() => {
   diffed.sort((a, b) => RING_ORDER[a.currentRing] - RING_ORDER[b.currentRing])
   return diffed
 })
+
+function releaseLabel(version) {
+  return version === 'current' ? 'current (draft)' : version
+}
 
 const counts = computed(() => {
   const c = { new: 0, moved: 0, deprecated: 0 }
@@ -117,8 +152,16 @@ const filteredItems = computed(() => {
 
 <template>
   <div class="changes-page">
-    <h1>Changes<template v-if="compareWith"> since {{ compareWith === 'current' ? 'current (draft)' : compareWith }}</template></h1>
-    <p class="intro">Technologies that were added, moved on to the next ring or deprecated in release {{ releaseDate }}.
+    <h1>
+      Changes
+      <template v-if="compareWith">
+        <template v-if="viewingIsEarlier"> up to {{ releaseLabel(compareWith) }}</template>
+        <template v-else> since {{ releaseLabel(compareWith) }}</template>
+      </template>
+    </h1>
+    <p class="intro">
+      <template v-if="compareWith && viewingIsEarlier">Technologies that get added, move on to the next ring or get deprecated between release {{ releaseDate }} and {{ releaseLabel(compareWith) }}.</template>
+      <template v-else>Technologies that were added, moved on to the next ring or deprecated in release {{ releaseDate }}.</template>
       Rings only progress in one direction: Adopt &rarr; Use &rarr; Hold &rarr; Stop &rarr; Deprecated.</p>
 
     <div class="tiles">
