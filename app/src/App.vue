@@ -358,6 +358,9 @@ function openDeprecated() {
       :open="infoOpen"
       @close="infoOpen = false"
     >
+      <div class="info-logo">
+        <img src="/favicon.svg" alt="" width="40" height="40" />
+      </div>
       <div class="info-section">
         <div class="info-label">Version</div>
         <div class="info-grid">
@@ -441,6 +444,8 @@ function openDeprecated() {
    needed ::part()). */
 .info-dialog { width: 620px; border-radius: 1rem; }
 .info-dialog::part(header) { justify-content: center; }
+.info-logo { display: flex; justify-content: center; padding: 1rem 1.5rem 0; }
+.info-logo img { width: 40px; height: 40px; }
 
 .info-section { padding: 1rem 1.5rem; }
 .info-section + .info-section { border-top: 1px solid var(--sap-border, #e4e7eb); }
