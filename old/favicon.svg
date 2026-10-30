@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="SAP Development Tech Radar logo">
+  <defs>
+    <clipPath id="disc">
+      <circle cx="32" cy="32" r="30"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#disc)">
+    <circle cx="32" cy="32" r="30" fill="#d20a0a"/>
+    <circle cx="32" cy="32" r="22.5" fill="#f0ab00"/>
+    <circle cx="32" cy="32" r="15" fill="#256f3a"/>
+    <circle cx="32" cy="32" r="7.5" fill="#0064d9"/>
+
+    <path d="M32 2 V62 M2 32 H62" stroke="#ffffff" stroke-width="1.6"/>
+  </g>
+
+  <circle cx="32" cy="32" r="30" fill="none" stroke="#ffffff" stroke-width="1.6"/>
+
+  <circle cx="19" cy="19" r="2.4" fill="#ffffff"/>
+  <circle cx="46" cy="24" r="1.8" fill="#ffffff"/>
+  <circle cx="24" cy="46" r="2" fill="#ffffff"/>
+  <circle cx="40" cy="42" r="1.6" fill="#ffffff"/>
+  <circle cx="32" cy="32" r="2.6" fill="#ffffff"/>
+</svg>

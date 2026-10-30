@@ -11,7 +11,11 @@ defineEmits(['back'])
     </nav>
 
     <ui5-card>
-      <ui5-card-header slot="header" title-text="About the SAP Development Tech Radar"></ui5-card-header>
+      <ui5-card-header slot="header" title-text="About the SAP Development Tech Radar">
+        <ui5-avatar slot="avatar" shape="Square" size="S">
+          <img src="/favicon.svg" alt="" />
+        </ui5-avatar>
+      </ui5-card-header>
       <div class="card-body">
         <section class="about-section">
           <h2>What is the SAP Development Tech Radar?</h2>
@@ -91,6 +95,7 @@ defineEmits(['back'])
 
 <style scoped>
 .about-page { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+.about-page ui5-avatar img { width: 100%; height: 100%; }
 .breadcrumb { margin-bottom: 1rem; font-size: 0.85rem; color: var(--sap-text-muted, #5b738b); }
 .card-body { padding: 0.5rem 1.5rem 1.5rem; }
 
