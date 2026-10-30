@@ -190,11 +190,13 @@ const filteredItems = computed(() => {
               <td><a href="#" @click.prevent="emit('open-detail', i.id)">{{ i.title }}</a></td>
               <td>{{ i.quadrant }}</td>
               <td><span class="change-type" :class="i.type">{{ TYPE_LABEL[i.type] }}</span></td>
-              <td class="ring-cell">
-                <RingPill v-if="i.previousRing" :ring="i.previousRing" />
-                <span v-else class="lab">&ndash;</span>
-                <span class="arrow">&rarr;</span>
-                <RingPill :ring="i.currentRing" />
+              <td>
+                <span class="ring-cell">
+                  <RingPill v-if="i.previousRing" :ring="i.previousRing" />
+                  <span v-else class="lab">&ndash;</span>
+                  <span class="arrow">&rarr;</span>
+                  <RingPill :ring="i.currentRing" />
+                </span>
               </td>
               <td>{{ i.reason }}</td>
             </tr>
@@ -254,7 +256,7 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
   text-transform: uppercase;
   letter-spacing: 0.02em;
 }
-.changes-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
+.changes-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
 .changes-table tbody tr { cursor: pointer; }
 .changes-table .empty { text-align: center; color: var(--sap-text-muted, #5b738b); cursor: default; padding: 1.5rem 0; }
 
