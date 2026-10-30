@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import RadarPage from './components/RadarPage.vue'
 import DetailPage from './components/DetailPage.vue'
 import PrivacyPage from './components/PrivacyPage.vue'
+import AboutPage from './components/AboutPage.vue'
 import DeprecatedPage from './components/DeprecatedPage.vue'
 import ChangesPage from './components/ChangesPage.vue'
 
@@ -70,6 +71,7 @@ function pastReleaseUrl(version) {
 const basePath = import.meta.env.BASE_URL
 const detailPrefix = basePath + 'details/'
 const privacyPath = basePath + 'privacy'
+const aboutPath = basePath + 'about'
 const deprecatedPath = basePath + 'deprecated'
 const changesPath = basePath + 'changes'
 // Makes the List tab's scroll position visible/shareable in the URL -
@@ -95,6 +97,10 @@ function syncViewFromLocation() {
   }
   if (window.location.pathname === privacyPath) {
     view.value = 'privacy'
+    return
+  }
+  if (window.location.pathname === aboutPath) {
+    view.value = 'about'
     return
   }
   if (window.location.pathname === deprecatedPath) {
@@ -237,6 +243,15 @@ function openPrivacy() {
   }
 }
 
+// Info dialog's "About" section link
+function openAbout() {
+  infoOpen.value = false
+  view.value = 'about'
+  if (window.location.pathname !== aboutPath) {
+    window.history.pushState({}, '', aboutPath)
+  }
+}
+
 // Radar page's "Deprecated" tile (design/DESIGN.md screen C)
 function openDeprecated() {
   view.value = 'deprecated'
@@ -302,6 +317,7 @@ function openDeprecated() {
           @show-on-radar="showOnRadar"
         />
         <PrivacyPage v-else-if="view === 'privacy'" @back="backToRadar" />
+        <AboutPage v-else-if="view === 'about'" @back="backToRadar" />
         <DeprecatedPage
           v-else-if="view === 'deprecated'"
           :entries="activeData.entries"
@@ -357,6 +373,9 @@ function openDeprecated() {
           building SAP applications. Every technology sits in one quadrant and one ring.</p>
         <p class="info-muted">Rings: Adopt &rarr; Use &rarr; Hold &rarr; Stop. Deprecated technologies are not shown
           on the radar but on the Deprecated page.</p>
+        <div class="info-links">
+          <a href="#" @click.prevent="openAbout">More about the tech radar</a>
+        </div>
       </div>
       <div class="info-section">
         <div class="info-label">Legal &amp; Privacy</div>
