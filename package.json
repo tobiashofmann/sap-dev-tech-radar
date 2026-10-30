@@ -25,7 +25,9 @@
     "js-toml": "^1.0.0"
   },
   "scripts": {
+    "prestart": "npm run lint && npm run test && npm run conv && npm run build:app",
     "start": "browser-sync radar -w",
+    "build:app": "npm --prefix app run build",
     "conv": "node index.js",
     "test": "node --test",
     "test:coverage": "c8 node --test",
