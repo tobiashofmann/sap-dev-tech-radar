@@ -32,8 +32,9 @@
     "test": "node --test",
     "test:coverage": "c8 node --test",
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
-    "lint:js": "eslint convert.js index.js history.js release-data.js test/*.js",
+    "lint:js": "eslint convert.js index.js history.js release-data.js sbom.js test/*.js",
     "lint:toml": "eslint definitions/**/*.toml",
-    "lint:html": "eslint old/**/*.html"
+    "lint:html": "eslint old/**/*.html",
+    "sbom": "node sbom.js"
   }
 }
