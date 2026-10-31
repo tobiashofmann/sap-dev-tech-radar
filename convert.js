@@ -72,9 +72,12 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
 
   /**
-   * Write HTML data to file
-   *
-   * @param {string} htmltemplate
+   * Renders and writes a technology's detail page to old/html/<filename>.html
+   * @param {*} tomlAsJson parsed TOML
+   * @param {string|number} htmltemplate the loaded HTML template, or -1 if it could not be read (see loadHtmlTemplate())
+   * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
+   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
    */
   function writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
 
@@ -90,10 +93,14 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
 
   /**
-   * Convert toml JSON to HTML
-   * @param {*} tomlAsJson
-   * @param {*} htmltemplate
-   * @returns
+   * Replaces every %placeholder% in the HTML template with this
+   * technology's data.
+   * @param {*} tomlAsJson parsed TOML
+   * @param {string} htmltemplate the loaded HTML template
+   * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
+   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
+   * @returns {string} the rendered HTML
    */
   function conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
     //console.log(tomlAsJson);
@@ -176,6 +183,12 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
     return html;
   }
 
+  /**
+   * Maps a ring to the Bootstrap color class used to highlight it on a
+   * technology's detail page.
+   * @param {string} ring
+   * @returns {string|undefined} the Bootstrap class, or undefined for a ring with no mapped color (e.g. DEPRECATED)
+   */
   function getReplaceColor(ring) {
       const bootstrapColor = {
         ADOPT: "text-bg-success",
@@ -200,7 +213,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
   /**
    * Load HTML template file
-   * @returns
+   * @returns {string|number} the template's content, or -1 if it could not be read
    */
   function loadHtmlTemplate() {
     try {
@@ -218,7 +231,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 /**
  * Create base config JSON
  * Automatically sets the date value to current Year and Month
- * @returns JSON
+ * @returns {{date: string, entries: object[]}}
  */
 function createConfigJson() {
   const releaseDraftVersion = "-draft";
@@ -237,6 +250,11 @@ function createConfigJson() {
 }
 
 
+/**
+ * Writes the in-memory config JSON (built up across all non-DEPRECATED
+ * entries processed so far) to old/config.json.
+ * @param {{date: string, entries: object[]}} configJson
+ */
 function writeConfigJson2File(configJson) {
   const path = "./old/config.json";
 
@@ -245,14 +263,19 @@ function writeConfigJson2File(configJson) {
 
 
   /**
-    [config]
-    label = "ADT"
-    ring = "USE"
-    quadrant = "Tools"
-    active = true
-    moved = 0
-    link = "./detail.html"
-  */
+   * Maps a parsed TOML entry's [config] table to the legacy D3 radar's
+   * int-indexed shape, e.g.:
+   *   [config]
+   *   label = "ADT"
+   *   ring = "USE"
+   *   quadrant = "Tools"
+   *   active = true
+   *   moved = 0
+   *   link = "./detail.html"
+   * @param {*} data parsed TOML
+   * @param {string} filename
+   * @returns {{quadrant: number, ring: number, label: string, active: boolean, moved: number, link: string}}
+   */
     function json2config(data, filename) {
       const url = "./html/" + filename + ".html";
       let config = {
