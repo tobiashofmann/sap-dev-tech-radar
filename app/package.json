@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "docs:js": "jsdoc -c jsdoc.json",
-    "docs:vue": "vue-docgen \"src/**/*.vue\" jsdoc/vue",
+    "docs:vue": "vue-docgen \"src/**/*.vue\" ../jsdoc/app-vue",
     "docs": "npm run docs:js && npm run docs:vue"
   },
   "dependencies": {
