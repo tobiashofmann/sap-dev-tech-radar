@@ -6,19 +6,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The SAP development tech radar (SDTR): a static site that visualizes SAP technology recommendations across 4 quadrants (Tools, Frameworks, UI, Technology) and 4 rings (ADOPT, USE, HOLD, STOP), plus a DEPRECATED state. It is content-driven — the vast majority of changes to this repo are adding/editing TOML entries, not touching code.
 
+## Language
+
+English only, for everything: code, comments, commit messages, PR descriptions, TOML content (`[page]`/`[links]` values), and all Markdown docs (`CLAUDE.md`, `CONTRIBUTING.md`, `PROCESS.md`, `test/TESTCASES.md`, etc.). Don't write or accept non-English content in any file in this repo.
+
 ## Commands
 
 ```sh
 npm i              # install dependencies
 npm run conv        # convert definitions/**/*.toml -> old/config.json + old/html/*.html + old/deprecated.html + old/releases/** + radar/data.json + radar/releases/**
 npm run start        # browser-sync serve ./radar with live reload, for previewing the new app locally (needs `cd app && npm run build` first)
+npm run test          # node --test - unit tests for the TOML -> JSON/HTML conversion pipeline (test/*.test.js)
+npm run test:coverage # same, under c8 for coverage
 npm run lint          # lint:js + lint:html + lint:toml
-npm run lint:js       # eslint convert.js index.js history.js release-data.js
+npm run lint:js       # eslint convert.js index.js history.js release-data.js test/*.js
 npm run lint:toml     # eslint definitions/**/*.toml
 npm run lint:html     # eslint old/**/*.html
 ```
 
-There is no test suite. Validation is: run `npm run conv` and confirm it completes without errors (a malformed TOML file throws and is logged, but does not stop the rest of the batch), then `npm run start` (or `cd old && npx browser-sync . -w` for the legacy site) to visually check the radar and the entry's detail page.
+`npm run prestart` chains `lint`, `test`, `conv` and the `app/` build, and runs automatically before `npm run start`.
+
+Unit tests (`test/*.test.js`, using `node:test` + `node:assert/strict`, fixtures in `test/fixtures.js`) cover the pure functions in `convert.js`, `history.js` and `release-data.js` — see `test/TESTCASES.md` for a function-by-function table of what's covered and what's still missing (notably: `createHTML`/`createDeprecatedPage`, the `deriveAndArchiveHistory`/`deriveAndArchiveReleaseData` orchestration, an `index.js` end-to-end run, and anything in `app/` or `mcp/`, none of which have tests). CI (`.github/workflows/techradar.yml`) does not run `npm run lint` or `npm run test` — only locally, via `prestart`.
+
+Beyond the unit tests, further validation is: run `npm run conv` and confirm it completes without errors (a malformed TOML file throws and is logged, but does not stop the rest of the batch), then `npm run start` (or `cd old && npx browser-sync . -w` for the legacy site) to visually check the radar and the entry's detail page.
 
 To check a single definition file without converting everything, just run `npm run conv` — it globs all of `definitions/**/*.toml` each time; there's no per-file conversion entry point.
 
@@ -36,7 +46,8 @@ This is the core thing to understand before touching anything in `index.js` or `
 5. **`release-data.js`** (called from `index.js` right after `history.js`) writes `radar/data.json`: one enriched JSON for the *current* (not-yet-released) state - every entry's full `[page]`/`[config]` data (including resolved `related` and that entry's `releaseHistory`) plus a `changes` block (new / moved-to-next-ring / deprecated, diffed against the most recently tagged release via `history.js`'s derived history). This is the file the new `app/` Vue front end fetches; it's a separate artifact from `old/config.json` (which stays in its existing minimal int-indexed shape for the legacy D3 vanilla site) so neither consumer had to change shape for the other. It also archives a `data.json`-equivalent per past release under `radar/releases/<version>/data.json` (plus its own `radar/releases/manifest.json`) — same enriched shape, built the same git-show-at-each-tag way `history.js` builds `old/config.json`'s history, so the new app can render an archived release with its existing components. A release's file, once written, is never rewritten on later runs (immutable once published), same as `old/config.json`'s per-release archive.
 6. **`old/`** is the legacy, publishable vanilla-JS site: `old/index.html` loads `old/js/d3.v4.min.js` + `old/js/radar.js` (the D3 "build-your-own-radar" visualization) and fetches `old/config.json` for entries. `old/html/*.html` are the generated per-technology detail pages linked from the radar. `old/releases/<version>/config.json` are the reconstructed past-release snapshots described above. `old/css/radar.css` and `old/bootstrap/` hold styling/icons.
 7. **`app/`** is a separate Vue 3 + Vite + UI5 Web Components + D3 project (its own `package.json`) building the redesigned UI from `design/DESIGN.md`. `npm run build` there outputs straight to `radar/` (its `index.html` + `assets/`, no nested subfolder) — the new app's own publishable site, sitting alongside the sibling JSON files `npm run conv` writes there (`radar/data.json`, `radar/releases/**`). It implements the Radar page (A1-A3/F/G), Detail page (B), a Privacy Policy page and a working release selector (fetches `radar/releases/<version>/data.json` to render an archived release) by fetching those files; the Changes page (D) isn't built yet. In dev (`npm run dev` inside `app/`), a small Vite middleware (`vite.config.js`) serves the sibling repo's `radar/*.json` files at fixed dev URLs so dev behaves like the production layout.
-8. **CI** (`.github/workflows/techradar.yml`) runs `npm run conv`, then installs and builds `app/` (`npm ci && npm run build` with `working-directory: ./app`), then deploys `./radar` to GitHub Pages, triggered on published releases (not on every push to main). This is the only thing that actually builds+publishes the live site; CI does not commit anything back to the repo. Note `app/`'s build only outputs the new app; the legacy `old/` site is not deployed by this workflow today (CI's `./radar` upload doesn't include it) — flagging this as a gap, not something resolved here.
+8. **CI** (`.github/workflows/techradar.yml`) runs `npm run conv`, then installs and builds `app/` (`npm ci && npm run build` with `working-directory: ./app`), then deploys `./radar` to GitHub Pages, triggered on published releases (not on every push to main). This is the only thing that actually builds+publishes the live site; CI does not commit anything back to the repo, and it does not run `npm run lint` or `npm run test` either. Note `app/`'s build only outputs the new app; the legacy `old/` site is not deployed by this workflow today (CI's `./radar` upload doesn't include it) — flagging this as a gap, not something resolved here.
+9. **`mcp/`** is a separate MCP (Model Context Protocol) server (its own `package.json`, TypeScript, built with `tsc`) exposing the radar data to AI clients over stdio. It reads `../radar/data.json` at the repo root — the same enriched file `release-data.js` writes — so `npm run conv` must have been run at least once before it has data to serve. It exposes three tools (`sdtr_get_technology`, `sdtr_list_technologies`, `sdtr_get_changes`, implemented under `mcp/src/tools/`) and is registered for this session in `.mcp.json`. See `mcp/README.md` for setup/run commands. It is not part of `npm run conv`/CI and has no tests.
 
 Implication: after editing or adding any `definitions/**/*.toml` file, always run `npm run conv` before previewing or committing. `old/config.json`, `old/html/*.html`, `old/releases/**`, `radar/data.json`, and `radar/releases/**` are build output that must stay in sync with `definitions/` — but note they are **gitignored** (`.gitignore`: `html/`, `old/config.json`, `old/releases/`, `radar/`), i.e. NOT committed to the repo, despite being present on disk after a local build. Only `old/deprecated.html` (its shell is hand-edited, its `<tbody>` generated) and `old/index.html`/`old/js/*` etc. are tracked. Each contributor/CI regenerates the rest locally via `npm run conv` (and, for `radar/`'s app bundle, `cd app && npm run build`).
 

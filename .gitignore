@@ -3,6 +3,7 @@ node_modules/
 .idea/
 .continue/
 design/
+mcp/
 
 # yarn
 yarn-error.log
