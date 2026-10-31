@@ -37,9 +37,9 @@
     "conv": "node index.js",
     "test": "node --test",
     "test:coverage": "c8 node --test",
-    "test:junit": "mkdir -p reports && node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
-    "test:ctrf": "npm run test:junit && junit-to-ctrf reports/junit.xml -o reports/ctrf-report.json -t \"node:test\"",
-    "test:allure": "npm run test:junit && allure generate reports -o allure-report --clean",
+    "test:junit": "mkdir -p radar/qa/reports && node --test --test-reporter=junit --test-reporter-destination=radar/qa/reports/junit.xml",
+    "test:ctrf": "npm run test:junit && junit-to-ctrf radar/qa/reports/junit.xml -o radar/qa/reports/ctrf-report.json -t \"node:test\"",
+    "test:allure": "npm run test:junit && allure generate radar/qa/reports -o radar/qa/allure --clean",
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
     "lint:js": "eslint convert.js index.js history.js release-data.js sbom.js test/*.js",
     "lint:toml": "eslint definitions/**/*.toml",
@@ -47,6 +47,7 @@
     "sbom": "node sbom.js",
     "docs:conv": "jsdoc -c jsdoc.json",
     "docs:app": "npm --prefix app run docs",
-    "docs": "npm run docs:conv && npm run docs:app"
+    "docs": "npm run docs:conv && npm run docs:app",
+    "qa": "npm run test:coverage && npm run test:ctrf && npm run test:allure && npm run docs && npm run sbom"
   }
 }

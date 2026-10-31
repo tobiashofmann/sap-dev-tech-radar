@@ -1,3 +1,5 @@
 {
-  "reporter": ["text", "lcov", "html"]
+  "reporter": ["text", "lcov", "html"],
+  "reports-dir": "./radar/qa/coverage",
+  "temp-directory": "./.c8-tmp"
 }

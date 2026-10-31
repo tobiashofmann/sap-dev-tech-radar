@@ -5,7 +5,7 @@
     "exclude": ["src/main.js"]
   },
   "opts": {
-    "destination": "../jsdoc/app-js"
+    "destination": "../radar/qa/jsdoc/app-js"
   },
   "templates": {
     "cleverLinks": true

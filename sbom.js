@@ -32,7 +32,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const OUT_DIR = './sbom';
+const OUT_DIR = './radar/qa/sbom';
 
 /**
  * Runs `npm sbom` in a given project directory and returns its parsed
