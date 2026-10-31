@@ -1,0 +1,13 @@
+{
+  "source": {
+    "include": ["src"],
+    "includePattern": ".js$",
+    "exclude": ["src/main.js"]
+  },
+  "opts": {
+    "destination": "./jsdoc/js"
+  },
+  "templates": {
+    "cleverLinks": true
+  }
+}

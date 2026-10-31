@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "docs:js": "jsdoc -c jsdoc.json",
+    "docs:vue": "vue-docgen \"src/**/*.vue\" jsdoc/vue",
+    "docs": "npm run docs:js && npm run docs:vue"
   },
   "dependencies": {
     "@ui5/webcomponents": "^2.28.1",
@@ -18,7 +21,9 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.10",
+    "jsdoc": "^4.0.5",
     "playwright": "^1.64.1",
-    "vite": "^8.3.5"
+    "vite": "^8.3.5",
+    "vue-docgen-cli": "^4.79.0"
   }
 }

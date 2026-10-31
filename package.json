@@ -23,6 +23,7 @@
     "eslint-plugin-toml": "^0.9.2",
     "glob": "^10.3.10",
     "js-toml": "^1.0.0",
+    "jsdoc": "^4.0.5",
     "junit-to-ctrf": "^0.1.0"
   },
   "scripts": {
@@ -38,6 +39,9 @@
     "lint:js": "eslint convert.js index.js history.js release-data.js sbom.js test/*.js",
     "lint:toml": "eslint definitions/**/*.toml",
     "lint:html": "eslint old/**/*.html",
-    "sbom": "node sbom.js"
+    "sbom": "node sbom.js",
+    "docs:conv": "jsdoc -c jsdoc.json",
+    "docs:app": "npm --prefix app run docs",
+    "docs": "npm run docs:conv && npm run docs:app"
   }
 }
