@@ -19,3 +19,7 @@ radar/
 
 # tests
 coverage/
+
+# mcp/ build output - compiled from mcp/src by `npm run build` there.
+# mcp/node_modules is already covered by the node_modules/ pattern above.
+mcp/dist/
