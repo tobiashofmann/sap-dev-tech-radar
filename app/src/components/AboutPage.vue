@@ -1,7 +1,10 @@
 <script setup>
 import RingPill from './RingPill.vue'
 
-defineEmits(['back'])
+defineEmits([
+  /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
+  'back'
+])
 </script>
 
 <template>
@@ -117,3 +120,9 @@ li { margin-bottom: 0.25rem; }
 .ring-table th, .quadrant-table th { white-space: nowrap; font-weight: 600; width: 1%; }
 .ring-table :deep(.ring-pill) { vertical-align: middle; }
 </style>
+
+<docs>
+The About page: static copy explaining what the SDTR is, how it's governed,
+and how to contribute - reached from the header's info dialog and linked
+back to the radar via the "back" event.
+</docs>

@@ -471,3 +471,12 @@ function openDeprecated() {
   border-top: 1px solid var(--sap-border, #e4e7eb);
 }
 </style>
+
+<docs>
+The app's root component: fetches radar/data.json (and, on demand, past
+releases' radar/releases/<version>/data.json), owns the header/tab/search
+state, and switches between RadarPage, DetailPage, ChangesPage,
+DeprecatedPage, AboutPage and PrivacyPage based on which one the user is
+viewing - the other components take their data as props and communicate
+back up via the events documented on each of them.
+</docs>

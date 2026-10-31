@@ -8,17 +8,29 @@ import { sanitizeDescription } from '../sanitize.js'
 import { TREND_ARROWS, TRENDS } from '../trendIcons.js'
 
 const props = defineProps({
+  /** The current draft's full entry list, as release-data.js's `radar/data.json` shapes them. */
   entries: { type: Array, required: true },
+  /** The current draft's changes-since-last-release block ({previousRelease, items}), for the "Changes" tile. */
   changes: { type: Object, required: true },
+  /** The header search box's current value, used to filter both the radar and the list view. */
   searchQuery: { type: String, default: '' },
-  // bumped by the header's "List" tab on every click, including repeat
-  // clicks while already on this page - see the watcher below.
+  /**
+   * Bumped by the header's "List" tab on every click, including repeat
+   * clicks while already on this page - see the watcher below.
+   */
   jumpToList: { type: Number, default: 0 },
-  // set by the detail page's "Show on full radar" link (via App.vue) to
-  // select that technology once we're back here.
+  /**
+   * Set by the detail page's "Show on full radar" link (via App.vue) to
+   * select that technology once we're back here.
+   */
   preselectId: { type: String, default: null }
 })
-const emit = defineEmits(['open-detail', 'open-deprecated'])
+const emit = defineEmits([
+  /** Fired with a technology's id when it's opened (from the radar, list, or side card), to show its detail page. */
+  'open-detail',
+  /** Fired when the "Deprecated" tile is clicked, to show the deprecated-technologies page. */
+  'open-deprecated'
+])
 
 const tableWrapRef = ref(null)
 watch(
@@ -953,3 +965,10 @@ watch([selectedEntry, radarSize], layoutSideCards)
   .tiles ui5-card.tile { flex: 1 1 calc(50% - 0.75rem); }
 }
 </style>
+
+<docs>
+The main radar view (A1-A3/F/G from design/DESIGN.md): the D3-rendered
+radar chart itself, the quadrant/ring summary tiles, a selected blip's
+side card, and a sortable/filterable list view - all driven by the same
+`entries`/`searchQuery` props.
+</docs>

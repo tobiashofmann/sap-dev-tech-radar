@@ -50,9 +50,29 @@ function serveReleaseData() {
   }
 }
 
+// Strips <docs>...</docs> custom blocks before @vitejs/plugin-vue ever sees
+// them - those blocks hold free-form markdown read by `npm run docs:vue`
+// (vue-docgen-cli, which reads the .vue files straight off disk, so this
+// never touches what it sees), but Vite's Vue plugin has no loader for an
+// unrecognized custom block and tries to parse its content as JS, which
+// fails the build. enforce: 'pre' so this runs before vue()'s own parsing.
+function stripDocsBlocks() {
+  return {
+    name: 'strip-docs-blocks',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!id.endsWith('.vue') || !code.includes('<docs>')) {
+        return null
+      }
+      return code.replace(/<docs>[\s\S]*?<\/docs>/g, '')
+    }
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    stripDocsBlocks(),
     vue({
       template: {
         compilerOptions: {
