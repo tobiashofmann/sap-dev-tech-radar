@@ -23,7 +23,3 @@ coverage/
 # mcp/ build output - compiled from mcp/src by `npm run build` there.
 # mcp/node_modules is already covered by the node_modules/ pattern above.
 mcp/dist/
-
-# local MCP client config (e.g. pointing at mcp/dist/index.js) - personal
-# dev setup, not something the repo should prescribe.
-.mcp.json
