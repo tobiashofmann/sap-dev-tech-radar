@@ -1,9 +1,24 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeCase, normalizeParsedConfig, validateForwardOnly, getReleaseTags } from '../history.js';
+import fs from 'node:fs';
+import {
+  normalizeCase,
+  normalizeParsedConfig,
+  validateForwardOnly,
+  getReleaseTags,
+  getFileAtTag,
+  listDefinitionFilesAtTag,
+  deriveAndArchiveHistory
+} from '../history.js';
 
 const CANONICAL_RINGS = ['ADOPT', 'USE', 'HOLD', 'STOP', 'DEPRECATED'];
 const CANONICAL_QUADRANTS = ['UI', 'Technology', 'Tools', 'Frameworks'];
+
+// a release tag and a file known to exist at that tag in this repo's real
+// history, used by the read-only git tests below (same approach as
+// getReleaseTags()'s test: reads this repo's real git data, never writes).
+const KNOWN_TAG = '2025.12';
+const KNOWN_FILE = 'definitions/frameworks/abapcloud.toml';
 
 describe('history.js: normalizeCase()', () => {
   test('matches a canonical value case-insensitively', () => {
@@ -76,5 +91,91 @@ describe('history.js: getReleaseTags() (reads this repo\'s real git tags, read-o
     }
     const versions = tags.map((t) => t.version);
     assert.deepEqual(versions, [...versions].sort());
+  });
+});
+
+describe('history.js: getFileAtTag() (reads this repo\'s real git history, read-only)', () => {
+  test('returns the file\'s content when it existed at that tag', () => {
+    const content = getFileAtTag(KNOWN_TAG, KNOWN_FILE);
+    assert.equal(typeof content, 'string');
+    assert.ok(content.includes('[config]'));
+  });
+
+  test('returns null when the path did not exist at that tag', () => {
+    assert.equal(getFileAtTag(KNOWN_TAG, 'definitions/frameworks/does-not-exist.toml'), null);
+  });
+
+  test('returns null for a tag/ref that does not exist, instead of throwing', () => {
+    assert.equal(getFileAtTag('not-a-real-tag', KNOWN_FILE), null);
+  });
+});
+
+describe('history.js: listDefinitionFilesAtTag() (reads this repo\'s real git history, read-only)', () => {
+  test('lists every definitions/**/*.toml path that existed at that tag', () => {
+    const files = listDefinitionFilesAtTag(KNOWN_TAG);
+    assert.ok(files.length > 0, 'expected at least one definition file at this tag');
+    assert.ok(files.includes(KNOWN_FILE));
+    for (const file of files) {
+      assert.ok(file.startsWith('definitions/'));
+      assert.ok(file.endsWith('.toml'));
+    }
+  });
+
+  test('returns an empty array for a tag/ref that does not exist, instead of throwing', () => {
+    assert.deepEqual(listDefinitionFilesAtTag('not-a-real-tag'), []);
+  });
+});
+
+describe('history.js: deriveAndArchiveHistory() (reads this repo\'s real git history, read-only; fs mocked so nothing is actually written)', () => {
+  test('returns an entry (even if empty) for every filename passed in, and nothing else', (t) => {
+    t.mock.method(fs, 'existsSync', () => true);
+    t.mock.method(fs, 'mkdirSync', () => {});
+    t.mock.method(fs, 'writeFileSync', () => {});
+
+    const history = deriveAndArchiveHistory([{ filename: 'not-a-real-technology-xyz' }]);
+    assert.deepEqual(history, { 'not-a-real-technology-xyz': [] });
+  });
+
+  test('derives a non-empty, oldest-first, forward-only-shaped history for a technology with real release history', (t) => {
+    t.mock.method(fs, 'existsSync', () => true);
+    t.mock.method(fs, 'mkdirSync', () => {});
+    t.mock.method(fs, 'writeFileSync', () => {});
+
+    const history = deriveAndArchiveHistory([{ filename: 'abapcloud' }]);
+    const entries = history.abapcloud;
+    assert.ok(entries.length > 0, 'expected at least one past release for abapcloud');
+    for (const { release, ring } of entries) {
+      assert.match(release, /^\d{4}-\d{2}$/);
+      assert.ok(CANONICAL_RINGS.includes(ring));
+    }
+    const releases = entries.map((e) => e.release);
+    assert.deepEqual(releases, [...releases].sort());
+  });
+
+  test('when every release is already archived, only the manifest is (re-)written, not any per-release snapshot', (t) => {
+    t.mock.method(fs, 'existsSync', () => true);
+    const mkdir = t.mock.method(fs, 'mkdirSync', () => {});
+    const writeFile = t.mock.method(fs, 'writeFileSync', () => {});
+
+    deriveAndArchiveHistory([{ filename: 'abapcloud' }]);
+
+    assert.equal(mkdir.mock.callCount(), 1); // just the top-level releases dir
+    assert.equal(writeFile.mock.callCount(), 1); // just manifest.json
+    const [manifestPath, manifestBody] = writeFile.mock.calls[0].arguments;
+    assert.match(manifestPath, /manifest\.json$/);
+    const manifest = JSON.parse(manifestBody);
+    assert.deepEqual(manifest, getReleaseTags().map((t) => t.version));
+  });
+
+  test('when a release is not yet archived, its snapshot is written in addition to the manifest', (t) => {
+    t.mock.method(fs, 'existsSync', () => false);
+    const mkdir = t.mock.method(fs, 'mkdirSync', () => {});
+    const writeFile = t.mock.method(fs, 'writeFileSync', () => {});
+
+    deriveAndArchiveHistory([{ filename: 'abapcloud' }]);
+
+    const tagCount = getReleaseTags().length;
+    assert.equal(mkdir.mock.callCount(), 1 + tagCount); // releases dir + one per release
+    assert.equal(writeFile.mock.callCount(), tagCount + 1); // one snapshot per release + manifest
   });
 });

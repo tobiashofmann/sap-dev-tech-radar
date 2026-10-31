@@ -6,13 +6,15 @@ what's still missing.
 
 ## What is tested?
 
-Testing today covers exclusively the **TOML → JSON/HTML conversion pipeline**
-(`convert.js`, `history.js`, `release-data.js`): the pure functions, largely free of
-filesystem side effects, that translate TOML data into the legacy D3 config, the generated
-detail pages, and the Vue app JSON (`radar/data.json`).
+Testing today covers the **TOML → JSON/HTML conversion pipeline**
+(`convert.js`, `history.js`, `release-data.js`, plus `index.js`'s orchestration of them):
+the pure functions, largely free of filesystem side effects, that translate TOML data into
+the legacy D3 config, the generated detail pages, and the Vue app JSON (`radar/data.json`);
+and, for `index.js` itself, an end-to-end run against a fixture `definitions/` directory in
+an isolated temp repo, verifying the actual files it writes.
 
-**Not tested**: the orchestration script `index.js` itself (end-to-end), the Vue app under
-`app/` (neither unit, component, nor E2E tests), and the MCP server under `mcp/`.
+**Not tested**: the Vue app under `app/` (neither unit, component, nor E2E tests), and the
+MCP server under `mcp/`.
 
 ## What is it tested with?
 
@@ -38,20 +40,20 @@ detail pages, and the Vue app JSON (`radar/data.json`).
 | Convert TOML | convert.js | `createCONFIG()` — happy path (valid non-DEPRECATED entry, `old/config.json` is written) | — | ❌ missing |
 | Convert TOML | convert.js | `createHTML()` / `conv2html()` (incl. internal helpers `renderRelated`, `renderReleaseHistory`, `getReplaceColor`, `replacePlaceholder`, `loadHtmlTemplate`, `writeHtmlToFile`) | — | ❌ missing |
 | Convert TOML | convert.js | `createDeprecatedPage()` | — | ❌ missing |
-| Convert TOML | index.js | End-to-end run (`node index.js` against fixture `definitions/`, checking the generated artifacts `old/config.json`, `old/html/*.html`, `radar/data.json`) | — | ❌ missing |
+| Convert TOML | index.js | End-to-end run (`node index.js` against fixture `definitions/`, checking the generated artifacts `old/config.json`, `old/html/*.html`, `old/deprecated.html`, `radar/data.json`) | `index.test.js` — "index.js: end-to-end run against a fixture definitions/ directory" | ✅ present |
 | Build history info | history.js | `normalizeCase()` | `history.test.js` — "normalizeCase()" | ✅ present |
 | Build history info | history.js | `normalizeParsedConfig()` | `history.test.js` — "normalizeParsedConfig()" | ✅ present |
 | Build history info | history.js | `validateForwardOnly()` | `history.test.js` — "validateForwardOnly()" | ✅ present |
-| Build history info | history.js | `getFileAtTag()` | — | ❌ missing |
-| Build history info | history.js | `listDefinitionFilesAtTag()` | — | ❌ missing |
-| Build history info | history.js | `deriveAndArchiveHistory()` (main orchestration, writes `old/releases/**`) | — | ❌ missing |
+| Build history info | history.js | `getFileAtTag()` | `history.test.js` — "getFileAtTag() (reads this repo's real git history, read-only)" | ✅ present |
+| Build history info | history.js | `listDefinitionFilesAtTag()` | `history.test.js` — "listDefinitionFilesAtTag() (reads this repo's real git history, read-only)" | ✅ present |
+| Build history info | history.js | `deriveAndArchiveHistory()` (main orchestration, writes `old/releases/**`) | `history.test.js` — "deriveAndArchiveHistory() (...; fs mocked so nothing is actually written)" | ✅ present |
 | Find and set release dates | history.js | `getReleaseTags()` | `history.test.js` — "getReleaseTags() (reads this repo's real git tags, read-only)" | ✅ present |
 | Find and set release dates | release-data.js | `lastChangedRelease()` | `release-data.test.js` — "lastChangedRelease()" | ✅ present |
 | Find and set release dates | release-data.js | `computeChanges()` | `release-data.test.js` — "computeChanges()" (new/moved/deprecated classification, sorting) | ✅ present |
 | Build app release data | release-data.js | `buildEntry()` | `release-data.test.js` — "buildEntry() - one reference per quadrant/ring, plus deprecated" + tests for `recommendation` fallback, `since`, `related` | ✅ present |
 | Build app release data | release-data.js | `resolveRelated()` | `release-data.test.js` — "resolveRelated()" | ✅ present |
-| Build app release data | release-data.js | `writeReleaseData()` (writes `radar/data.json`) | — | ❌ missing |
-| Build app release data | release-data.js | `deriveAndArchiveReleaseData()` (writes `radar/releases/**`) | — | ❌ missing |
+| Build app release data | release-data.js | `writeReleaseData()` (writes `radar/data.json`) | `release-data.test.js` — "writeReleaseData()" | ✅ present |
+| Build app release data | release-data.js | `deriveAndArchiveReleaseData()` (writes `radar/releases/**`) | `release-data.test.js` — "deriveAndArchiveReleaseData() (...; fs mocked so nothing is actually written)" | ✅ present |
 
 ---
 
@@ -99,5 +101,5 @@ detail pages, and the Vue app JSON (`radar/data.json`).
 |---|---|
 | MCP server tests (`mcp/src/format.ts`, `data.ts`, `tools/getTechnology.ts`, `tools/listTechnologies.ts`, `tools/getChanges.ts`, `index.ts`) | ❌ missing — no test framework set up in `mcp/package.json` |
 | CI runs tests/lint | ❌ missing — `.github/workflows/techradar.yml` only runs `npm run conv` and the `app` build; `npm run lint` and `npm run test` only run locally via the `prestart` script, not in CI |
-| `index.js` integration test | ❌ missing (see the Conversion table) |
+| `index.js` integration test | ✅ present (see the Conversion table) |
 | Coverage reporting for `app/` and `mcp/` | ❌ missing — `c8` only runs against the top-level conversion tests |

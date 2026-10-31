@@ -79,7 +79,10 @@ function normalizeTagToVersion(tag) {
 function getReleaseTags() {
   let raw;
   try {
-    raw = execFileSync('git', ['tag', '--list'], { encoding: 'utf8' });
+    // stderr suppressed - running outside any git repo (e.g. an isolated
+    // test fixture) is a caught, expected outcome here, not something
+    // that should print git's own "fatal: ..." noise to the console
+    raw = execFileSync('git', ['tag', '--list'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   } catch (err) {
     console.error('Could not read git tags, skipping release history derivation:', err.message);
     return [];
@@ -101,7 +104,10 @@ function getReleaseTags() {
  */
 function getFileAtTag(tag, relPath) {
   try {
-    return execFileSync('git', ['show', `${tag}:${relPath}`], { encoding: 'utf8' });
+    // stderr is suppressed (not inherited) - a missing tag/path is an
+    // expected, caught outcome here, not something that should print
+    // git's own "fatal: ..." noise to the console
+    return execFileSync('git', ['show', `${tag}:${relPath}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   } catch (err) {
     return null;
   }
@@ -114,7 +120,8 @@ function getFileAtTag(tag, relPath) {
  */
 function listDefinitionFilesAtTag(tag) {
   try {
-    const raw = execFileSync('git', ['ls-tree', '-r', '--name-only', tag, '--', 'definitions'], { encoding: 'utf8' });
+    // stderr suppressed, same reasoning as getFileAtTag() above
+    const raw = execFileSync('git', ['ls-tree', '-r', '--name-only', tag, '--', 'definitions'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
     return raw
       .split('\n')
       .map((line) => line.trim())
