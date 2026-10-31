@@ -61,7 +61,7 @@ function createCONFIG(tomlAsJson, filename) {
    * @param {JSON} tomlAsJson
    * @param {string} filename
    * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
-   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
    */
 function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
@@ -77,7 +77,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
    * @param {string|number} htmltemplate the loaded HTML template, or -1 if it could not be read (see loadHtmlTemplate())
    * @param {string} filename
    * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
-   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
    */
   function writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
 
@@ -99,7 +99,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
    * @param {string} htmltemplate the loaded HTML template
    * @param {string} filename
    * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
-   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
    * @returns {string} the rendered HTML
    */
   function conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
@@ -171,7 +171,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
    * Renders the ring-history timeline: one entry per past release this
    * technology was already published in, plus the current (unreleased) ring.
    * @param {*} tomlAsJson
-   * @param {{release: string, ring: string}[]} [releaseHistory] oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] oldest first
    * @returns {string}
    */
   function renderReleaseHistory(tomlAsJson, releaseHistory) {

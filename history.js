@@ -74,7 +74,7 @@ function normalizeTagToVersion(tag) {
 
 /**
  * Lists all git tags that look like a published release, oldest first.
- * @returns {{tag: string, version: string}[]}
+ * @returns {Array.<{tag: string, version: string}>}
  */
 function getReleaseTags() {
   let raw;
@@ -138,8 +138,8 @@ function listDefinitionFilesAtTag(tag) {
  * old/releases/. Nothing here is authored by hand - it's all read back
  * out of the definitions/ TOML files as they existed at each release tag.
  *
- * @param {{filename: string}[]} entries current definitions/**\/*.toml files
- * @returns {Object.<string, {release: string, ring: string}[]>} ring history per filename, oldest first
+ * @param {Array.<{filename: string}>} entries current definitions/**\/*.toml files
+ * @returns {Object.<string, Array.<{release: string, ring: string}>>} ring history per filename, oldest first
  */
 function deriveAndArchiveHistory(entries) {
   const tags = getReleaseTags();
@@ -204,7 +204,7 @@ function deriveAndArchiveHistory(entries) {
  * i.e. enforces Adopt -> Use -> Hold -> Stop -> Deprecated, forward only.
  * @param {string} filename
  * @param {string} currentRing
- * @param {{release: string, ring: string}[]} history oldest first
+ * @param {Array.<{release: string, ring: string}>} history oldest first
  */
 function validateForwardOnly(filename, currentRing, history) {
   if (!history || history.length === 0) {
