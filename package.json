@@ -15,8 +15,11 @@
   "directories": {
     "doc": "docs"
   },
+  "overrides": {
+    "dompurify": "^3.4.17"
+  },
   "devDependencies": {
-    "allure-commandline": "^2.46.1",
+    "allure": "^3.22.1",
     "browser-sync": "^3.0.2",
     "c8": "^12.0.0",
     "eslint": "^8.56.0",
@@ -36,7 +39,7 @@
     "test:coverage": "c8 node --test",
     "test:junit": "mkdir -p reports && node --test --test-reporter=junit --test-reporter-destination=reports/junit.xml",
     "test:ctrf": "npm run test:junit && junit-to-ctrf reports/junit.xml -o reports/ctrf-report.json -t \"node:test\"",
-    "test:allure": "npm run test:junit && allure generate reports -o reports/allure-report --clean",
+    "test:allure": "npm run test:junit && allure generate reports -o allure-report --clean",
     "lint": "npm run lint:js && npm run lint:html && npm run lint:toml",
     "lint:js": "eslint convert.js index.js history.js release-data.js sbom.js test/*.js",
     "lint:toml": "eslint definitions/**/*.toml",
