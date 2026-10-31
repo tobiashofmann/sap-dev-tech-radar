@@ -19,3 +19,5 @@ radar/
 
 # tests
 coverage/
+
+mcp/dist
