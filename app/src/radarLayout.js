@@ -1,6 +1,9 @@
-// Quadrant corners per design/DESIGN.md rule 7: UI top-left, Technology
-// top-right, Tools bottom-left, Frameworks bottom-right. radial_min/max are
-// multiples of PI (atan2 convention, SVG y-down).
+/**
+ * Quadrant corners per design/DESIGN.md rule 7: UI top-left, Technology
+ * top-right, Tools bottom-left, Frameworks bottom-right. radial_min/max are
+ * multiples of PI (atan2 convention, SVG y-down).
+ * @type {Array.<{name: string, radial_min: number, radial_max: number}>}
+ */
 export const QUADRANTS = [
   { name: 'UI', radial_min: -1, radial_max: -0.5 },
   { name: 'Technology', radial_min: -0.5, radial_max: 0 },
@@ -8,12 +11,21 @@ export const QUADRANTS = [
   { name: 'Tools', radial_min: 0.5, radial_max: 1 }
 ]
 
-// center -> outside, per design/DESIGN.md rule 7
+/**
+ * Ring names, center -> outside, per design/DESIGN.md rule 7.
+ * @type {string[]}
+ */
 export const RINGS = ['ADOPT', 'USE', 'HOLD', 'STOP']
 
 // ring boundaries as a fraction of the chart's outer radius
 const RING_BOUNDS = [0, 0.3, 0.55, 0.78, 1]
 
+/**
+ * A 32-bit FNV-1a hash of a string, used to seed blipPosition()'s PRNG so
+ * a given id always lands at the same position.
+ * @param {string} str
+ * @returns {number} unsigned 32-bit hash
+ */
 function hashSeed(str) {
   let h = 2166136261
   for (let i = 0; i < str.length; i++) {
@@ -23,6 +35,13 @@ function hashSeed(str) {
   return h >>> 0
 }
 
+/**
+ * A seeded pseudo-random number generator (mulberry32) - deterministic for
+ * a given seed, unlike Math.random(), so blipPosition() is stable across
+ * re-renders.
+ * @param {number} seed
+ * @returns {function(): number} a function that returns the next random float in [0, 1)
+ */
 function mulberry32(seed) {
   let a = seed
   return function () {
@@ -59,6 +78,12 @@ export function blipPosition(id, quadrantName, ringName, maxRadius) {
   return { x: r * Math.cos(angle), y: r * Math.sin(angle) }
 }
 
+/**
+ * The pixel radius of each ring boundary (ADOPT/USE/HOLD/STOP's outer
+ * edges), for drawing the radar's ring circles.
+ * @param {number} maxRadius pixels, the chart's outer ring radius
+ * @returns {number[]} one radius per ring in RINGS, innermost first
+ */
 export function ringBoundaryRadii(maxRadius) {
   return RING_BOUNDS.slice(1).map((f) => f * maxRadius)
 }
