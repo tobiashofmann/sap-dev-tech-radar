@@ -1,0 +1,17 @@
+[page]
+title = "Extension Technology Mapping"
+description = "The Extension Technology Mapping links extension tasks to technical extension building blocks. For each building block it shows the clean core level and the extension domain where it runs: on-stack (same stack as the core solution), side-by-side (outside the core, based on standard APIs and events, e.g. SAP BTP) or hybrid.<br/><br/>Example: to add a custom field to a standard UI in SAP S/4HANA on-premise, the mapping points to the Custom Fields app in combination with Adapting SAP Fiori UIs at Runtime."
+reason = "Use the Extension Technology Mapping as the reference for choosing extension technologies. It is maintained by SAP. The source of truth for clean core levels is SAP Note 3578329."
+support = "Supported"
+
+[links]
+"SAP Help Extension Technology Mapping" = "https://help.sap.com/docs/SAP_APPLICATION_EXTENSION_METHODOLOGY/2f804cb5e53d4279879009100a2b2082/f1d84c5bcd8a4057b22d51faa4f3ead1.html?locale=en-US&version=CLOUD"
+"SAP Note 3578329 Clean Core Levels" = "https://me.sap.com/notes/3578329"
+
+[config]
+label = "Extension Technology Mapping"
+ring = "USE"
+quadrant = "Frameworks"
+active = true
+moved = 0
+trend = "positive"
