@@ -10,7 +10,7 @@ support = "Supported"
 
 [config]
 label = "Extension Technology Mapping"
-ring = "USE"
+ring = "ADOPT"
 quadrant = "Frameworks"
 active = true
 moved = 0
