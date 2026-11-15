@@ -33,6 +33,7 @@
   "scripts": {
     "prestart": "npm run lint && npm run test && npm run conv && npm run build:app",
     "start": "browser-sync radar -w",
+    "start-old": "browser-sync old -w",
     "build:app": "npm --prefix app run build",
     "conv": "node index.js",
     "test": "node --test",
