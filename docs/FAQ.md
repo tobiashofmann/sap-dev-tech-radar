@@ -22,7 +22,7 @@ No.
 
 ## And why not?
 
-Listing ERP products like S/4HANA, SAP Analytics Cloud, BNAC, EPD, AM, SuccessFactors, Ariba, or modules like MM, CO, FI won't work. Selecting these kind of products is the task of enterprise architecture. Products are selected via their capabilities. The business process of a customer are analyzed, their capabilities identified and matched with the capabilities of SAP products. As the matching depends on the business process demanded capabilities, this is highly dependent on the business process. While companies might use the same process, how it is used results in different capabilities. Thus, a solution that works for company A won't necessarily work for company B. This is why a tech radar like the SDTR won't work.
+Listing ERP products like S/4HANA, SAP Analytics Cloud, BNAC, EPD, AM, SuccessFactors, Ariba, or modules like MM, CO, FI won't work. Selecting this kind of product is the task of enterprise architecture. Products are selected via their capabilities. The business process of a customer are analyzed, their capabilities identified and matched with the capabilities of SAP products. As the matching depends on the business process demanded capabilities, this is highly dependent on the business process. While companies might use the same process, how it is used results in different capabilities. Thus, a solution that works for company A won't necessarily work for company B. This is why a tech radar like the SDTR won't work.
 
 ## Why focus on SAP and not 3rd party products?
 

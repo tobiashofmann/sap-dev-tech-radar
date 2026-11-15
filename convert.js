@@ -16,12 +16,23 @@ let deprecatedList = [];
 const VALID_RINGS = ["ADOPT", "USE", "HOLD", "STOP", "DEPRECATED"];
 const VALID_QUADRANTS = ["Tools", "Frameworks", "UI", "Technology"];
 
-  /**
-   * convert toml to JSON
-   * @param {JSON} tomlAsJson
-   * @param {string} filename
-   */
-function createCONFIG(tomlAsJson, filename) {
+/**
+ * Validates one parsed definitions/**\/*.toml file: the [page]/[config]
+ * tables exist, ring/quadrant are one of the exact allowed values, and a
+ * DEPRECATED entry carries a well-formed `since`. Pure (no I/O, no module
+ * state), so index.js can run it over every entry up front - before any
+ * output file is written, for the legacy site and the Vue app's
+ * radar/data.json alike - and createCONFIG() still calls it itself.
+ * @param {*} tomlAsJson parsed TOML
+ * @param {string} filename
+ * @throws {Error} describing the first rule the entry breaks
+ */
+function validateEntry(tomlAsJson, filename) {
+  for (const table of ["page", "config"]) {
+    if (!tomlAsJson || typeof tomlAsJson[table] !== "object" || tomlAsJson[table] === null) {
+      throw new Error(`"${filename}": missing [${table}] table`);
+    }
+  }
 
   // getQuadrant/getRing silently default to 0 for an unrecognized value,
   // so a typo like ring = "Adopt" would otherwise be mis-filed without
@@ -33,12 +44,26 @@ function createCONFIG(tomlAsJson, filename) {
     throw new Error(`"${filename}": quadrant "${tomlAsJson.config.quadrant}" must be one of ${VALID_QUADRANTS.join(", ")}`);
   }
 
-  // add to deprecated list if ring is DEPRECATED
   if (tomlAsJson.config.ring === "DEPRECATED") {
     const since = tomlAsJson.config.since;
     if (!/^\d{4}-(06|12)$/.test(since)) {
       throw new Error(`"${filename}": since "${since}" must match YYYY-06 or YYYY-12 (e.g. "2026-06")`);
     }
+  }
+}
+
+  /**
+   * convert toml to JSON
+   * @param {JSON} tomlAsJson
+   * @param {string} filename
+   */
+function createCONFIG(tomlAsJson, filename) {
+
+  validateEntry(tomlAsJson, filename);
+
+  // add to deprecated list if ring is DEPRECATED
+  if (tomlAsJson.config.ring === "DEPRECATED") {
+    const since = tomlAsJson.config.since;
     deprecatedList.push({
       title: tomlAsJson.config.label,
       quadrant: tomlAsJson.config.quadrant,
@@ -61,20 +86,29 @@ function createCONFIG(tomlAsJson, filename) {
    * @param {JSON} tomlAsJson
    * @param {string} filename
    * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
-   * @param {{release: string, ring: string}[]} [releaseHistory] this technology's ring per past release, oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
    */
 function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
   let htmltemplate = loadHtmlTemplate();
+  if (htmltemplate === -1) {
+    // loadHtmlTemplate() already logged the underlying read error; without
+    // the template no detail page can be written, which must fail the
+    // build instead of silently producing a site without detail pages
+    throw new Error(`"${filename}": could not load template/template.html, no detail page written`);
+  }
   writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory);
   //console.log(htmltemplate);
 }
 
 
   /**
-   * Write HTML data to file
-   *
-   * @param {string} htmltemplate
+   * Renders and writes a technology's detail page to old/html/<filename>.html
+   * @param {*} tomlAsJson parsed TOML
+   * @param {string|number} htmltemplate the loaded HTML template, or -1 if it could not be read (see loadHtmlTemplate())
+   * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
    */
   function writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
 
@@ -90,10 +124,14 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
 
   /**
-   * Convert toml JSON to HTML
-   * @param {*} tomlAsJson
-   * @param {*} htmltemplate
-   * @returns
+   * Replaces every %placeholder% in the HTML template with this
+   * technology's data.
+   * @param {*} tomlAsJson parsed TOML
+   * @param {string} htmltemplate the loaded HTML template
+   * @param {string} filename
+   * @param {Object.<string, {title: string, quadrant: string, ring: string}>} [entryByFilename] lookup for resolving `related` ids
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] this technology's ring per past release, oldest first
+   * @returns {string} the rendered HTML
    */
   function conv2html(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory) {
     //console.log(tomlAsJson);
@@ -164,7 +202,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
    * Renders the ring-history timeline: one entry per past release this
    * technology was already published in, plus the current (unreleased) ring.
    * @param {*} tomlAsJson
-   * @param {{release: string, ring: string}[]} [releaseHistory] oldest first
+   * @param {Array.<{release: string, ring: string}>} [releaseHistory] oldest first
    * @returns {string}
    */
   function renderReleaseHistory(tomlAsJson, releaseHistory) {
@@ -176,6 +214,12 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
     return html;
   }
 
+  /**
+   * Maps a ring to the Bootstrap color class used to highlight it on a
+   * technology's detail page.
+   * @param {string} ring
+   * @returns {string|undefined} the Bootstrap class, or undefined for a ring with no mapped color (e.g. DEPRECATED)
+   */
   function getReplaceColor(ring) {
       const bootstrapColor = {
         ADOPT: "text-bg-success",
@@ -200,7 +244,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
   /**
    * Load HTML template file
-   * @returns
+   * @returns {string|number} the template's content, or -1 if it could not be read
    */
   function loadHtmlTemplate() {
     try {
@@ -218,17 +262,9 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 /**
  * Create base config JSON
  * Automatically sets the date value to current Year and Month
- * @returns JSON
+ * @returns {{date: string, entries: object[]}}
  */
 function createConfigJson() {
-  const releaseDraftVersion = "-draft";
-  const releaseVersion = releaseDraftVersion;
-  /*
-  let configJson = {
-      "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}) + releaseVersion,
-      "entries": []
-  }
-  */
   let configJson = {
       "date": new Date().getUTCFullYear() + "." + new Date().toLocaleString('en', {month: '2-digit'}),
       "entries": []
@@ -237,6 +273,11 @@ function createConfigJson() {
 }
 
 
+/**
+ * Writes the in-memory config JSON (built up across all non-DEPRECATED
+ * entries processed so far) to old/config.json.
+ * @param {{date: string, entries: object[]}} configJson
+ */
 function writeConfigJson2File(configJson) {
   const path = "./old/config.json";
 
@@ -245,14 +286,19 @@ function writeConfigJson2File(configJson) {
 
 
   /**
-    [config]
-    label = "ADT"
-    ring = "USE"
-    quadrant = "Tools"
-    active = true
-    moved = 0
-    link = "./detail.html"
-  */
+   * Maps a parsed TOML entry's [config] table to the legacy D3 radar's
+   * int-indexed shape, e.g.:
+   *   [config]
+   *   label = "ADT"
+   *   ring = "USE"
+   *   quadrant = "Tools"
+   *   active = true
+   *   moved = 0
+   *   link = "./detail.html"
+   * @param {*} data parsed TOML
+   * @param {string} filename
+   * @returns {{quadrant: number, ring: number, label: string, active: boolean, moved: number, link: string}}
+   */
     function json2config(data, filename) {
       const url = "./html/" + filename + ".html";
       let config = {
@@ -352,4 +398,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage, json2config}
+export {createCONFIG, createHTML, createDeprecatedPage, json2config, validateEntry}

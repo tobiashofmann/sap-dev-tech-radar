@@ -3,16 +3,27 @@ import { ref, computed } from 'vue'
 import RingPill from './RingPill.vue'
 
 const props = defineProps({
-  entries: { type: Array, required: true }, // the viewed release's entries (the "now" side of every comparison)
-  changes: { type: Object, required: true }, // precomputed vs the immediately preceding release: {previousRelease, items}
-  releaseDate: { type: String, required: true }, // the viewed release's own date/version label
+  /** The viewed release's entries (the "now" side of every comparison). */
+  entries: { type: Array, required: true },
+  /** Precomputed vs the immediately preceding release: {previousRelease, items}. */
+  changes: { type: Object, required: true },
+  /** The viewed release's own date/version label. */
+  releaseDate: { type: String, required: true },
+  /** The header search box's current value, used to filter the changes table too. */
   searchQuery: { type: String, default: '' },
-  pastReleases: { type: Array, required: true }, // version strings, newest first
-  viewingVersion: { type: String, required: true }, // 'current' or a version string - whichever release is on screen
-  releaseEntries: { type: Function, required: true }, // (version) => entries array | null (null = not fetched yet)
-  fetchPastRelease: { type: Function, required: true } // (version) => Promise<void>
+  /** Version strings, newest first - populates the "compare with" dropdown. */
+  pastReleases: { type: Array, required: true },
+  /** 'current' or a version string - whichever release is on screen. */
+  viewingVersion: { type: String, required: true },
+  /** (version) => entries array | null (null = not fetched yet). */
+  releaseEntries: { type: Function, required: true },
+  /** (version) => Promise<void> - fetches and caches a past release's data.json, via App.vue. */
+  fetchPastRelease: { type: Function, required: true }
 })
-const emit = defineEmits(['open-detail'])
+const emit = defineEmits([
+  /** Fired with a technology's id when its row is clicked, to open its detail page. */
+  'open-detail'
+])
 
 const QUADRANTS = ['UI', 'Technology', 'Tools', 'Frameworks']
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 }
@@ -22,6 +33,9 @@ const changeFilter = ref('All')
 const quadrantFilter = ref('All')
 const compareWith = ref(props.changes.previousRelease)
 const compareLoading = ref(false)
+// set when the picked "Compare with" release could not be fetched - shown
+// instead of the table, which would otherwise just look like "no changes"
+const compareError = ref(null)
 
 // "Compare with" (design/DESIGN.md screen D): any other release than the
 // one currently on screen - 'current' (the live draft) if that isn't
@@ -42,10 +56,18 @@ const compareOptions = computed(() => {
 async function onCompareChange(e) {
   const version = e.target.value
   compareWith.value = version
+  compareError.value = null
   if (version && !props.releaseEntries(version)) {
     compareLoading.value = true
     try {
       await props.fetchPastRelease(version)
+    } catch (err) {
+      // only report it if this is still the selected release - a slower,
+      // failed request for a release the user has already moved on from
+      // must not put an error over the newer selection
+      if (compareWith.value === version) {
+        compareError.value = `Could not load release ${releaseLabel(version)} for comparison: ${err.message}`
+      }
     } finally {
       compareLoading.value = false
     }
@@ -215,6 +237,7 @@ const filteredItems = computed(() => {
     </div>
 
     <p v-if="compareLoading" class="loading-note">Loading comparison release&hellip;</p>
+    <p v-else-if="compareError" class="error-note" role="alert">{{ compareError }}</p>
 
     <ui5-card v-else>
       <div class="card-body">
@@ -287,6 +310,7 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
 }
 .compare-select { width: 13rem; margin-left: auto; }
 .loading-note { color: var(--sap-text-muted, #5b738b); padding: 1rem 0; }
+.error-note { color: #d20a0a; padding: 1rem 0; }
 
 .card-body { padding: 0.5rem 1.5rem 1.5rem; }
 .changes-table { width: 100%; border-collapse: collapse; }
@@ -312,3 +336,9 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
 .ring-cell .lab { color: var(--sap-text-muted, #5b738b); }
 .ring-cell .arrow { color: var(--sap-text-muted, #5b738b); }
 </style>
+
+<docs>
+The Changes page (new / moved-to-next-ring / deprecated entries since the
+previous release), with a dropdown to compare the viewed release against
+any earlier one instead of just the immediately preceding release.
+</docs>

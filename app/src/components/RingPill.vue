@@ -2,6 +2,7 @@
 import { RING_COLORS } from '../ringColors.js'
 
 defineProps({
+  /** The ring to label, e.g. "ADOPT" - also looked up in RING_COLORS for the pill's color. */
   ring: { type: String, required: true }
 })
 </script>
@@ -25,3 +26,10 @@ defineProps({
   background: rgba(0, 0, 0, 0.03);
 }
 </style>
+
+<docs>
+A small rounded pill labelling a technology's ring, colored per
+ringColors.js's RING_COLORS - used on the radar's blip tooltips, the
+list view, and the detail page wherever a ring needs a compact,
+consistently-colored label.
+</docs>

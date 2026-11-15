@@ -18,7 +18,7 @@ const RELEASES_DIR = './radar/releases';
  * @param {string[]} relatedIds
  * @param {string} filename owning technology, for the error message
  * @param {Object.<string, {title: string, quadrant: string, ring: string}>} entryByFilename
- * @returns {{id: string, title: string, quadrant: string, ring: string}[]}
+ * @returns {Array.<{id: string, title: string, quadrant: string, ring: string}>}
  */
 function resolveRelated(relatedIds, filename, entryByFilename) {
   return (relatedIds || []).map((id) => {
@@ -34,7 +34,7 @@ function resolveRelated(relatedIds, filename, entryByFilename) {
  * The release this technology last changed ring in, or null if that
  * happened in the current, not-yet-released draft.
  * @param {string} currentRing
- * @param {{release: string, ring: string}[]} history oldest first
+ * @param {Array.<{release: string, ring: string}>} history oldest first
  * @returns {string|null}
  */
 function lastChangedRelease(currentRing, history) {
@@ -51,7 +51,7 @@ function lastChangedRelease(currentRing, history) {
  * @param {*} data parsed TOML
  * @param {string} filename
  * @param {Object.<string, {title: string, quadrant: string, ring: string}>} entryByFilename
- * @param {{release: string, ring: string}[]} history oldest first
+ * @param {Array.<{release: string, ring: string}>} history oldest first
  * @returns {object}
  */
 function buildEntry(data, filename, entryByFilename, history) {
@@ -80,8 +80,8 @@ function buildEntry(data, filename, entryByFilename, history) {
  * what's new, what moved to its next ring, and what's newly deprecated.
  * Entries with no ring change since then are left out.
  *
- * @param {{filename: string, data: object}[]} entries current definitions/**\/*.toml files
- * @param {Object.<string, {release: string, ring: string}[]>} historyByFilename oldest first
+ * @param {Array.<{filename: string, data: object}>} entries current definitions/**\/*.toml files
+ * @param {Object.<string, Array.<{release: string, ring: string}>>} historyByFilename oldest first
  * @returns {{previousRelease: string|null, items: object[]}}
  */
 function computeChanges(entries, historyByFilename) {
@@ -142,9 +142,9 @@ function currentVersionLabel() {
  * render the radar, list, filters, detail pages and the changes page for
  * the current (not-yet-released) state, in one file.
  *
- * @param {{filename: string, data: object}[]} entries
+ * @param {Array.<{filename: string, data: object}>} entries
  * @param {Object.<string, {title: string, quadrant: string, ring: string}>} entryByFilename
- * @param {Object.<string, {release: string, ring: string}[]>} historyByFilename
+ * @param {Object.<string, Array.<{release: string, ring: string}>>} historyByFilename
  */
 function writeReleaseData(entries, entryByFilename, historyByFilename) {
   const releaseEntries = entries.map(({ filename, data }) =>

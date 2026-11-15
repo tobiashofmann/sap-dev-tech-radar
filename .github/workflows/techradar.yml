@@ -31,6 +31,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # history.js derives release history from git tags and reads
+          # definitions/**/*.toml as it existed at each tag (git show/git
+          # ls-tree) - it needs the full history and all tags, not a
+          # shallow clone (same as ci.yml). Without this, the deployed
+          # site has no release history/archive and the git-history unit
+          # tests run by `npm run qa` fail.
+          fetch-depth: 0
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -53,16 +61,6 @@ jobs:
         with:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Node.js
@@ -73,6 +71,14 @@ jobs:
       - name: Build Vue app
         run: npm run build
         working-directory: ./app
+        env:
+          # GitHub Pages serves this project site under /<repository>/,
+          # not at the domain root - app/vite.config.js reads this as
+          # Vite's `base` so asset URLs, client-side routes and data
+          # fetches all resolve under that subpath.
+          RADAR_BASE_PATH: /${{ github.event.repository.name }}/
+      - name: Generate QA reports
+        run: npm run qa
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

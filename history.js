@@ -74,12 +74,15 @@ function normalizeTagToVersion(tag) {
 
 /**
  * Lists all git tags that look like a published release, oldest first.
- * @returns {{tag: string, version: string}[]}
+ * @returns {Array.<{tag: string, version: string}>}
  */
 function getReleaseTags() {
   let raw;
   try {
-    raw = execFileSync('git', ['tag', '--list'], { encoding: 'utf8' });
+    // stderr suppressed - running outside any git repo (e.g. an isolated
+    // test fixture) is a caught, expected outcome here, not something
+    // that should print git's own "fatal: ..." noise to the console
+    raw = execFileSync('git', ['tag', '--list'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   } catch (err) {
     console.error('Could not read git tags, skipping release history derivation:', err.message);
     return [];
@@ -101,7 +104,10 @@ function getReleaseTags() {
  */
 function getFileAtTag(tag, relPath) {
   try {
-    return execFileSync('git', ['show', `${tag}:${relPath}`], { encoding: 'utf8' });
+    // stderr is suppressed (not inherited) - a missing tag/path is an
+    // expected, caught outcome here, not something that should print
+    // git's own "fatal: ..." noise to the console
+    return execFileSync('git', ['show', `${tag}:${relPath}`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
   } catch (err) {
     return null;
   }
@@ -114,7 +120,8 @@ function getFileAtTag(tag, relPath) {
  */
 function listDefinitionFilesAtTag(tag) {
   try {
-    const raw = execFileSync('git', ['ls-tree', '-r', '--name-only', tag, '--', 'definitions'], { encoding: 'utf8' });
+    // stderr suppressed, same reasoning as getFileAtTag() above
+    const raw = execFileSync('git', ['ls-tree', '-r', '--name-only', tag, '--', 'definitions'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
     return raw
       .split('\n')
       .map((line) => line.trim())
@@ -131,8 +138,8 @@ function listDefinitionFilesAtTag(tag) {
  * old/releases/. Nothing here is authored by hand - it's all read back
  * out of the definitions/ TOML files as they existed at each release tag.
  *
- * @param {{filename: string}[]} entries current definitions/**\/*.toml files
- * @returns {Object.<string, {release: string, ring: string}[]>} ring history per filename, oldest first
+ * @param {Array.<{filename: string}>} entries current definitions/**\/*.toml files
+ * @returns {Object.<string, Array.<{release: string, ring: string}>>} ring history per filename, oldest first
  */
 function deriveAndArchiveHistory(entries) {
   const tags = getReleaseTags();
@@ -197,7 +204,7 @@ function deriveAndArchiveHistory(entries) {
  * i.e. enforces Adopt -> Use -> Hold -> Stop -> Deprecated, forward only.
  * @param {string} filename
  * @param {string} currentRing
- * @param {{release: string, ring: string}[]} history oldest first
+ * @param {Array.<{release: string, ring: string}>} history oldest first
  */
 function validateForwardOnly(filename, currentRing, history) {
   if (!history || history.length === 0) {

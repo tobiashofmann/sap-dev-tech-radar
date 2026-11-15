@@ -1,5 +1,8 @@
 <script setup>
-defineEmits(['back'])
+defineEmits([
+  /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
+  'back'
+])
 </script>
 
 <template>
@@ -107,3 +110,8 @@ p { line-height: 1.6; margin: 0 0 0.75rem; }
 ul { margin: 0 0 0.75rem; padding-left: 1.25rem; line-height: 1.6; }
 li { margin-bottom: 0.25rem; }
 </style>
+
+<docs>
+The Privacy Policy page: static legal copy, reached from the header's info
+dialog and linked back to the radar via the "back" event.
+</docs>

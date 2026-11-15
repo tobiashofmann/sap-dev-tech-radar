@@ -1,7 +1,14 @@
 <script setup>
 import RingPill from './RingPill.vue'
 
-defineEmits(['back'])
+defineEmits([
+  /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
+  'back'
+])
+
+// built from the app's base path, not a fixed "/favicon.svg" - on GitHub
+// Pages the app lives under /<repository>/ (see vite.config.js's `base`)
+const faviconUrl = import.meta.env.BASE_URL + 'favicon.svg'
 </script>
 
 <template>
@@ -13,7 +20,7 @@ defineEmits(['back'])
     <ui5-card>
       <ui5-card-header slot="header" title-text="About the SAP Development Tech Radar">
         <ui5-avatar slot="avatar" shape="Square" size="S">
-          <img src="/favicon.svg" alt="" />
+          <img :src="faviconUrl" alt="" />
         </ui5-avatar>
       </ui5-card-header>
       <div class="card-body">
@@ -117,3 +124,9 @@ li { margin-bottom: 0.25rem; }
 .ring-table th, .quadrant-table th { white-space: nowrap; font-weight: 600; width: 1%; }
 .ring-table :deep(.ring-pill) { vertical-align: middle; }
 </style>
+
+<docs>
+The About page: static copy explaining what the SDTR is, how it's governed,
+and how to contribute - reached from the header's info dialog and linked
+back to the radar via the "back" event.
+</docs>
