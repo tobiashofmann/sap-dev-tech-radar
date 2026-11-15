@@ -36,11 +36,13 @@ MCP server under `mcp/`.
 | Use case | File | Function | Covered by | Status |
 |---|---|---|---|---|
 | Convert TOML | convert.js | `json2config()` | `convert.test.js` — "json2config() - one reference per quadrant/ring" (all 4 quadrant/ring combinations) | ✅ present |
+| Convert TOML | convert.js | `validateEntry()` (pure per-entry check `index.js` runs before writing anything) | `convert.test.js` — "validateEntry()": all 5 reference entries accepted; invalid ring, invalid quadrant, missing `since`, missing `[page]`/`[config]` table rejected | ✅ present |
 | Convert TOML | convert.js | `createCONFIG()` — validation | `convert.test.js` — invalid ring, invalid quadrant, invalid `since`, valid DEPRECATED case | ✅ present |
 | Convert TOML | convert.js | `createCONFIG()` — happy path (valid non-DEPRECATED entry, `old/config.json` is written) | — | ❌ missing |
 | Convert TOML | convert.js | `createHTML()` / `conv2html()` (incl. internal helpers `renderRelated`, `renderReleaseHistory`, `getReplaceColor`, `replacePlaceholder`, `loadHtmlTemplate`, `writeHtmlToFile`) | — | ❌ missing |
 | Convert TOML | convert.js | `createDeprecatedPage()` | — | ❌ missing |
 | Convert TOML | index.js | End-to-end run (`node index.js` against fixture `definitions/`, checking the generated artifacts `old/config.json`, `old/html/*.html`, `old/deprecated.html`, `radar/data.json`) | `index.test.js` — "index.js: end-to-end run against a fixture definitions/ directory" | ✅ present |
+| Convert TOML | index.js | Failing run: invalid definitions (bad ring, unknown `related` id, malformed `since`, unparsable TOML, missing `[config]`) exit non-zero, report every problem, and write no `radar/data.json`/`old/config.json`/`old/html/` | `index.test.js` — "index.js: invalid definitions fail the run before anything is written" | ✅ present |
 | Build history info | history.js | `normalizeCase()` | `history.test.js` — "normalizeCase()" | ✅ present |
 | Build history info | history.js | `normalizeParsedConfig()` | `history.test.js` — "normalizeParsedConfig()" | ✅ present |
 | Build history info | history.js | `validateForwardOnly()` | `history.test.js` — "validateForwardOnly()" | ✅ present |

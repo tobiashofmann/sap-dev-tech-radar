@@ -70,7 +70,14 @@ const timelineEntries = computed(() => {
   return entries.slice(-MAX_TIMELINE_ENTRIES)
 })
 
+// `hex` is undefined for a ring RING_COLORS doesn't know (the build
+// rejects those for current definitions, but an archived release is
+// rendered as it was published) - fall back to no tint instead of
+// throwing and taking the whole detail page down with it.
 function hexToRgba(hex, alpha) {
+  if (!hex) {
+    return 'transparent'
+  }
   const n = parseInt(hex.slice(1), 16)
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`
 }

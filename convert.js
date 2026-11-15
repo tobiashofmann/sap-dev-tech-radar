@@ -16,12 +16,23 @@ let deprecatedList = [];
 const VALID_RINGS = ["ADOPT", "USE", "HOLD", "STOP", "DEPRECATED"];
 const VALID_QUADRANTS = ["Tools", "Frameworks", "UI", "Technology"];
 
-  /**
-   * convert toml to JSON
-   * @param {JSON} tomlAsJson
-   * @param {string} filename
-   */
-function createCONFIG(tomlAsJson, filename) {
+/**
+ * Validates one parsed definitions/**\/*.toml file: the [page]/[config]
+ * tables exist, ring/quadrant are one of the exact allowed values, and a
+ * DEPRECATED entry carries a well-formed `since`. Pure (no I/O, no module
+ * state), so index.js can run it over every entry up front - before any
+ * output file is written, for the legacy site and the Vue app's
+ * radar/data.json alike - and createCONFIG() still calls it itself.
+ * @param {*} tomlAsJson parsed TOML
+ * @param {string} filename
+ * @throws {Error} describing the first rule the entry breaks
+ */
+function validateEntry(tomlAsJson, filename) {
+  for (const table of ["page", "config"]) {
+    if (!tomlAsJson || typeof tomlAsJson[table] !== "object" || tomlAsJson[table] === null) {
+      throw new Error(`"${filename}": missing [${table}] table`);
+    }
+  }
 
   // getQuadrant/getRing silently default to 0 for an unrecognized value,
   // so a typo like ring = "Adopt" would otherwise be mis-filed without
@@ -33,12 +44,26 @@ function createCONFIG(tomlAsJson, filename) {
     throw new Error(`"${filename}": quadrant "${tomlAsJson.config.quadrant}" must be one of ${VALID_QUADRANTS.join(", ")}`);
   }
 
-  // add to deprecated list if ring is DEPRECATED
   if (tomlAsJson.config.ring === "DEPRECATED") {
     const since = tomlAsJson.config.since;
     if (!/^\d{4}-(06|12)$/.test(since)) {
       throw new Error(`"${filename}": since "${since}" must match YYYY-06 or YYYY-12 (e.g. "2026-06")`);
     }
+  }
+}
+
+  /**
+   * convert toml to JSON
+   * @param {JSON} tomlAsJson
+   * @param {string} filename
+   */
+function createCONFIG(tomlAsJson, filename) {
+
+  validateEntry(tomlAsJson, filename);
+
+  // add to deprecated list if ring is DEPRECATED
+  if (tomlAsJson.config.ring === "DEPRECATED") {
+    const since = tomlAsJson.config.since;
     deprecatedList.push({
       title: tomlAsJson.config.label,
       quadrant: tomlAsJson.config.quadrant,
@@ -66,6 +91,12 @@ function createCONFIG(tomlAsJson, filename) {
 function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
 
   let htmltemplate = loadHtmlTemplate();
+  if (htmltemplate === -1) {
+    // loadHtmlTemplate() already logged the underlying read error; without
+    // the template no detail page can be written, which must fail the
+    // build instead of silently producing a site without detail pages
+    throw new Error(`"${filename}": could not load template/template.html, no detail page written`);
+  }
   writeHtmlToFile(tomlAsJson, htmltemplate, filename, entryByFilename, releaseHistory);
   //console.log(htmltemplate);
 }
@@ -375,4 +406,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage, json2config}
+export {createCONFIG, createHTML, createDeprecatedPage, json2config, validateEntry}

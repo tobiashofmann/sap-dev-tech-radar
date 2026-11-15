@@ -31,6 +31,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # history.js derives release history from git tags and reads
+          # definitions/**/*.toml as it existed at each tag (git show/git
+          # ls-tree) - it needs the full history and all tags, not a
+          # shallow clone (same as ci.yml). Without this, the deployed
+          # site has no release history/archive and the git-history unit
+          # tests run by `npm run qa` fail.
+          fetch-depth: 0
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -73,6 +81,12 @@ jobs:
       - name: Build Vue app
         run: npm run build
         working-directory: ./app
+        env:
+          # GitHub Pages serves this project site under /<repository>/,
+          # not at the domain root - app/vite.config.js reads this as
+          # Vite's `base` so asset URLs, client-side routes and data
+          # fetches all resolve under that subpath.
+          RADAR_BASE_PATH: /${{ github.event.repository.name }}/
       - name: Generate QA reports
         run: npm run qa
       - name: Upload artifact

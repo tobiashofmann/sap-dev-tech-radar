@@ -1,6 +1,6 @@
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -64,39 +64,65 @@ trend = "stable"
 since = "2026-06"
 `;
 
-before(() => {
+// every fixture directory created by createFixtureRoot(), removed in after()
+const fixtureRoots = [];
+
+/**
+ * Creates an isolated fixture directory index.js can run in: the HTML
+ * shells it reads, plus the given definitions/ files. Neither radar/ nor
+ * old/html/ is pre-created - index.js has to create its own (gitignored)
+ * output directories, exactly as on a fresh checkout.
+ * @param {Object.<string, string>} definitions TOML content by path relative to definitions/, e.g. "ui/foo.toml"
+ * @returns {string} the fixture directory
+ */
+function createFixtureRoot(definitions) {
   const repoRoot = process.cwd();
-  rootDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdtr-index-e2e-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sdtr-index-e2e-'));
+  fixtureRoots.push(dir);
 
   // convert.js's HTML rendering needs the real template
-  fs.mkdirSync(path.join(rootDir, 'template'), { recursive: true });
-  fs.cpSync(path.join(repoRoot, 'template/template.html'), path.join(rootDir, 'template/template.html'));
+  fs.mkdirSync(path.join(dir, 'template'), { recursive: true });
+  fs.cpSync(path.join(repoRoot, 'template/template.html'), path.join(dir, 'template/template.html'));
 
-  // old/deprecated.html's hand-authored shell, and old/html/ pre-created
-  // (convert.js writes into it but never creates it itself - same
-  // precondition as in the real repo)
-  fs.mkdirSync(path.join(rootDir, 'old/html'), { recursive: true });
-  fs.cpSync(path.join(repoRoot, 'old/deprecated.html'), path.join(rootDir, 'old/deprecated.html'));
+  // old/deprecated.html's hand-authored shell
+  fs.mkdirSync(path.join(dir, 'old'), { recursive: true });
+  fs.cpSync(path.join(repoRoot, 'old/deprecated.html'), path.join(dir, 'old/deprecated.html'));
 
-  // release-data.js writes straight into radar/data.json without creating
-  // the directory first - same precondition as old/html/ above
-  fs.mkdirSync(path.join(rootDir, 'radar'), { recursive: true });
+  Object.entries(definitions).forEach(([relPath, content]) => {
+    const target = path.join(dir, 'definitions', relPath);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, content);
+  });
 
-  // minimal definitions/ fixture: one live entry (with a `related` id) and
-  // one deprecated entry
-  fs.mkdirSync(path.join(rootDir, 'definitions/ui'), { recursive: true });
-  fs.mkdirSync(path.join(rootDir, 'definitions/technology'), { recursive: true });
-  fs.writeFileSync(path.join(rootDir, 'definitions/ui/fixture-ui-adopt.toml'), FIXTURE_ADOPT_TOML);
-  fs.writeFileSync(path.join(rootDir, 'definitions/technology/fixture-tech-deprecated.toml'), FIXTURE_DEPRECATED_TOML);
+  return dir;
+}
 
+/**
+ * Runs the real index.js with the given fixture directory as cwd.
+ * @param {string} dir
+ * @returns {{status: number, stderr: string}}
+ */
+function runIndex(dir) {
   // the isolated directory is not a git repo, so getReleaseTags() (used by
   // both history.js and release-data.js) gracefully finds no tags - this
   // run always looks like a fresh checkout with no release history yet
-  execFileSync(process.execPath, [path.join(repoRoot, 'index.js')], { cwd: rootDir, encoding: 'utf8' });
+  const result = spawnSync(process.execPath, [path.join(process.cwd(), 'index.js')], { cwd: dir, encoding: 'utf8' });
+  return { status: result.status, stderr: result.stderr };
+}
+
+before(() => {
+  // minimal definitions/ fixture: one live entry (with a `related` id) and
+  // one deprecated entry
+  rootDir = createFixtureRoot({
+    'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML,
+    'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML
+  });
+  const { status, stderr } = runIndex(rootDir);
+  assert.equal(status, 0, stderr);
 });
 
 after(() => {
-  fs.rmSync(rootDir, { recursive: true, force: true });
+  fixtureRoots.forEach((dir) => fs.rmSync(dir, { recursive: true, force: true }));
 });
 
 describe('index.js: end-to-end run against a fixture definitions/ directory', () => {
@@ -136,5 +162,71 @@ describe('index.js: end-to-end run against a fixture definitions/ directory', ()
   test('does not create old/releases or radar/releases - there is no git tag history to archive', () => {
     assert.equal(fs.existsSync(path.join(rootDir, 'old/releases')), false);
     assert.equal(fs.existsSync(path.join(rootDir, 'radar/releases')), false);
+  });
+});
+
+// A broken definition must fail the whole run (non-zero exit code, so CI
+// and the Pages deploy stop) *before* anything is written for the current
+// state - not get logged while the build stays green and the bad (or a
+// missing) radar/data.json is deployed anyway.
+describe('index.js: invalid definitions fail the run before anything is written', () => {
+  // (Object.assign rather than object spread: .eslintrc.json parses as ES2015)
+  const VALID = {
+    'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML,
+    'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML
+  };
+
+  const cases = [
+    {
+      name: 'an unrecognized ring (casing typo)',
+      definitions: Object.assign({}, VALID, { 'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML.replace('ring = "ADOPT"', 'ring = "Adopt"') }),
+      message: /"fixture-ui-adopt": ring "Adopt" must be one of/
+    },
+    {
+      name: 'a `related` id that matches no definition file',
+      definitions: Object.assign({}, VALID, { 'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML.replace('"fixture-tech-deprecated"', '"does-not-exist"') }),
+      message: /"fixture-ui-adopt": related id "does-not-exist" does not match/
+    },
+    {
+      name: 'a DEPRECATED entry with a malformed `since`',
+      definitions: Object.assign({}, VALID, { 'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML.replace('"2026-06"', '"2026-07"') }),
+      message: /"fixture-tech-deprecated": since "2026-07" must match/
+    },
+    {
+      name: 'a file that is not valid TOML',
+      definitions: Object.assign({}, VALID, { 'tools/broken.toml': '[page\ntitle = ' }),
+      message: /broken\.toml": could not be read\/parsed as TOML/
+    },
+    {
+      name: 'a file without a [config] table',
+      definitions: Object.assign({}, VALID, { 'tools/no-config.toml': '[page]\ntitle = "No config"\n' }),
+      message: /"no-config": missing \[config\] table/
+    }
+  ];
+
+  for (const { name, definitions, message } of cases) {
+    test(`${name}: non-zero exit, error reported, no output written`, () => {
+      const dir = createFixtureRoot(definitions);
+      const { status, stderr } = runIndex(dir);
+
+      assert.equal(status, 1);
+      assert.match(stderr, message);
+      assert.equal(fs.existsSync(path.join(dir, 'radar/data.json')), false);
+      assert.equal(fs.existsSync(path.join(dir, 'old/config.json')), false);
+      assert.equal(fs.existsSync(path.join(dir, 'old/html')), false);
+    });
+  }
+
+  test('every problem is reported in one run, not just the first', () => {
+    const dir = createFixtureRoot({
+      'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML.replace('"fixture-tech-deprecated"', '"does-not-exist"'),
+      'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML.replace('quadrant = "Technology"', 'quadrant = "technology"')
+    });
+    const { status, stderr } = runIndex(dir);
+
+    assert.equal(status, 1);
+    assert.match(stderr, /related id "does-not-exist"/);
+    assert.match(stderr, /quadrant "technology" must be one of/);
+    assert.match(stderr, /2 error\(s\) in definitions\//);
   });
 });

@@ -5,6 +5,10 @@ defineEmits([
   /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
   'back'
 ])
+
+// built from the app's base path, not a fixed "/favicon.svg" - on GitHub
+// Pages the app lives under /<repository>/ (see vite.config.js's `base`)
+const faviconUrl = import.meta.env.BASE_URL + 'favicon.svg'
 </script>
 
 <template>
@@ -16,7 +20,7 @@ defineEmits([
     <ui5-card>
       <ui5-card-header slot="header" title-text="About the SAP Development Tech Radar">
         <ui5-avatar slot="avatar" shape="Square" size="S">
-          <img src="/favicon.svg" alt="" />
+          <img :src="faviconUrl" alt="" />
         </ui5-avatar>
       </ui5-card-header>
       <div class="card-body">
