@@ -145,11 +145,23 @@ function sortBy(key) {
     sortAsc.value = true
   }
 }
+// The value a row is sorted by for a given column. Rings sort in their
+// radar order (ADOPT, USE, HOLD, STOP - RINGS' own order, center ->
+// outside), not alphabetically, which would put HOLD and STOP before USE.
+function sortValue(entry, key) {
+  if (key === 'number') {
+    return blipNumbers.value[entry.id]
+  }
+  if (key === 'ring') {
+    return RINGS.indexOf(entry.ring)
+  }
+  return entry[key] ?? ''
+}
 const sortedEntries = computed(() => {
   const list = [...visibleEntries.value]
   list.sort((a, b) => {
-    const av = sortKey.value === 'number' ? blipNumbers.value[a.id] : a[sortKey.value] ?? ''
-    const bv = sortKey.value === 'number' ? blipNumbers.value[b.id] : b[sortKey.value] ?? ''
+    const av = sortValue(a, sortKey.value)
+    const bv = sortValue(b, sortKey.value)
     return av < bv ? -1 : av > bv ? 1 : 0
   })
   return sortAsc.value ? list : list.reverse()

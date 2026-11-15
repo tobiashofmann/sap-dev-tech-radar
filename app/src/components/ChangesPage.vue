@@ -33,6 +33,9 @@ const changeFilter = ref('All')
 const quadrantFilter = ref('All')
 const compareWith = ref(props.changes.previousRelease)
 const compareLoading = ref(false)
+// set when the picked "Compare with" release could not be fetched - shown
+// instead of the table, which would otherwise just look like "no changes"
+const compareError = ref(null)
 
 // "Compare with" (design/DESIGN.md screen D): any other release than the
 // one currently on screen - 'current' (the live draft) if that isn't
@@ -53,10 +56,18 @@ const compareOptions = computed(() => {
 async function onCompareChange(e) {
   const version = e.target.value
   compareWith.value = version
+  compareError.value = null
   if (version && !props.releaseEntries(version)) {
     compareLoading.value = true
     try {
       await props.fetchPastRelease(version)
+    } catch (err) {
+      // only report it if this is still the selected release - a slower,
+      // failed request for a release the user has already moved on from
+      // must not put an error over the newer selection
+      if (compareWith.value === version) {
+        compareError.value = `Could not load release ${releaseLabel(version)} for comparison: ${err.message}`
+      }
     } finally {
       compareLoading.value = false
     }
@@ -226,6 +237,7 @@ const filteredItems = computed(() => {
     </div>
 
     <p v-if="compareLoading" class="loading-note">Loading comparison release&hellip;</p>
+    <p v-else-if="compareError" class="error-note" role="alert">{{ compareError }}</p>
 
     <ui5-card v-else>
       <div class="card-body">
@@ -298,6 +310,7 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
 }
 .compare-select { width: 13rem; margin-left: auto; }
 .loading-note { color: var(--sap-text-muted, #5b738b); padding: 1rem 0; }
+.error-note { color: #d20a0a; padding: 1rem 0; }
 
 .card-body { padding: 0.5rem 1.5rem 1.5rem; }
 .changes-table { width: 100%; border-collapse: collapse; }
