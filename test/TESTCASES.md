@@ -37,6 +37,8 @@ MCP server under `mcp/`.
 |---|---|---|---|---|
 | Convert TOML | convert.js | `json2config()` | `convert.test.js` — "json2config() - one reference per quadrant/ring" (all 4 quadrant/ring combinations) | ✅ present |
 | Convert TOML | convert.js | `validateEntry()` (pure per-entry check `index.js` runs before writing anything) | `convert.test.js` — "validateEntry()": all 5 reference entries accepted; invalid ring, invalid quadrant, missing `since`, missing `[page]`/`[config]` table rejected | ✅ present |
+| Convert TOML | convert.js | `validateEntry()` — `[links]` values must be http(s) URLs | `convert.test.js` — "validateEntry() - [links] must be plain web links" | ✅ present |
+| Convert TOML | convert.js | `escapeHtml()` / `renderRichText()` (escaping of TOML values on the legacy pages, formatting-tag allow-list) | `convert.test.js` — "escapeHtml() / renderRichText()"; end-to-end in `index.test.js` — "TOML values are escaped on the generated legacy pages" | ✅ present |
 | Convert TOML | convert.js | `createCONFIG()` — validation | `convert.test.js` — invalid ring, invalid quadrant, invalid `since`, valid DEPRECATED case | ✅ present |
 | Convert TOML | convert.js | `createCONFIG()` — happy path (valid non-DEPRECATED entry, `old/config.json` is written) | — | ❌ missing |
 | Convert TOML | convert.js | `createHTML()` / `conv2html()` (incl. internal helpers `renderRelated`, `renderReleaseHistory`, `getReplaceColor`, `replacePlaceholder`, `loadHtmlTemplate`, `writeHtmlToFile`) | — | ❌ missing |

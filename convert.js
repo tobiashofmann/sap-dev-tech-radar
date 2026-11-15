@@ -16,10 +16,52 @@ let deprecatedList = [];
 const VALID_RINGS = ["ADOPT", "USE", "HOLD", "STOP", "DEPRECATED"];
 const VALID_QUADRANTS = ["Tools", "Frameworks", "UI", "Technology"];
 
+// Tags a [page] text (description, reason, recommendation) may use on the
+// generated legacy pages - attribute-less formatting only. Mirrors the
+// app's allow-list (app/src/sanitize.js) except for <a>: a link needs an
+// attribute, and nothing with attributes is let through here; references
+// belong in [links] instead.
+const RICH_TEXT_TAGS = ["br", "b", "i", "em", "strong", "ul", "ol", "li"];
+const RICH_TEXT_TAG_PATTERN = new RegExp(`&lt;(/?)(${RICH_TEXT_TAGS.join("|")})\\s*(/?)&gt;`, "gi");
+
+/**
+ * Escapes a value for use as HTML text or inside a quoted HTML attribute.
+ * definitions/**\/*.toml content is reviewed, but that review is a content
+ * check, not a security review - and the generated pages are published on
+ * the same origin as the Vue app (radar/old/, see publish-old.js), so
+ * nothing from a TOML file may reach them as markup unchecked.
+ * An already-written character reference (&amp;, &#39;, ...) is kept as it
+ * is rather than escaped a second time.
+ * @param {*} value
+ * @returns {string}
+ */
+function escapeHtml(value) {
+  return String(value === undefined || value === null ? "" : value)
+    .replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);)/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Renders a [page] text that may contain simple formatting (in practice
+ * <br>/<br/> line breaks): everything is escaped first, then exactly the
+ * attribute-less tags in RICH_TEXT_TAGS are turned back into markup. Any
+ * other tag, and any tag carrying attributes, stays visible as text
+ * instead of being interpreted by the browser.
+ * @param {*} value
+ * @returns {string}
+ */
+function renderRichText(value) {
+  return escapeHtml(value).replace(RICH_TEXT_TAG_PATTERN, (match, open, tag, close) => `<${open}${tag.toLowerCase()}${close}>`);
+}
+
 /**
  * Validates one parsed definitions/**\/*.toml file: the [page]/[config]
- * tables exist, ring/quadrant are one of the exact allowed values, and a
- * DEPRECATED entry carries a well-formed `since`. Pure (no I/O, no module
+ * tables exist, ring/quadrant are one of the exact allowed values, a
+ * DEPRECATED entry carries a well-formed `since`, and every [links]
+ * value is an http(s) URL. Pure (no I/O, no module
  * state), so index.js can run it over every entry up front - before any
  * output file is written, for the legacy site and the Vue app's
  * radar/data.json alike - and createCONFIG() still calls it itself.
@@ -48,6 +90,15 @@ function validateEntry(tomlAsJson, filename) {
     const since = tomlAsJson.config.since;
     if (!/^\d{4}-(06|12)$/.test(since)) {
       throw new Error(`"${filename}": since "${since}" must match YYYY-06 or YYYY-12 (e.g. "2026-06")`);
+    }
+  }
+
+  // [links] values end up as href attributes, on the legacy pages and in
+  // the Vue app alike - anything but a plain web link (e.g. javascript:)
+  // must not get that far.
+  for (const [name, url] of Object.entries(tomlAsJson.links || {})) {
+    if (typeof url !== "string" || !/^https?:\/\//i.test(url)) {
+      throw new Error(`"${filename}": link "${name}" must be an http(s) URL, got "${url}"`);
     }
   }
 }
@@ -137,14 +188,17 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
     //console.log(tomlAsJson);
     //console.log(htmltemplate);
 
-    htmltemplate = replacePlaceholder(htmltemplate, "%title%", tomlAsJson.page.title);
-    htmltemplate = replacePlaceholder(htmltemplate, "%description%", tomlAsJson.page.description);
-    htmltemplate = replacePlaceholder(htmltemplate, "%reason%", tomlAsJson.page.reason);
-    htmltemplate = replacePlaceholder(htmltemplate, "%recommendation%", tomlAsJson.page.recommendation || tomlAsJson.page.reason);
-    htmltemplate = replacePlaceholder(htmltemplate, "%support%", tomlAsJson.page.support);
-    htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", tomlAsJson.config.quadrant);
-    htmltemplate = replacePlaceholder(htmltemplate, "%ring%", tomlAsJson.config.ring);
-    htmltemplate = replacePlaceholder(htmltemplate, "%trend%", tomlAsJson.config.trend);
+    // Every value from the TOML file is escaped before it goes into the
+    // page (see escapeHtml()); the three long texts may keep their simple
+    // formatting tags (see renderRichText()).
+    htmltemplate = replacePlaceholder(htmltemplate, "%title%", escapeHtml(tomlAsJson.page.title));
+    htmltemplate = replacePlaceholder(htmltemplate, "%description%", renderRichText(tomlAsJson.page.description));
+    htmltemplate = replacePlaceholder(htmltemplate, "%reason%", renderRichText(tomlAsJson.page.reason));
+    htmltemplate = replacePlaceholder(htmltemplate, "%recommendation%", renderRichText(tomlAsJson.page.recommendation || tomlAsJson.page.reason));
+    htmltemplate = replacePlaceholder(htmltemplate, "%support%", escapeHtml(tomlAsJson.page.support));
+    htmltemplate = replacePlaceholder(htmltemplate, "%quadrant%", escapeHtml(tomlAsJson.config.quadrant));
+    htmltemplate = replacePlaceholder(htmltemplate, "%ring%", escapeHtml(tomlAsJson.config.ring));
+    htmltemplate = replacePlaceholder(htmltemplate, "%trend%", escapeHtml(tomlAsJson.config.trend));
     htmltemplate = replacePlaceholder(htmltemplate, "%related%", renderRelated(tomlAsJson, filename, entryByFilename));
     htmltemplate = replacePlaceholder(htmltemplate, "%releasehistory%", renderReleaseHistory(tomlAsJson, releaseHistory));
 
@@ -166,7 +220,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
     let links = "";
     for (let name in tomlAsJson.links) {
         //links += "<li><a href='" +tomlAsJson.links[name]+ "'>" +name+ "</a></li>";
-        links += "<a href='" +tomlAsJson.links[name]+ "' class='list-group-item list-group-item-action link-primary'>" +name+ "</a>";
+        links += "<a href='" +escapeHtml(tomlAsJson.links[name])+ "' class='list-group-item list-group-item-action link-primary'>" +escapeHtml(name)+ "</a>";
 
     }
     htmltemplate = replacePlaceholder(htmltemplate, "%references%", links);
@@ -193,7 +247,7 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
       if (!related) {
         throw new Error(`"${filename}": related id "${id}" does not match any definitions/**/*.toml filename`);
       }
-      html += "<a href='./" +id+ ".html' class='list-group-item list-group-item-action link-primary'>" +related.title+ " (" +related.quadrant+ ", " +related.ring+ ")</a>";
+      html += "<a href='./" +escapeHtml(encodeURIComponent(id))+ ".html' class='list-group-item list-group-item-action link-primary'>" +escapeHtml(related.title)+ " (" +escapeHtml(related.quadrant)+ ", " +escapeHtml(related.ring)+ ")</a>";
     });
     return html;
   }
@@ -208,9 +262,9 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
   function renderReleaseHistory(tomlAsJson, releaseHistory) {
     let html = "";
     (releaseHistory || []).forEach(({ release, ring }) => {
-      html += "<li class='list-group-item'>" +release+ ": <b>" +ring+ "</b></li>";
+      html += "<li class='list-group-item'>" +escapeHtml(release)+ ": <b>" +escapeHtml(ring)+ "</b></li>";
     });
-    html += "<li class='list-group-item'>current: <b>" +tomlAsJson.config.ring+ "</b></li>";
+    html += "<li class='list-group-item'>current: <b>" +escapeHtml(tomlAsJson.config.ring)+ "</b></li>";
     return html;
   }
 
@@ -235,11 +289,13 @@ function createHTML(tomlAsJson, filename, entryByFilename, releaseHistory) {
    *
    * @param {string} htmltemplate html template with placeholder
    * @param {string} placeholder e.g. %title%
-   * @param {string} value value to be inserted
+   * @param {string} value value to be inserted, already escaped/rendered for HTML by the caller
    * @returns htmlplaceholder with replaced text
    */
   function replacePlaceholder(htmltemplate, placeholder, value) {
-    return htmltemplate.replaceAll(placeholder, value);
+    // a replacer function, not the value itself: a plain string would have
+    // "$&", "$1", "$$" etc. in the content interpreted as replacement patterns
+    return htmltemplate.replaceAll(placeholder, () => value);
   }
 
   /**
@@ -378,9 +434,9 @@ function createDeprecatedPage() {
   let tableRows = "";
   deprecatedList.forEach(item => {
     tableRows += `<tr>
-      <td><a href="${item.link}">${item.title}</a></td>
-      <td>${item.quadrant}</td>
-      <td class="text-end">${item.since}</td>
+      <td><a href="${escapeHtml(item.link)}">${escapeHtml(item.title)}</a></td>
+      <td>${escapeHtml(item.quadrant)}</td>
+      <td class="text-end">${escapeHtml(item.since)}</td>
     </tr>\n`;
   });
 
@@ -389,7 +445,8 @@ function createDeprecatedPage() {
   const newTbody = `<tbody id="deprecated-table-body">
     ${tableRows}
   </tbody>`;
-  html = html.replace(tbodyRegex, newTbody);
+  // replacer function for the same reason as in replacePlaceholder()
+  html = html.replace(tbodyRegex, () => newTbody);
 
   fs.writeFileSync(path, html);
 }
@@ -398,4 +455,4 @@ function createDeprecatedPage() {
  * Module exports.
  * @public
  */
-export {createCONFIG, createHTML, createDeprecatedPage, json2config, validateEntry}
+export {createCONFIG, createHTML, createDeprecatedPage, json2config, validateEntry, escapeHtml, renderRichText}
