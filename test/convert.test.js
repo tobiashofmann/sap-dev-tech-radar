@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { json2config, createCONFIG } from '../convert.js';
+import { json2config, createCONFIG, validateEntry } from '../convert.js';
 import {
   REF_UI_ADOPT,
   REF_TECHNOLOGY_USE,
@@ -60,5 +60,41 @@ describe('convert.js: createCONFIG() validation', () => {
     const writeFile = t.mock.method(fs, 'writeFileSync', () => {});
     assert.doesNotThrow(() => createCONFIG(REF_DEPRECATED.data, REF_DEPRECATED.filename));
     assert.equal(writeFile.mock.callCount(), 0);
+  });
+});
+
+describe('convert.js: validateEntry() - the pure per-entry check index.js runs before writing anything', () => {
+  for (const ref of [REF_UI_ADOPT, REF_TECHNOLOGY_USE, REF_TOOLS_HOLD, REF_FRAMEWORKS_STOP, REF_DEPRECATED]) {
+    test(`accepts the valid ${ref.data.config.quadrant}/${ref.data.config.ring} reference entry`, () => {
+      assert.doesNotThrow(() => validateEntry(ref.data, ref.filename));
+    });
+  }
+
+  test('rejects an unrecognized ring', () => {
+    const bad = structuredClone(REF_UI_ADOPT.data);
+    bad.config.ring = 'Adopt';
+    assert.throws(() => validateEntry(bad, 'bad-ring'), /"bad-ring": ring "Adopt" must be one of/);
+  });
+
+  test('rejects an unrecognized quadrant', () => {
+    const bad = structuredClone(REF_UI_ADOPT.data);
+    bad.config.quadrant = 'ui';
+    assert.throws(() => validateEntry(bad, 'bad-quadrant'), /"bad-quadrant": quadrant "ui" must be one of/);
+  });
+
+  test('rejects a DEPRECATED entry without a well-formed "since"', () => {
+    const bad = structuredClone(REF_DEPRECATED.data);
+    delete bad.config.since;
+    assert.throws(() => validateEntry(bad, 'no-since'), /"no-since": since "undefined" must match/);
+  });
+
+  test('rejects an entry missing its [page] or [config] table', () => {
+    const noPage = structuredClone(REF_UI_ADOPT.data);
+    delete noPage.page;
+    assert.throws(() => validateEntry(noPage, 'no-page'), /"no-page": missing \[page\] table/);
+
+    const noConfig = structuredClone(REF_UI_ADOPT.data);
+    delete noConfig.config;
+    assert.throws(() => validateEntry(noConfig, 'no-config'), /"no-config": missing \[config\] table/);
   });
 });

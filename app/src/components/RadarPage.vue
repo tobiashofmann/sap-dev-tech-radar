@@ -8,9 +8,9 @@ import { sanitizeDescription } from '../sanitize.js'
 import { TREND_ARROWS, TRENDS } from '../trendIcons.js'
 
 const props = defineProps({
-  /** The current draft's full entry list, as release-data.js's `radar/data.json` shapes them. */
+  /** The viewed release's full entry list (the current draft's `radar/data.json`, or an archived release's `data.json` - same shape, see release-data.js). */
   entries: { type: Array, required: true },
-  /** The current draft's changes-since-last-release block ({previousRelease, items}), for the "Changes" tile. */
+  /** The viewed release's changes-since-its-previous-release block ({previousRelease, items}), for the "About this radar" card's summary line. */
   changes: { type: Object, required: true },
   /** The header search box's current value, used to filter both the radar and the list view. */
   searchQuery: { type: String, default: '' },
@@ -58,8 +58,9 @@ const quadrantFilter = ref('All')
 const ringFilter = ref('All')
 const trendFilter = ref('All')
 const selectedId = ref(null)
-// Screen F (fullscreen radar): button added here, the actual fullscreen
-// layout/behavior is a separate follow-up step.
+// Screen F (fullscreen radar): toggled by the button on the radar card
+// (and left with Escape) - see the "Screen F: fullscreen radar" block
+// further down for what changes while it's on.
 const isFullscreen = ref(false)
 // Screen G (radar hover): which blip is hovered, and the tooltip's pixel
 // position within .radar-card-inner. Position is computed once per
@@ -112,8 +113,8 @@ const tileCounts = computed(() => {
 
 // Deprecated technologies aren't on the radar at all (design/DESIGN.md rule
 // 3) - no ring/trend concept applies, so this only respects the quadrant
-// filter, not ring/trend. Total now counts every technology, deprecated
-// included.
+// filter, not ring/trend. The "Total" tile counts every technology,
+// deprecated included.
 const deprecatedCount = computed(() => {
   const deprecated = props.entries.filter((e) => e.ring === 'DEPRECATED')
   return quadrantFilter.value === 'All'
@@ -144,11 +145,23 @@ function sortBy(key) {
     sortAsc.value = true
   }
 }
+// The value a row is sorted by for a given column. Rings sort in their
+// radar order (ADOPT, USE, HOLD, STOP - RINGS' own order, center ->
+// outside), not alphabetically, which would put HOLD and STOP before USE.
+function sortValue(entry, key) {
+  if (key === 'number') {
+    return blipNumbers.value[entry.id]
+  }
+  if (key === 'ring') {
+    return RINGS.indexOf(entry.ring)
+  }
+  return entry[key] ?? ''
+}
 const sortedEntries = computed(() => {
   const list = [...visibleEntries.value]
   list.sort((a, b) => {
-    const av = sortKey.value === 'number' ? blipNumbers.value[a.id] : a[sortKey.value] ?? ''
-    const bv = sortKey.value === 'number' ? blipNumbers.value[b.id] : b[sortKey.value] ?? ''
+    const av = sortValue(a, sortKey.value)
+    const bv = sortValue(b, sortKey.value)
     return av < bv ? -1 : av > bv ? 1 : 0
   })
   return sortAsc.value ? list : list.reverse()
@@ -166,16 +179,17 @@ function toggleTrendFilter(trend) {
   trendFilter.value = trendFilter.value === trend ? 'All' : trend
 }
 
-// --- Screen F: numbered blips + per-quadrant legend lists (fullscreen) --
-// Replaces the earlier "name next to every blip" attempt, which was too
-// cluttered in dense areas. Each quadrant gets its own 1..N numbering
-// (alphabetical by label, so it's predictable) and its own list, rendered
-// outside the radar; the blip itself just shows that number.
-// Numbers are unique across the whole radar, not per quadrant - assign
-// them first (alphabetical by label, over every visible entry), then
-// group into the per-quadrant legend lists for display. A quadrant's list
-// therefore isn't 1..N itself; it just shows whichever global numbers
-// landed in that quadrant, in ascending order.
+// --- numbered blips + per-quadrant legend lists --------------------------
+// A blip shows a number instead of its name (names next to every blip
+// are too cluttered in dense areas). The same number is the list view's
+// first column and, in fullscreen (Screen F), the key into the
+// per-quadrant legend lists rendered left/right of the radar.
+// Numbers are unique across the whole radar, not per quadrant: they're
+// assigned alphabetically by label over every currently visible entry
+// (so they're predictable, but change when a filter/search changes what's
+// visible), then grouped into the per-quadrant legend lists for display.
+// A quadrant's list therefore isn't 1..N itself; it just shows whichever
+// global numbers landed in that quadrant, in ascending order.
 const blipNumbers = computed(() => {
   const sorted = visibleEntries.value.slice().sort((a, b) => a.label.localeCompare(b.label))
   const map = {}
@@ -362,8 +376,9 @@ function renderChart() {
       }
     })
 
-  // Per-quadrant blip number (see quadrantLegends/blipNumbers above),
-  // always shown now - also used as the table's first column.
+  // Each blip's radar-wide number (see blipNumbers above), shown in
+  // every mode, not just fullscreen - the same number is the list view's
+  // first column.
   g.selectAll('text.blip-number')
     .data(visibleEntries.value, (d) => d.id)
     .join('text')
@@ -377,7 +392,7 @@ function renderChart() {
     .style('fill', '#fff')
     .style('pointer-events', 'none')
     .text((d) => blipNumbers.value[d.id])
-  // --- end Screen F blip numbers -----------------------------------------
+  // --- end blip numbers --------------------------------------------------
 }
 
 onMounted(renderChart)

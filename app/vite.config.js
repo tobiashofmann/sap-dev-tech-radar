@@ -69,8 +69,50 @@ function stripDocsBlocks() {
   }
 }
 
+// GitHub Pages has no server-side SPA fallback: a hard load (or reload) of
+// a client-side route like <base>details/<id> is a 404 as far as Pages is
+// concerned. Pages serves 404.html (from the site root) for any unknown
+// path while keeping the requested URL in the address bar, so publishing
+// a copy of index.html as 404.html boots the app there too, and App.vue's
+// own syncViewFromLocation() then picks the view from that URL. Only
+// correct together with an absolute `base` (see below) - index.html's
+// asset URLs must not depend on which path it happened to be served for.
+function spaFallback404() {
+  let outDir
+  return {
+    name: 'spa-fallback-404',
+    apply: 'build',
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir)
+    },
+    closeBundle() {
+      const indexHtml = path.join(outDir, 'index.html')
+      if (fs.existsSync(indexHtml)) {
+        fs.copyFileSync(indexHtml, path.join(outDir, '404.html'))
+      }
+    }
+  }
+}
+
+// The absolute path this app is served under, with a leading and trailing
+// slash. Defaults to "/" (dev server, and the repo root's `npm run start`,
+// which serves radar/ at the domain root); the Pages deploy workflow
+// (.github/workflows/techradar.yml) sets RADAR_BASE_PATH to
+// "/<repository>/", since a GitHub Pages project site lives under that
+// subpath. Must be absolute, not "./": client-side routes like
+// <base>details/<id> are hard-loadable, and relative asset URLs would then
+// resolve against the wrong directory.
+function basePath() {
+  const raw = process.env.RADAR_BASE_PATH
+  if (!raw) {
+    return '/'
+  }
+  return '/' + raw.split('/').filter(Boolean).map((segment) => segment + '/').join('')
+}
+
 // https://vite.dev/config/
 export default defineConfig({
+  base: basePath(),
   plugins: [
     stripDocsBlocks(),
     vue({
@@ -81,7 +123,8 @@ export default defineConfig({
         }
       }
     }),
-    serveReleaseData()
+    serveReleaseData(),
+    spaFallback404()
   ],
   build: {
     // radar/ is this app's own publishable output directory (the old
