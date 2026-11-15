@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import RingPill from './RingPill.vue'
-import { sanitizeDescription } from '../sanitize.js'
+import { sanitizeDescription, sanitizeHtml } from '../sanitize.js'
 import { TREND_ARROWS } from '../trendIcons.js'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
@@ -197,9 +197,10 @@ const positionOnRadar = computed(() => {
         <ui5-card class="what-to-do-card" :style="whatToDoStyle">
           <ui5-card-header slot="header" title-text="What to do"></ui5-card-header>
           <div class="card-body">
-            <p class="recommendation">{{ entry.recommendation }}</p>
+            <!-- v-html, not {{ }}: reason/recommendation may contain <br> line breaks (see sanitize.js) -->
+            <p class="recommendation" v-html="sanitizeHtml(entry.recommendation)"></p>
             <p v-if="entry.reason !== entry.recommendation || voteLink" class="meta-line">
-              <template v-if="entry.reason !== entry.recommendation">Reason: {{ entry.reason }}</template>
+              <template v-if="entry.reason !== entry.recommendation">Reason: <span v-html="sanitizeHtml(entry.reason)"></span></template>
               <a v-if="voteLink" :href="voteLink.url" target="_blank" rel="noopener">View ring proposal &amp; vote</a>
             </p>
           </div>

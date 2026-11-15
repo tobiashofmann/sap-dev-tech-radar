@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayout.js'
 import { RING_COLORS } from '../ringColors.js'
 import RingPill from './RingPill.vue'
-import { sanitizeDescription } from '../sanitize.js'
+import { sanitizeDescription, sanitizeHtml } from '../sanitize.js'
 import { TREND_ARROWS, TRENDS } from '../trendIcons.js'
 
 const props = defineProps({
@@ -717,7 +717,7 @@ watch([selectedEntry, radarSize], layoutSideCards)
             <p v-html="sanitizeDescription(selectedEntry.description)"></p>
             <p>Ring: <b>{{ selectedEntry.ring }}</b> &middot; Quadrant: <b>{{ selectedEntry.quadrant }}</b>
               &middot; Trend: <b>{{ TREND_ARROWS[selectedEntry.trend] }} {{ selectedEntry.trend }}</b></p>
-            <p>Reason: {{ selectedEntry.reason }}</p>
+            <p>Reason: <span v-html="sanitizeHtml(selectedEntry.reason)"></span></p>
             <ui5-button @click="emit('open-detail', selectedEntry.id)">Open detail page &rarr;</ui5-button>
           </div>
         </ui5-card>
