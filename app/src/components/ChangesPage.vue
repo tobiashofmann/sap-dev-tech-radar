@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import RingPill from './RingPill.vue'
+import { sanitizeHtml } from '../sanitize.js'
 
 const props = defineProps({
   /** The viewed release's entries (the "now" side of every comparison). */
@@ -264,7 +265,8 @@ const filteredItems = computed(() => {
                   <RingPill :ring="i.currentRing" />
                 </span>
               </td>
-              <td>{{ i.reason }}</td>
+              <!-- v-html, not {{ }}: reason may contain <br> line breaks (see sanitize.js) -->
+              <td v-html="sanitizeHtml(i.reason)"></td>
             </tr>
             <tr v-if="!filteredItems.length">
               <td colspan="5" class="empty">No changes match these filters.</td>

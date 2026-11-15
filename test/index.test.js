@@ -230,3 +230,84 @@ describe('index.js: invalid definitions fail the run before anything is written'
     assert.match(stderr, /2 error\(s\) in definitions\//);
   });
 });
+
+// publish-old.js is, like index.js, a top-level script that works relative
+// to process.cwd() - run for real against a fixture directory.
+describe('publish-old.js: copies the legacy site to radar/old/', () => {
+  test('radar/old/ becomes a fresh copy of old/, without files left over from an earlier copy', () => {
+    const dir = createFixtureRoot({
+      'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML,
+      'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML
+    });
+    fs.writeFileSync(path.join(dir, 'old/index.html'), '<html></html>');
+    assert.equal(runIndex(dir).status, 0);
+
+    // something a previous run published that no longer exists in old/
+    fs.mkdirSync(path.join(dir, 'radar/old/html'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'radar/old/html/removed-technology.html'), 'stale');
+
+    const result = spawnSync(process.execPath, [path.join(process.cwd(), 'publish-old.js')], { cwd: dir, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+
+    for (const file of ['index.html', 'config.json', 'deprecated.html', 'html/fixture-ui-adopt.html', 'html/fixture-tech-deprecated.html']) {
+      assert.equal(
+        fs.readFileSync(path.join(dir, 'radar/old', file), 'utf8'),
+        fs.readFileSync(path.join(dir, 'old', file), 'utf8'),
+        file
+      );
+    }
+    assert.equal(fs.existsSync(path.join(dir, 'radar/old/html/removed-technology.html')), false);
+  });
+
+  test('fails with a non-zero exit code when there is no old/index.html to publish', () => {
+    const dir = createFixtureRoot({});
+    const result = spawnSync(process.execPath, [path.join(process.cwd(), 'publish-old.js')], { cwd: dir, encoding: 'utf8' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /old\/index\.html not found/);
+    assert.equal(fs.existsSync(path.join(dir, 'radar/old')), false);
+  });
+});
+
+// The generated legacy pages are published on the same origin as the app
+// (radar/old/), so markup smuggled into a TOML value must come out as
+// inert text there, never as elements the browser interprets.
+describe('index.js: TOML values are escaped on the generated legacy pages', () => {
+  test('markup in title/description/reason/support/label and link names is not emitted as markup', () => {
+    const hostile = FIXTURE_ADOPT_TOML
+      .replace('title = "Fixture UI Adopt"', 'title = "T<script>window.pwnedTitle=1</script>"')
+      // (function replacer: "$&" must reach the TOML literally, not be expanded by this .replace() itself)
+      .replace('description = "Fixture technology for the index.js end-to-end test."', () => `description = "line one<br>line two<img src=x onerror='window.pwnedDesc=1'> costs $& more"`)
+      .replace('support = "Supported"', `support = "S<svg onload='window.pwnedSupport=1'>"`)
+      .replace('Homepage = "https://example.com/fixture-ui-adopt"', `"N<b onmouseover='x()'>" = "https://example.com/a'onclick='x()"`);
+    const hostileDeprecated = FIXTURE_DEPRECATED_TOML.replace('label = "FxTechDep"', 'label = "L<img src=x onerror=1>"');
+    const dir = createFixtureRoot({
+      'ui/fixture-ui-adopt.toml': hostile,
+      'technology/fixture-tech-deprecated.toml': hostileDeprecated
+    });
+    const { status, stderr } = runIndex(dir);
+    assert.equal(status, 0, stderr);
+
+    const html = fs.readFileSync(path.join(dir, 'old/html/fixture-ui-adopt.html'), 'utf8');
+    for (const forbidden of ['<script>window', '<img src=x', '<svg onload', '<b onmouseover', "'onclick='"]) {
+      assert.equal(html.includes(forbidden), false, forbidden);
+    }
+    assert.ok(html.includes('line one<br>line two')); // the allowed line break survives
+    assert.ok(html.includes('costs $&amp; more')); // "$&" is content, not a replacement pattern
+    assert.ok(html.includes('T&lt;script&gt;'));
+
+    const deprecated = fs.readFileSync(path.join(dir, 'old/deprecated.html'), 'utf8');
+    assert.equal(deprecated.includes('<img src=x'), false);
+    assert.ok(deprecated.includes('L&lt;img src=x onerror=1&gt;'));
+  });
+
+  test('a javascript: link fails the run instead of being published', () => {
+    const dir = createFixtureRoot({
+      'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML.replace('"https://example.com/fixture-ui-adopt"', '"javascript:alert(1)"'),
+      'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML
+    });
+    const { status, stderr } = runIndex(dir);
+    assert.equal(status, 1);
+    assert.match(stderr, /link "Homepage" must be an http\(s\) URL/);
+    assert.equal(fs.existsSync(path.join(dir, 'radar/data.json')), false);
+  });
+});
