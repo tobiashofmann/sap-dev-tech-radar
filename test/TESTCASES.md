@@ -43,6 +43,7 @@ MCP server under `mcp/`.
 | Convert TOML | convert.js | `createDeprecatedPage()` | — | ❌ missing |
 | Convert TOML | index.js | End-to-end run (`node index.js` against fixture `definitions/`, checking the generated artifacts `old/config.json`, `old/html/*.html`, `old/deprecated.html`, `radar/data.json`) | `index.test.js` — "index.js: end-to-end run against a fixture definitions/ directory" | ✅ present |
 | Convert TOML | index.js | Failing run: invalid definitions (bad ring, unknown `related` id, malformed `since`, unparsable TOML, missing `[config]`) exit non-zero, report every problem, and write no `radar/data.json`/`old/config.json`/`old/html/` | `index.test.js` — "index.js: invalid definitions fail the run before anything is written" | ✅ present |
+| Convert TOML | publish-old.js | Copies `old/` to `radar/old/` (fresh copy, stale files from an earlier copy removed); non-zero exit when `old/index.html` is missing | `index.test.js` — "publish-old.js: copies the legacy site to radar/old/" | ✅ present |
 | Build history info | history.js | `normalizeCase()` | `history.test.js` — "normalizeCase()" | ✅ present |
 | Build history info | history.js | `normalizeParsedConfig()` | `history.test.js` — "normalizeParsedConfig()" | ✅ present |
 | Build history info | history.js | `validateForwardOnly()` | `history.test.js` — "validateForwardOnly()" | ✅ present |

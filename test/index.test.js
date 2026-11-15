@@ -230,3 +230,40 @@ describe('index.js: invalid definitions fail the run before anything is written'
     assert.match(stderr, /2 error\(s\) in definitions\//);
   });
 });
+
+// publish-old.js is, like index.js, a top-level script that works relative
+// to process.cwd() - run for real against a fixture directory.
+describe('publish-old.js: copies the legacy site to radar/old/', () => {
+  test('radar/old/ becomes a fresh copy of old/, without files left over from an earlier copy', () => {
+    const dir = createFixtureRoot({
+      'ui/fixture-ui-adopt.toml': FIXTURE_ADOPT_TOML,
+      'technology/fixture-tech-deprecated.toml': FIXTURE_DEPRECATED_TOML
+    });
+    fs.writeFileSync(path.join(dir, 'old/index.html'), '<html></html>');
+    assert.equal(runIndex(dir).status, 0);
+
+    // something a previous run published that no longer exists in old/
+    fs.mkdirSync(path.join(dir, 'radar/old/html'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'radar/old/html/removed-technology.html'), 'stale');
+
+    const result = spawnSync(process.execPath, [path.join(process.cwd(), 'publish-old.js')], { cwd: dir, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+
+    for (const file of ['index.html', 'config.json', 'deprecated.html', 'html/fixture-ui-adopt.html', 'html/fixture-tech-deprecated.html']) {
+      assert.equal(
+        fs.readFileSync(path.join(dir, 'radar/old', file), 'utf8'),
+        fs.readFileSync(path.join(dir, 'old', file), 'utf8'),
+        file
+      );
+    }
+    assert.equal(fs.existsSync(path.join(dir, 'radar/old/html/removed-technology.html')), false);
+  });
+
+  test('fails with a non-zero exit code when there is no old/index.html to publish', () => {
+    const dir = createFixtureRoot({});
+    const result = spawnSync(process.execPath, [path.join(process.cwd(), 'publish-old.js')], { cwd: dir, encoding: 'utf8' });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /old\/index\.html not found/);
+    assert.equal(fs.existsSync(path.join(dir, 'radar/old')), false);
+  });
+});
