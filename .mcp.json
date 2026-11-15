@@ -1,0 +1,11 @@
+{
+	"mcpServers": {
+		"SDTR-mcp-server": {
+			"type": "stdio",
+			"command": "node",
+			"args": [
+				"mcp/dist/index.js"
+			]
+		}
+	}
+}
