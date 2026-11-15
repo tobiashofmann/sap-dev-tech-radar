@@ -73,6 +73,8 @@ jobs:
       - name: Build Vue app
         run: npm run build
         working-directory: ./app
+      - name: Generate QA reports
+        run: npm run qa
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

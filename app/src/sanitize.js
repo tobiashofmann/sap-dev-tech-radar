@@ -12,6 +12,15 @@ import DOMPurify from 'dompurify'
 const ALLOWED_TAGS = ['br', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li']
 const ALLOWED_ATTR = ['href', 'target', 'rel']
 
+/**
+ * Sanitizes a technology's `[page].description` HTML before it's rendered
+ * with v-html, allowing only the narrow tag/attribute set CLAUDE.md
+ * documents as intended (see the module comment above for why this
+ * matters despite the content being reviewed/voted-on, not raw user
+ * input).
+ * @param {string} html
+ * @returns {string} sanitized HTML
+ */
 export function sanitizeDescription(html) {
   return DOMPurify.sanitize(html ?? '', { ALLOWED_TAGS, ALLOWED_ATTR })
 }

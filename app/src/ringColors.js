@@ -1,5 +1,8 @@
-// design/DESIGN.md rule 5 - keep these in one place, same values drive
-// blips, chips, pills and tiles everywhere.
+/**
+ * Per-ring color, per design/DESIGN.md rule 5 - keep these in one place,
+ * same values drive blips, chips, pills and tiles everywhere.
+ * @type {Object.<string, string>}
+ */
 export const RING_COLORS = {
   ADOPT: '#0064d9',
   USE: '#256f3a',

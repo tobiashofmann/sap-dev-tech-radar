@@ -3,16 +3,27 @@ import { ref, computed } from 'vue'
 import RingPill from './RingPill.vue'
 
 const props = defineProps({
-  entries: { type: Array, required: true }, // the viewed release's entries (the "now" side of every comparison)
-  changes: { type: Object, required: true }, // precomputed vs the immediately preceding release: {previousRelease, items}
-  releaseDate: { type: String, required: true }, // the viewed release's own date/version label
+  /** The viewed release's entries (the "now" side of every comparison). */
+  entries: { type: Array, required: true },
+  /** Precomputed vs the immediately preceding release: {previousRelease, items}. */
+  changes: { type: Object, required: true },
+  /** The viewed release's own date/version label. */
+  releaseDate: { type: String, required: true },
+  /** The header search box's current value, used to filter the changes table too. */
   searchQuery: { type: String, default: '' },
-  pastReleases: { type: Array, required: true }, // version strings, newest first
-  viewingVersion: { type: String, required: true }, // 'current' or a version string - whichever release is on screen
-  releaseEntries: { type: Function, required: true }, // (version) => entries array | null (null = not fetched yet)
-  fetchPastRelease: { type: Function, required: true } // (version) => Promise<void>
+  /** Version strings, newest first - populates the "compare with" dropdown. */
+  pastReleases: { type: Array, required: true },
+  /** 'current' or a version string - whichever release is on screen. */
+  viewingVersion: { type: String, required: true },
+  /** (version) => entries array | null (null = not fetched yet). */
+  releaseEntries: { type: Function, required: true },
+  /** (version) => Promise<void> - fetches and caches a past release's data.json, via App.vue. */
+  fetchPastRelease: { type: Function, required: true }
 })
-const emit = defineEmits(['open-detail'])
+const emit = defineEmits([
+  /** Fired with a technology's id when its row is clicked, to open its detail page. */
+  'open-detail'
+])
 
 const QUADRANTS = ['UI', 'Technology', 'Tools', 'Frameworks']
 const RING_ORDER = { ADOPT: 0, USE: 1, HOLD: 2, STOP: 3, DEPRECATED: 4 }
@@ -312,3 +323,9 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
 .ring-cell .lab { color: var(--sap-text-muted, #5b738b); }
 .ring-cell .arrow { color: var(--sap-text-muted, #5b738b); }
 </style>
+
+<docs>
+The Changes page (new / moved-to-next-ring / deprecated entries since the
+previous release), with a dropdown to compare the viewed release against
+any earlier one instead of just the immediately preceding release.
+</docs>

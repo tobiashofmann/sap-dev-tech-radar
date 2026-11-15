@@ -1,0 +1,11 @@
+{
+  "source": {
+    "include": ["convert.js", "history.js", "release-data.js", "index.js", "sbom.js"]
+  },
+  "opts": {
+    "destination": "./radar/qa/jsdoc/conv"
+  },
+  "templates": {
+    "cleverLinks": true
+  }
+}

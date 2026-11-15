@@ -61,6 +61,16 @@ function pastReleaseUrl(version) {
   return import.meta.env.DEV ? `/releases/${version}/data.json` : `./releases/${version}/data.json`
 }
 
+// QA reports (npm run qa, see CLAUDE.md) land under radar/qa/** alongside
+// this app's own build output - same convention as dataUrl/manifestUrl
+// above. Unlike those, there's no dev-server middleware for qa/** (it's
+// never produced by the dev server itself), so these only resolve against
+// a built radar/ tree (e.g. `npm run qa` then `npm run start`), not
+// against `npm run dev` - see the QA section's own note in the dialog.
+function qaUrl(path) {
+  return import.meta.env.DEV ? `/qa/${path}` : `./qa/${path}`
+}
+
 // Deep linking: /details/<id> (id = the technology's TOML filename, already
 // unique and URL-safe per CONTRIBUTING.md's naming rule - no need to use
 // config.label, which can contain spaces and isn't pipeline-enforced unique).
@@ -390,6 +400,20 @@ function openDeprecated() {
           <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement &#8599;</a>
         </div>
       </div>
+      <div class="info-section">
+        <div class="info-label">QA</div>
+        <p class="info-muted">Generated test/coverage/documentation reports for this build. Only available
+          on the deployed site and a locally built preview - not under `npm run dev`.</p>
+        <div class="info-links">
+          <a :href="qaUrl('coverage/')" target="_blank" rel="noopener">Coverage report &#8599;</a>
+          <a :href="qaUrl('allure/')" target="_blank" rel="noopener">Unit test report &#8599;</a>
+          <a :href="qaUrl('jsdoc/conv/')" target="_blank" rel="noopener">JSDoc: conversion scripts &#8599;</a>
+          <a :href="qaUrl('jsdoc/app-js/')" target="_blank" rel="noopener">JSDoc: app JS &#8599;</a>
+          <a :href="qaUrl('jsdoc/app-vue/')" target="_blank" rel="noopener">Vue component docs &#8599;</a>
+          <a :href="qaUrl('sbom/dev.cdx.json')" target="_blank" rel="noopener">SBOM (dev) &#8599;</a>
+          <a :href="qaUrl('sbom/prd.cdx.json')" target="_blank" rel="noopener">SBOM (prd) &#8599;</a>
+        </div>
+      </div>
       <div class="dialog-footer">
         <ui5-button @click="infoOpen = false">Close</ui5-button>
       </div>
@@ -471,3 +495,12 @@ function openDeprecated() {
   border-top: 1px solid var(--sap-border, #e4e7eb);
 }
 </style>
+
+<docs>
+The app's root component: fetches radar/data.json (and, on demand, past
+releases' radar/releases/<version>/data.json), owns the header/tab/search
+state, and switches between RadarPage, DetailPage, ChangesPage,
+DeprecatedPage, AboutPage and PrivacyPage based on which one the user is
+viewing - the other components take their data as props and communicate
+back up via the events documented on each of them.
+</docs>

@@ -7,10 +7,19 @@ import { QUADRANTS, RINGS, blipPosition, ringBoundaryRadii } from '../radarLayou
 import { RING_COLORS } from '../ringColors.js'
 
 const props = defineProps({
+  /** The technology being shown (release-data.js's enriched shape: page data, ring, releaseHistory, related, ...). */
   entry: { type: Object, required: true },
+  /** The full current entry list, for resolving `related` ids to their own detail pages. */
   allEntries: { type: Array, required: true }
 })
-const emit = defineEmits(['back', 'open-detail', 'show-on-radar'])
+const emit = defineEmits([
+  /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
+  'back',
+  /** Fired with a technology's id - either from the related-technologies list or the release-history table - to open that detail page instead. */
+  'open-detail',
+  /** Fired with this entry's id when "Show on full radar" is clicked, so the radar page preselects it. */
+  'show-on-radar'
+])
 
 // most recent ring transition: the ring right before it, and the release
 // it happened in (null = happened in the current, not-yet-released draft)
@@ -359,3 +368,9 @@ th, td { text-align: left; padding: 0.4rem 0.3rem; border-bottom: 1px solid #f0f
   .reference-grid { grid-template-columns: 1fr; }
 }
 </style>
+
+<docs>
+A technology's detail page: description, reason/recommendation, support,
+reference links, related technologies, its position on a mini radar, and
+its full ring-per-release history.
+</docs>

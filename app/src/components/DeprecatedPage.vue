@@ -3,9 +3,15 @@ import { computed } from 'vue'
 import RingPill from './RingPill.vue'
 
 const props = defineProps({
+  /** The current draft's full entry list - filtered down to DEPRECATED ones below. */
   entries: { type: Array, required: true }
 })
-const emit = defineEmits(['back', 'open-detail'])
+const emit = defineEmits([
+  /** Fired when the "Radar" breadcrumb link is clicked, to return to the radar view. */
+  'back',
+  /** Fired with a technology's id when its row is clicked, to open its detail page. */
+  'open-detail'
+])
 
 const deprecatedEntries = computed(() =>
   props.entries
@@ -70,3 +76,8 @@ h1 { font-size: 1.5rem; margin: 0 0 0.4rem; }
 .deprecated-table td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #f0f0f0; }
 .deprecated-table tr { cursor: pointer; }
 </style>
+
+<docs>
+Lists every DEPRECATED entry (title, quadrant, deprecated-since date),
+reached from the radar page's "Deprecated" tile.
+</docs>
