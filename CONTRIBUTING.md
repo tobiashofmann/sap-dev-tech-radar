@@ -47,6 +47,8 @@ Please use the TOML file that already exists for the technology. Do not create a
 
 ## Test it locally
 
+You need Node.js 24 LTS (Node 24 or newer; see `engines` in `package.json`). `.nvmrc` selects it for nvm/fnm (`nvm install && nvm use`), and `npm i` fails on an older Node version. GitHub Actions uses Node 24 as well.
+
 Run the npm script conv. This will convert your TOML information to the HTML info page and add it to the config JSON for the tech radar web site.
 
 ```sh
