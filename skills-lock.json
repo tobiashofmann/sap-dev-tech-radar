@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "action-canvas": {
+      "source": "tobiashofmann/action-canvas",
+      "commit": "a26b726cad06b8cf0497aed0490eebeba3905292",
+      "sourceType": "github",
+      "skillPath": "skills/action-canvas/SKILL.md",
+      "computedHash": "fa21dacd0723433ba55dd4d250debe44d746f005478a197a2f0ecc7b2c810160"
+    }
+  }
+}
