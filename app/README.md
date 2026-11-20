@@ -8,6 +8,8 @@ This is currently a scaffold/proof of concept (`src/App.vue`) showing the
 three pieces work together in one Vite bundle - it does not yet implement
 the real A1-G screens or fetch the generated radar data from `../radar/`.
 
+Requires Node.js 24 LTS (Node 24 or newer, see `engines` in `package.json`; `.nvmrc` selects it for nvm/fnm).
+
 ```sh
 npm install
 npm run dev     # local dev server
